@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import User from './../models/user';
-import { IUserWithNoCredential } from './../interfaces/user';
+import User from '@/models/user';
+import { IUserWithNoCredential } from '@/interfaces/user';
 
 export const signup = async (req: Request, res: Response) => {
   const { name, email, password, passwordConfirm, role } = req.body;
