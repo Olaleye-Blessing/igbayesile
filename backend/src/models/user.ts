@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 import valdatior from 'validator';
 import { hash } from 'bcrypt';
-import { IUser } from './../interfaces/user';
+import { IUser } from '@/interfaces/user';
 
 const userSchema = new Schema<IUser>({
   name: {
