@@ -1,0 +1,14 @@
+{
+	"name": "igbayesile",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"dev": "concurrently \"cd backend && pnpm run dev\" \"cd frontend && pnpm run dev\""
+	},
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"devDependencies": {
+		"concurrently": "^8.2.2"
+	}
+}

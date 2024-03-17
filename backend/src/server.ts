@@ -1,0 +1,18 @@
+import dotenv from 'dotenv';
+dotenv.config({ path: './config.env' });
+
+import app from './app';
+
+const port = process.env.PORT || 5000;
+
+const server = app.listen(port, () => {
+  console.log(`[server]: Server is running at http://localhost:${port}`);
+});
+
+process.on('unhandledRejection', (err: Error) => {
+  console.log('____ 🔥 Unhandled rejection ____');
+  console.log(err.message);
+  server.close(() => {
+    process.exit(1);
+  });
+});
