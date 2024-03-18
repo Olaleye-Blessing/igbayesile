@@ -2,59 +2,46 @@ import { NextFunction, Request, Response } from 'express';
 import User from '@/models/user';
 import { IUserWithNoCredential } from '@/interfaces/user';
 import AppError from '@/utils/AppError';
+import catchAsync from '@/utils/catchAsync';
 
-export const signup = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const signup = catchAsync(async (req, res, next) => {
   const { name, email, password, passwordConfirm, role } = req.body;
 
   if (!name || !email || !password || !passwordConfirm || !role)
     return next(new AppError('Please provide all details', 400));
 
-  try {
-    const user: IUserWithNoCredential = await User.create({
-      name,
-      email,
-      password,
-      passwordConfirm,
-      role,
-    });
+  const user: IUserWithNoCredential = await User.create({
+    name,
+    email,
+    password,
+    passwordConfirm,
+    role,
+  });
 
-    user.password = undefined;
-    user.passwordConfirm = undefined;
+  user.password = undefined;
+  user.passwordConfirm = undefined;
 
-    return res.status(201).json({
-      status: 'success',
-      data: {
-        user,
-      },
-    });
-  } catch (error) {
-    return next(error);
-  }
-};
+  return res.status(201).json({
+    status: 'success',
+    data: {
+      user,
+    },
+  });
+});
 
-export const login = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const { email, password } = req.body;
+export const login = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body;
 
-  if (!email && !password)
-    return next(new AppError('Provide email and password', 400));
+    if (!email && !password)
+      return next(new AppError('Provide email and password', 400));
 
-  if (!email) return next(new AppError('Provide email', 400));
-  if (!password) return next(new AppError('Provide password', 400));
+    if (!email) return next(new AppError('Provide email', 400));
+    if (!password) return next(new AppError('Provide password', 400));
 
-  try {
     const user = await User.findOne({ email }).select('+password');
 
     // Investigate this issue
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     if (!user || !(await user.correctPassword(password, user.password)))
       return next(new AppError('Incorrect email or password', 400));
 
@@ -67,7 +54,5 @@ export const login = async (
         user,
       },
     });
-  } catch (error) {
-    return next(error);
-  }
-};
+  },
+);
