@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Types } from 'mongoose';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import User from '@/models/user';
 import { IMongoUser } from '@/interfaces/user';
 import AppError from '@/utils/AppError';
@@ -42,6 +42,22 @@ export const login = catchAsync(
     sendToken(user, res);
   },
 );
+
+export const protect = catchAsync(async (req, res, next) => {
+  const token = req.cookies.loggedIn;
+  if (!token) return next(new AppError('Please provide a login token', 400));
+
+  const decodedToken = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+
+  const user = await User.findById(decodedToken.id);
+
+  if (!user) return next(new AppError('This user does not exist', 400));
+
+  // TODO: Check if password hasn't been changed
+
+  req.user = user;
+  next();
+});
 
 function signToken(userId: Types.ObjectId) {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET!, {
