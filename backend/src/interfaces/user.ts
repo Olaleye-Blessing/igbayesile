@@ -8,6 +8,9 @@ export interface IUser {
   createdAt: Date;
   updatedAt: Date;
   role: 'guest' | 'manager';
+  passwordResetToken?: string;
+  passwordResetExpires?: Date;
+  passwordResetAt?: Date;
 }
 
 export interface IUserWithNoCredential

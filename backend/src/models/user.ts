@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { Schema, model, Model } from 'mongoose';
 import valdatior from 'validator';
 import { hash, compare } from 'bcrypt';
@@ -8,6 +9,7 @@ interface IUserMethods {
     incomingPassword: string,
     dbPassword: string,
   ): Promise<boolean>;
+  setPasswordResetToken(): string;
 }
 
 interface UserModel extends Model<IUser, object, IUserMethods> {
@@ -58,6 +60,15 @@ const userSchema = new Schema<IUser>({
     default: new Date(),
   },
   updatedAt: Date,
+  passwordResetToken: {
+    type: String,
+    default: null,
+  },
+  passwordResetExpires: {
+    type: Date,
+    default: null,
+  },
+  passwordResetAt: Date,
 });
 
 userSchema.methods.correctPassword = async function (
@@ -65,6 +76,18 @@ userSchema.methods.correctPassword = async function (
   dbPassword: string,
 ) {
   return await compare(incomingPassword, dbPassword);
+};
+
+userSchema.methods.setPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  this.passwordResetExpires = new Date(Date.now() + 1 * 60 * 60 * 1000);
+
+  return resetToken;
 };
 
 userSchema.pre('save', async function (next) {
