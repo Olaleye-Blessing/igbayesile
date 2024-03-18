@@ -1,7 +1,18 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Model } from 'mongoose';
 import valdatior from 'validator';
-import { hash } from 'bcrypt';
+import { hash, compare } from 'bcrypt';
 import { IUser } from '@/interfaces/user';
+
+interface IUserMethods {
+  correctPassword(
+    incomingPassword: string,
+    dbPassword: string,
+  ): Promise<boolean>;
+}
+
+interface UserModel extends Model<IUser, object, IUserMethods> {
+  // myStaticMethod(): number;
+}
 
 const userSchema = new Schema<IUser>({
   name: {
@@ -49,6 +60,13 @@ const userSchema = new Schema<IUser>({
   updatedAt: Date,
 });
 
+userSchema.methods.correctPassword = async function (
+  incomingPassword: string,
+  dbPassword: string,
+) {
+  return await compare(incomingPassword, dbPassword);
+};
+
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
 
@@ -58,6 +76,6 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-const User = model('User', userSchema);
+const User = model<IUser, UserModel>('User', userSchema);
 
 export default User;
