@@ -59,6 +59,35 @@ export const protect = catchAsync(async (req, res, next) => {
   next();
 });
 
+export const forgotPassword = catchAsync(async (req, res, next) => {
+  const email = req.body.email;
+  if (!email) return next(new AppError('Please provide a email!'));
+
+  const user = await User.findOne({ email });
+
+  const status = 'success',
+    message =
+      'We have sent a password reset link to the email address you provided. If the email address is associated with an account in our system, you will receive the link shortly.',
+    statusCode = 200;
+
+  if (!user) return res.status(statusCode).json({ status, message });
+
+  const resetToken = user.setPasswordResetToken();
+  await user.save({ validateBeforeSave: false });
+
+  const resetUrl = `${req.protocol}:://${req.get(
+    'host',
+  )}/api/v1/users/reset-password/${resetToken}`;
+
+  // TODO: send a mail
+
+  return res.status(statusCode).json({
+    status,
+    message,
+    ...(process.env.NODE_ENV === 'development' && { resetUrl }),
+  });
+});
+
 function signToken(userId: Types.ObjectId) {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET!, {
     expiresIn: process.env.JWT_LOGGED_IN_EXPIRES!,
