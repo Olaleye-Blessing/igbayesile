@@ -5,6 +5,8 @@ declare global {
       PORT?: string;
       DB_URL: string;
       DB_PASSWORD: string;
+      JWT_SECRET: string;
+      JWT_LOGGED_IN_EXPIRES: string;
     }
   }
 }

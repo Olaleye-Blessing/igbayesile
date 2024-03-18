@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
+import { Types } from 'mongoose';
+import jwt from 'jsonwebtoken';
 import User from '@/models/user';
-import { IUserWithNoCredential } from '@/interfaces/user';
+import { IMongoUser } from '@/interfaces/user';
 import AppError from '@/utils/AppError';
 import catchAsync from '@/utils/catchAsync';
 
@@ -10,7 +12,7 @@ export const signup = catchAsync(async (req, res, next) => {
   if (!name || !email || !password || !passwordConfirm || !role)
     return next(new AppError('Please provide all details', 400));
 
-  const user: IUserWithNoCredential = await User.create({
+  const user = await User.create({
     name,
     email,
     password,
@@ -18,15 +20,7 @@ export const signup = catchAsync(async (req, res, next) => {
     role,
   });
 
-  user.password = undefined;
-  user.passwordConfirm = undefined;
-
-  return res.status(201).json({
-    status: 'success',
-    data: {
-      user,
-    },
-  });
+  sendToken(user, res);
 });
 
 export const login = catchAsync(
@@ -45,14 +39,34 @@ export const login = catchAsync(
     if (!user || !(await user.correctPassword(password, user.password)))
       return next(new AppError('Incorrect email or password', 400));
 
-    // @ts-expect-error Do not send password to the client;
-    user.password = undefined;
-
-    return res.status(201).json({
-      status: 'success',
-      data: {
-        user,
-      },
-    });
+    sendToken(user, res);
   },
 );
+
+function signToken(userId: Types.ObjectId) {
+  return jwt.sign({ id: userId }, process.env.JWT_SECRET!, {
+    expiresIn: process.env.JWT_LOGGED_IN_EXPIRES!,
+  });
+}
+
+function sendToken(user: IMongoUser, res: Response) {
+  const token = signToken(user._id);
+
+  res.cookie('loggedIn', token, {
+    httpOnly: true,
+    secure: true,
+    expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+  });
+
+  // @ts-expect-error Do not send password to the client;
+  user.password = undefined;
+  // @ts-expect-error Do not send password to the client;
+  user.passwordConfirm = undefined;
+
+  return res.status(201).json({
+    status: 'success',
+    data: {
+      user,
+    },
+  });
+}
