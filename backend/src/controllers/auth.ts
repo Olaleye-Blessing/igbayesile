@@ -1,16 +1,17 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import User from '@/models/user';
 import { IUserWithNoCredential } from '@/interfaces/user';
+import AppError from '@/utils/AppError';
 
-export const signup = async (req: Request, res: Response) => {
+export const signup = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const { name, email, password, passwordConfirm, role } = req.body;
 
-  // TODO: Move this to a global error handler
   if (!name || !email || !password || !passwordConfirm || !role)
-    return res.status(400).json({
-      status: 'error',
-      message: 'Please provide all details',
-    });
+    return next(new AppError('Please provide all details', 400));
 
   try {
     const user: IUserWithNoCredential = await User.create({
@@ -31,35 +32,22 @@ export const signup = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.log(error);
-
-    // TODO: Move this to a global error handler
-    return res.status(500).json({
-      status: 'success',
-      message: 'Internal server error',
-    });
+    return next(error);
   }
 };
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const { email, password } = req.body;
 
-  // TODO: Move this to a global error handler
   if (!email && !password)
-    return res.status(400).json({
-      status: 'error',
-      message: 'Provide email and password',
-    });
-  if (!email)
-    return res.status(400).json({
-      status: 'error',
-      message: 'Provide email',
-    });
-  if (!password)
-    return res.status(400).json({
-      status: 'error',
-      message: 'Provide password',
-    });
+    return next(new AppError('Provide email and password', 400));
+
+  if (!email) return next(new AppError('Provide email', 400));
+  if (!password) return next(new AppError('Provide password', 400));
 
   try {
     const user = await User.findOne({ email }).select('+password');
@@ -68,10 +56,7 @@ export const login = async (req: Request, res: Response) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     if (!user || !(await user.correctPassword(password, user.password)))
-      return res.status(400).json({
-        status: 'error',
-        message: 'Incorrect email or password',
-      });
+      return next(new AppError('Incorrect email or password', 400));
 
     // @ts-expect-error Do not send password to the client;
     user.password = undefined;
@@ -83,9 +68,6 @@ export const login = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    return res.status(500).json({
-      status: 'error',
-      message: 'Internal server error',
-    });
+    return next(error);
   }
 };
