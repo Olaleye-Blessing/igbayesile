@@ -40,6 +40,6 @@
     "typescript": "^5.4.2"
   },
   "_moduleAliases": {
-    "@": "./src/"
+    "@": "dist"
   }
 }
