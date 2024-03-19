@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { NextFunction, Request, Response } from 'express';
 import { Types } from 'mongoose';
 import jwt, { JwtPayload } from 'jsonwebtoken';
@@ -85,6 +86,42 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
     status,
     message,
     ...(process.env.NODE_ENV === 'development' && { resetUrl }),
+  });
+});
+
+export const resetPassword = catchAsync(async (req, res, next) => {
+  const token = req.params.token;
+  if (!token) return next(new AppError('Please provide a reset token', 400));
+
+  const passwordResetToken = crypto
+    .createHash('sha256')
+    .update(token)
+    .digest('hex');
+  const user = await User.findOne({
+    passwordResetToken,
+    passwordResetExpires: { $gte: new Date(Date.now()) },
+  });
+
+  if (!user)
+    return next(
+      new AppError(
+        'This token is invalid or expired! Request for a new one',
+        400,
+      ),
+    );
+
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+  // middleware changes the passwordResetAt property
+
+  await user.save();
+
+  res.status(200).json({
+    status: 'success',
+    message:
+      'Password reset successfully. You can login with your new password now!',
   });
 });
 
