@@ -78,7 +78,7 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
 
   const resetUrl = `${req.protocol}:://${req.get(
     'host',
-  )}/api/v1/users/reset-password/${resetToken}`;
+  )}/api/v1/auth/reset-password/${resetToken}`;
 
   // TODO: send a mail
 
