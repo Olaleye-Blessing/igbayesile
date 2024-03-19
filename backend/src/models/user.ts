@@ -99,6 +99,14 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password') || this.isNew) return next();
+
+  this.passwordResetAt = new Date(Date.now() - 1000);
+
+  next();
+});
+
 const User = model<IUser, UserModel>('User', userSchema);
 
 export default User;
