@@ -6,6 +6,7 @@ import User from '@/models/user';
 import { IMongoUser } from '@/interfaces/user';
 import AppError from '@/utils/AppError';
 import catchAsync from '@/utils/catchAsync';
+import { IAuthUserReq } from '@/types/request';
 
 export const signup = catchAsync(async (req, res, next) => {
   const { name, email, password, passwordConfirm, role } = req.body;
@@ -56,7 +57,7 @@ export const protect = catchAsync(async (req, res, next) => {
 
   // TODO: Check if password hasn't been changed
 
-  req.user = user;
+  (req as IAuthUserReq).user = user;
   next();
 });
 
