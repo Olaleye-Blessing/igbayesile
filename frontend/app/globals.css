@@ -101,4 +101,12 @@
   h5 {
     @apply text-xl;
   }
+
+  .cardboard {
+    @apply rounded-md border bg-white transition duration-200 ease-linear shadow-md hover:shadow-sm;
+  }
+
+  .cardboard--outline {
+    @apply shadow-sm border-border;
+  }
 }
