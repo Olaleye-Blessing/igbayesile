@@ -4,8 +4,9 @@
   "description": "",
   "main": "dist/server.js",
   "scripts": {
-    "build": "npx tsc",
-    "start": "NODE_ENV=production node dist/server.js",
+    "build": "pnpm install && npx tsc",
+    "start": "node ./dist/server.js",
+    "start:prod": "NODE_ENV=production node dist/server.js",
     "dev": "ts-node-dev src/server.ts",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix"
