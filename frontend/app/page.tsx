@@ -1,40 +1,62 @@
 "use client";
 import { BACKEND_URL } from "@/constants/backend";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { useEffect } from "react";
+import axios from "axios";
+import { useState } from "react";
 
 export default function Home() {
-  useEffect(() => {
-    (async function login() {
+  const mutation = useMutation({
+    mutationFn: async () => {
       try {
-        console.log("___ LOADING ____");
-        console.log({ BACKEND_URL });
-        const req = await fetch(`${BACKEND_URL}/api/v1/auth/login`, {
-          method: "post",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify({
+        console.log("logging in...");
+        let { data } = await axios.post(
+          `${BACKEND_URL}/api/v1/auth/login`,
+          {
             email: "a@gmail.com",
             password: "New Password",
-          }),
-          credentials: "include",
-        });
-
-        const res = await req.json();
-
-        console.log(res);
+          },
+          {
+            withCredentials: true,
+          },
+        );
+        console.log(data);
       } catch (error) {
-        console.log("___ ERROR ___");
-        console.log(error);
+        throw error;
+      } finally {
+        console.log("login done");
       }
-      console.log("___ FINISH LOADING ____");
-    })();
-  }, []);
+    },
+  });
+
+  const [loadUsers, setLoadUsers] = useState(false);
+
+  const { isLoading, data, error } = useQuery({
+    queryKey: ["users"],
+    enabled: loadUsers,
+    queryFn: async () => {
+      try {
+        let { data } = await axios.get(`${BACKEND_URL}/api/v1/users`);
+        return data;
+      } catch (error) {
+        throw error;
+      }
+    },
+  });
+
+  console.log(isLoading, data, error);
 
   return (
     <main>
       <h1>Home Page</h1>
+
+      <button type="button" onClick={() => mutation.mutate()}>
+        Login In
+      </button>
+
+      <button type="button" onClick={() => setLoadUsers(true)}>
+        Get Users
+      </button>
 
       <div>
         <Link href={"/"}>Home</Link>
