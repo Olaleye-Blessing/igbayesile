@@ -3,7 +3,10 @@
 	"version": "1.0.0",
 	"main": "index.js",
 	"scripts": {
-		"dev": "concurrently \"cd backend && pnpm run dev\" \"cd frontend && pnpm run dev\""
+		"dev": "concurrently \"cd backend && pnpm run dev\" \"cd frontend && pnpm run dev\"",
+		"prod:frontend": "cd frontend && pnpm run build",
+		"prod:backend": "cd backend && pnpm run build && pnpm run start",
+		"prod": "pnpm run prod:frontend && pnpm run prod:backend"
 	},
 	"author": "",
 	"license": "ISC",
