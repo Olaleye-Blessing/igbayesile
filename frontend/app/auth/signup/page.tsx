@@ -8,7 +8,6 @@ import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { FormField } from "@/components/custom/form-field";
 import { API_BASE_URL } from "@/constants/backend";
-import { sleep } from "@/utils/sleep";
 import { FormRadioField } from "@/components/custom/form-radio-field";
 import { handleIgbayesileAPIError } from "@/utils/handle-igbayesile-api-error";
 import { IUser } from "@/interfaces/user";
@@ -70,8 +69,6 @@ export default function SignUp() {
     toast.loading("Creating an account", { id: toastId });
 
     try {
-      if (process.env.NODE_ENV === "production") await sleep(2000);
-
       const {
         data: {
           data: { user },

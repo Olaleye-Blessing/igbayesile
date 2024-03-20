@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import axios from "axios";
 import { useState } from "react";
-import { sleep } from "@/utils/sleep";
 import { handleIgbayesileAPIError } from "@/utils/handle-igbayesile-api-error";
 
 export default function Home() {
@@ -20,7 +19,6 @@ export default function Home() {
     enabled: loadUsers,
     queryFn: async () => {
       try {
-        await sleep(3_000);
         let { data } = await axios.get(`${BACKEND_URL}/api/v1/users`, {
           withCredentials: true,
         });
@@ -31,8 +29,6 @@ export default function Home() {
     },
     retry: 0,
   });
-
-  console.log(data, error);
 
   return (
     <main>

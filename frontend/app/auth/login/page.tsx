@@ -10,7 +10,6 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { API_BASE_URL } from "@/constants/backend";
 import { IUser } from "@/interfaces/user";
 import { handleIgbayesileAPIError } from "@/utils/handle-igbayesile-api-error";
-import { sleep } from "@/utils/sleep";
 import useAuthStore from "@/stores/auth";
 
 interface FormData {
@@ -32,11 +31,7 @@ export default function Page() {
   const login = async (data: FormData) => {
     const toastId = "logging-in";
 
-    if (process.env.NODE_ENV === "production") await sleep(2000);
-
     try {
-      if (process.env.NODE_ENV === "production") await sleep(2000);
-
       const {
         data: {
           data: { user },
