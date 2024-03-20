@@ -45,6 +45,15 @@ export const login = catchAsync(
   },
 );
 
+export const logout = catchAsync(async (req, res) => {
+  res.cookie('loggedIn', '', { expires: new Date(0) });
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Successfully logged out!',
+  });
+});
+
 export const protect = catchAsync(async (req, res, next) => {
   const token = req.cookies.loggedIn;
   if (!token) return next(new AppError('Please provide a login token', 400));
