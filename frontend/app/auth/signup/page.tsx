@@ -2,7 +2,7 @@
 
 import toast from "react-hot-toast";
 import axios from "axios";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -66,6 +66,7 @@ export default function SignUp() {
       ...body,
       passwordConfirm: body.password,
     };
+
     toast.loading("Creating an account", { id: toastId });
 
     try {
@@ -126,23 +127,28 @@ export default function SignUp() {
           })}
         </>
 
-        <FormRadioField
-          {...form.register("role", { required: true })}
-          required
-          label="Role"
-          options={roles}
-          errMsg={
-            form.formState.errors.role?.type === "required"
-              ? "Required"
-              : undefined
-          }
-          radioGroup={{
-            className: "flex items-center justify-start",
-            onValueChange: (val) => {
-              form.setValue("role", val);
-              form.clearErrors("role");
-            },
-          }}
+        <Controller
+          name="role"
+          control={form.control}
+          rules={{ required: true }}
+          render={({ field }) => (
+            <FormRadioField
+              required
+              label="Role"
+              options={roles}
+              errMsg={
+                form.formState.errors.role?.type === "required"
+                  ? "Required"
+                  : undefined
+              }
+              radioGroup={{
+                className: "flex items-center justify-start capitalize",
+                onValueChange: field.onChange,
+                name: "role",
+                value: form.watch("role") || "",
+              }}
+            />
+          )}
         />
 
         <Button
