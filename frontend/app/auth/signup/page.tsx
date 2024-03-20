@@ -12,6 +12,7 @@ import { sleep } from "@/utils/sleep";
 import { FormRadioField } from "@/components/custom/form-radio-field";
 import { handleIgbayesileAPIError } from "@/utils/handle-igbayesile-api-error";
 import { IUser } from "@/interfaces/user";
+import useAuthStore from "@/stores/auth";
 
 interface FormData {
   name: string;
@@ -49,6 +50,7 @@ const roles = [
 ];
 
 export default function SignUp() {
+  const storeLogin = useAuthStore((state) => state.login);
   const router = useRouter();
   const form = useForm<FormData>({
     defaultValues: {
@@ -70,7 +72,11 @@ export default function SignUp() {
     try {
       if (process.env.NODE_ENV === "production") await sleep(2000);
 
-      await axios.post<{ data: { user: IUser } }>(
+      const {
+        data: {
+          data: { user },
+        },
+      } = await axios.post<{ data: { user: IUser } }>(
         `${API_BASE_URL}/auth/signup`,
         data,
         {
@@ -78,6 +84,7 @@ export default function SignUp() {
         },
       );
       toast.success("Account created successfully", { id: toastId });
+      storeLogin(user);
       router.push("/");
     } catch (error) {
       toast.error(handleIgbayesileAPIError(error), { id: toastId });

@@ -11,6 +11,7 @@ import { API_BASE_URL } from "@/constants/backend";
 import { IUser } from "@/interfaces/user";
 import { handleIgbayesileAPIError } from "@/utils/handle-igbayesile-api-error";
 import { sleep } from "@/utils/sleep";
+import useAuthStore from "@/stores/auth";
 
 interface FormData {
   email: string;
@@ -19,6 +20,7 @@ interface FormData {
 
 export default function Page() {
   const router = useRouter();
+  const storeLogin = useAuthStore((state) => state.login);
 
   const form = useForm<FormData>({
     defaultValues: {
@@ -35,7 +37,11 @@ export default function Page() {
     try {
       if (process.env.NODE_ENV === "production") await sleep(2000);
 
-      await axios.post<{ data: { user: IUser } }>(
+      const {
+        data: {
+          data: { user },
+        },
+      } = await axios.post<{ data: { user: IUser } }>(
         `${API_BASE_URL}/auth/login`,
         data,
         {
@@ -43,6 +49,7 @@ export default function Page() {
         },
       );
       toast.success("Signed in successfully", { id: toastId });
+      storeLogin(user);
       router.push("/");
     } catch (error) {
       toast.error(handleIgbayesileAPIError(error), { id: toastId });
