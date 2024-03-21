@@ -3,12 +3,19 @@ import 'module-alias/register';
 import dotenv from 'dotenv';
 dotenv.config({ path: './config.env' });
 
+import { v2 as cloudinary } from 'cloudinary';
 import app from './app';
 import { connectDB } from './db';
 
 const port = process.env.PORT || 5000;
 
 connectDB();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
+  api_key: process.env.CLOUDINARY_API_KEY!,
+  api_secret: process.env.CLOUDINARY_API_SECRET!,
+});
 
 const server = app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
