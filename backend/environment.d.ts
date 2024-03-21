@@ -8,6 +8,9 @@ declare global {
       JWT_SECRET: string;
       JWT_LOGGED_IN_EXPIRES: string;
       FRONTEND_URL: string;
+      CLOUDINARY_CLOUD_NAME: string;
+      CLOUDINARY_API_KEY: string;
+      CLOUDINARY_API_SECRET: string;
     }
   }
 }
