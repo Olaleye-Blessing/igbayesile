@@ -12,17 +12,17 @@ import { TextAreaField } from "@/components/custom/TextAreaField";
 import ImagesPreview from "./images-preview";
 import Amenities from "./amenities";
 import { Button } from "@/components/ui/button";
+import useSearchParameters from "@/hooks/use-search-parameters";
 
 export interface HotelFormData
   extends Omit<IHotel, "images" | "manager" | "_id"> {
   images: File[];
 }
 
-interface HotelFormProps {
-  handleSetStep: (step: number) => void;
-}
+interface HotelFormProps {}
 
-export default function HotelForm({ handleSetStep }: HotelFormProps) {
+export default function HotelForm({}: HotelFormProps) {
+  const searchParams = useSearchParameters();
   // TODO: Fix this: form.formState.isSubmitting is true always
   const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<HotelFormData>({
@@ -55,7 +55,7 @@ export default function HotelForm({ handleSetStep }: HotelFormProps) {
     try {
       toast.loading("Creating your hotel", { id: toastId });
 
-      await axios.post<{ data: { hotel: IHotel } }>(
+      const res = await axios.post<{ data: { hotel: IHotel } }>(
         `${API_BASE_URL}/hotels`,
         hotelData,
         {
@@ -65,7 +65,8 @@ export default function HotelForm({ handleSetStep }: HotelFormProps) {
 
       toast.success("Hotel created successfully", { id: toastId });
       setIsSubmitting(false);
-      handleSetStep(1);
+
+      searchParams.updateParams({ hotel: res.data.data.hotel._id }, "push");
     } catch (error) {
       toast.error(handleIgbayesileAPIError(error), { id: toastId });
       setIsSubmitting(false);
