@@ -1,10 +1,9 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { UseFormReturn } from "react-hook-form";
-import { HotelFormData } from "./hotel-form";
 
 interface AmenitiesProps {
-  form: UseFormReturn<HotelFormData, any, undefined>;
+  form: UseFormReturn<any, any, undefined>;
 }
 
 export default function Amenities({ form }: AmenitiesProps) {
