@@ -7,6 +7,7 @@ import cors from 'cors';
 import authRouter from '@/routes/auth';
 import userRouter from '@/routes/user';
 import hotelRouter from '@/routes/hotel';
+import roomRouter from '@/routes/room';
 import globalErrorHanlder from '@/controllers/error';
 import { protect } from './controllers/auth';
 
@@ -23,6 +24,7 @@ app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', protect, userRouter);
 app.use('/api/v1/hotels', hotelRouter);
+app.use('/api/v1/rooms', roomRouter);
 
 
 app.use(globalErrorHanlder);
