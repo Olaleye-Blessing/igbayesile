@@ -1,4 +1,5 @@
 import { IHotel } from '@/interfaces/hotel';
+import AppError from '@/utils/AppError';
 import mongoose, { model, Schema } from 'mongoose';
 
 const hotelSchema = new Schema<IHotel>({
@@ -43,6 +44,28 @@ const hotelSchema = new Schema<IHotel>({
     ref: 'User',
     required: true,
   },
+});
+
+hotelSchema.index(
+  { name: 1, country: 1, state: 1, city: 1, manager: 1 },
+  { unique: true },
+);
+
+// @ts-expect-error Unknow types
+hotelSchema.post('save', function (error, doc, next) {
+  // Duplicate is handled here so as to provide a better error message
+  if (error.name === 'MongoServerError' && error.code === 11000) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const values = error.keyValue as any;
+    const msg =
+      `Duplicate hotel name, ${values.name}, in the same location ${values.city}-${values.state}-${values.country}, by the same manager.`.replace(
+        /\snull-/g,
+        ' ',
+      );
+    return next(new AppError(msg, 400));
+  }
+
+  return next();
 });
 
 const Hotel = model('Hotel', hotelSchema);
