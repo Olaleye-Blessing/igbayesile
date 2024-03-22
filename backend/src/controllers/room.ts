@@ -19,6 +19,14 @@ export const createRoom = catchAsync(async (req, res, next) => {
   if (!(await Hotel.exists({ _id: req.body.hotel })))
     return next(new AppError('This hotel does not exist.', 400));
 
+  if (
+    await Room.exists({
+      name: req.body.name,
+      hotel: req.body.hotel || req.params.hotelId,
+    })
+  )
+    return next(new AppError('Duplicate room in the same hotel', 400));
+
   // TODO: Learn about possible errors that could happen from cloudinary
   const imagesUrls = imagesFiles.map((image) => {
     const b64 = Buffer.from(image.buffer).toString('base64');
