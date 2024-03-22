@@ -2,6 +2,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import AppError from '@/utils/AppError';
 import catchAsync from '@/utils/catchAsync';
 import Room from '@/models/room';
+import Hotel from '@/models/hotel';
 
 export const createRoom = catchAsync(async (req, res, next) => {
   const imagesFiles = req.files as Express.Multer.File[];
@@ -14,6 +15,9 @@ export const createRoom = catchAsync(async (req, res, next) => {
   // Also check not to waste time uploading images
   if (!req.body.hotel)
     return next(new AppError('Provide the hotel this room belong to', 400));
+
+  if (!(await Hotel.exists({ _id: req.body.hotel })))
+    return next(new AppError('This hotel does not exist.', 400));
 
   // TODO: Learn about possible errors that could happen from cloudinary
   const imagesUrls = imagesFiles.map((image) => {
