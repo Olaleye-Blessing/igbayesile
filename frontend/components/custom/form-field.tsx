@@ -7,7 +7,7 @@ import { InputWithIcon } from "./input-with-icon";
 import { cn } from "@/lib/utils";
 import { InputPassword } from "./input-password";
 
-interface FormFieldProps {
+export interface FormFieldProps {
   errMsg?: string;
   label?: string;
   Icon?: ReactNode;
@@ -40,7 +40,7 @@ const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
       <div className={cn(["mb-3", className])}>
         <Label
           htmlFor={input.id || input.name}
-          className={labelClassName}
+          className={cn("capitalize", labelClassName)}
           required={required}
         >
           {label || input.name}

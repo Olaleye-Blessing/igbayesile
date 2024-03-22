@@ -58,7 +58,7 @@
   }
 
   .layout {
-    @apply px-4 w-full max-w-6xl;
+    @apply px-4 w-full max-w-6xl mx-auto;
   }
 
   h1, h2, h3, h4, h5, h6 {

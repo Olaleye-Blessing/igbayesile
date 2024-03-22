@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import Step from "./step";
 import Connector from "./connector";
 
-interface StepperProps {
+export interface StepperProps {
   steps: ReactNode[];
   current: number;
   onNext?: (next: number) => number;
