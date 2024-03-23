@@ -3,7 +3,7 @@
 import toast from "react-hot-toast";
 import axios from "axios";
 import { Controller, useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { FormField } from "@/components/custom/form-field";
@@ -49,6 +49,7 @@ const roles = [
 ];
 
 export default function SignUp() {
+  const redirectPage = useSearchParams().get("redirect") || "/";
   const storeLogin = useAuthStore((state) => state.login);
   const router = useRouter();
   const form = useForm<FormData>({
@@ -83,7 +84,7 @@ export default function SignUp() {
       );
       toast.success("Account created successfully", { id: toastId });
       storeLogin(user);
-      router.push("/");
+      router.push(redirectPage);
     } catch (error) {
       toast.error(handleIgbayesileAPIError(error), { id: toastId });
     }
