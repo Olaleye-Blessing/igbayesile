@@ -19,4 +19,6 @@ router
     hotelController.createHotel,
   );
 
+router.route('/:id').get(hotelController.getHotel);
+
 export default router;

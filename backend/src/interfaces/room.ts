@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 
-export interface IHotel {
+export interface IRoom {
   _id: Types.ObjectId;
   name: string;
   description: string;
