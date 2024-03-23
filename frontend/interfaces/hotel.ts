@@ -1,3 +1,6 @@
+import { IRoom } from "./room";
+import { IUser } from "./user";
+
 export interface IHotel {
   name: string;
   description: string;
@@ -9,4 +12,9 @@ export interface IHotel {
   images: string[];
   manager: string;
   _id: string;
+}
+
+export interface IFullHotel extends Omit<IHotel, "manager"> {
+  manager: Omit<IUser, "role"> & { role: "manager" };
+  rooms: IRoom[];
 }
