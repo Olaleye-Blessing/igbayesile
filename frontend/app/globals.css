@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* grid-cols-[repeat(auto-fill,minmax(200px,_1fr))] */
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -58,7 +59,7 @@
   }
 
   .layout {
-    @apply px-4 w-full max-w-6xl mx-auto;
+    @apply px-4 w-full max-w-7xl mx-auto;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -91,5 +92,9 @@
 
   .cardboard--outline {
     @apply shadow-sm border-border;
+  }
+
+  .error {
+    @apply text-red-600 text-sm;
   }
 }
