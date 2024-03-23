@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { FormField } from "@/components/custom/form-field";
@@ -18,6 +18,7 @@ interface FormData {
 }
 
 export default function Page() {
+  const redirectPage = useSearchParams().get("redirect") || "/";
   const router = useRouter();
   const storeLogin = useAuthStore((state) => state.login);
 
@@ -45,7 +46,7 @@ export default function Page() {
       );
       toast.success("Signed in successfully", { id: toastId });
       storeLogin(user);
-      router.push("/");
+      router.push(redirectPage);
     } catch (error) {
       toast.error(handleIgbayesileAPIError(error), { id: toastId });
     }
