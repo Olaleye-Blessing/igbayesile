@@ -63,7 +63,7 @@ const roomSchema = new Schema({
   },
   hotel: {
     type: mongoose.Schema.ObjectId,
-    ref: 'Room',
+    ref: 'Hotel',
     required: [true, 'Please provide the hotel this room belongs to'],
   },
 });

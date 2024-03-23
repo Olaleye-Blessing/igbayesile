@@ -4,6 +4,19 @@ import Hotel from '@/models/hotel';
 import AppError from '@/utils/AppError';
 import { IAuthUserReq } from '@/types/request';
 
+export const getHotel = catchAsync(async (req, res, next) => {
+  const hotel = await Hotel.findById(req.params.id)
+    .populate('rooms')
+    .populate('manager');
+
+  if (!hotel) return next(new AppError('This hotel does not exist', 404));
+
+  return res.status(200).json({
+    status: 'success',
+    data: { hotel },
+  });
+});
+
 export const createHotel = catchAsync(async (req, res, next) => {
   const imagesFiles = req.files as Express.Multer.File[];
 
