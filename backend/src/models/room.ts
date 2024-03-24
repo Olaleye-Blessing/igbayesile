@@ -67,6 +67,10 @@ const roomSchema = new Schema({
     ref: 'Hotel',
     required: [true, 'Please provide the hotel this room belongs to'],
   },
+  // This is derived from the parent hotel.
+  country: String,
+  state: String,
+  city: String,
 });
 
 const Room = model('Room', roomSchema);

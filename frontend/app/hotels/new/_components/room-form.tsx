@@ -13,6 +13,8 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Amenities from "./amenities";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Terminal } from "lucide-react";
 
 export interface RoomFormData extends Omit<IRoom, "images" | "_id" | "hotel"> {
   images: File[];
@@ -179,6 +181,15 @@ export default function RoomForm({ hotelId }: RoomFormProps) {
           {images && <ImagesPreview form={form} images={images} />}
         </div>
         <Amenities form={form} />
+        <Alert className="bg-red-100 bg-opacity-20 text-red-600">
+          <Terminal className="h-4 w-4" />
+          <AlertTitle>Note!</AlertTitle>
+          <AlertDescription>
+            Room&lsquo;s location(
+            <span className="font-bold">city, state, and country</span>) will be
+            derived from hotel&lsquo;s location.
+          </AlertDescription>
+        </Alert>
 
         <Button type="submit" className="mt-4" isLoading={isSubmitting}>
           Create
@@ -189,7 +200,7 @@ export default function RoomForm({ hotelId }: RoomFormProps) {
         href="/"
         className={buttonVariants({
           variant: "destructive",
-          className: "w-full max-w-40 mt-6 ml-auto !block text-center",
+          className: "w-full max-w-40 mt-6 ml-auto !block text-center mb-4",
         })}
       >
         Skip
