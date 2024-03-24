@@ -7,6 +7,7 @@ import { MapPin } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Room from "@/components/room";
 import AmentiyWithIcon from "@/components/amentiy-with-icon";
+import AutoPlayImages from "@/components/custom/carousel/auto-play-images";
 
 interface MainProps {
   hotelId: string;
@@ -28,14 +29,12 @@ export default function Main({ hotelId }: MainProps) {
             <h1 className="mb-2">{data.hotel.name}</h1>
           </header>
           <section className="space-y-2">
-            <figure className="flex items-center justify-center max-h-[30rem] overflow-hidden rounded-md">
-              <img
-                src={data.hotel.images[0]}
-                className="w-full h-full rounded-md"
-                alt={``}
-                loading="eager"
-              />
-            </figure>
+            <AutoPlayImages
+              images={data.hotel.images}
+              nextClassName="right-0 xl:-right-12"
+              prevClassName="left-0 xl:-left-12"
+              className="max-w-[97%] mx-auto"
+            />
             <p className="flex items-center justify-start">
               <span>
                 <MapPin className="text-blue-700 w-8 h-8" />
@@ -84,21 +83,6 @@ export default function Main({ hotelId }: MainProps) {
                 <p>No bio yet</p>
               </div>
             </div>
-          </section>
-          <section className="mt-3">
-            <h3 className="text-base mb-2">Hotel Images</h3>
-            <ul className="sm:grid sm:gap-4 sm:grid-cols-[repeat(auto-fill,minmax(18.75rem,_1fr))]">
-              {data.hotel.images.map((img) => (
-                <li
-                  key={img}
-                  className="w-full mb-3 rounded-md overflow-hidden sm:mb-0 sm:max-w-[25rem]"
-                >
-                  <figure>
-                    <img src={img} alt="" />
-                  </figure>
-                </li>
-              ))}
-            </ul>
           </section>
           <section>
             <h3 className="text-base mt-4">Rooms</h3>
