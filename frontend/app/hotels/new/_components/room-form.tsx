@@ -12,6 +12,7 @@ import ImagesPreview from "./images-preview";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Amenities from "./amenities";
 
 export interface RoomFormData extends Omit<IRoom, "images" | "_id" | "hotel"> {
   images: File[];
@@ -34,6 +35,7 @@ export default function RoomForm({ hotelId }: RoomFormProps) {
       price: 1,
       maxNumOfGuests: 1,
       numOfBathrooms: 1,
+      amenities: [],
     },
   });
 
@@ -45,6 +47,7 @@ export default function RoomForm({ hotelId }: RoomFormProps) {
 
     const roomData = new FormData(e.target);
     roomData.set("hotel", hotelId);
+    _data.amenities.forEach((amenity) => roomData.append("amenities", amenity));
 
     const toastId = "create-new-room";
 
@@ -175,6 +178,8 @@ export default function RoomForm({ hotelId }: RoomFormProps) {
           />
           {images && <ImagesPreview form={form} images={images} />}
         </div>
+        <Amenities form={form} />
+
         <Button type="submit" className="mt-4" isLoading={isSubmitting}>
           Create
         </Button>

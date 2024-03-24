@@ -5,7 +5,7 @@ import Main from "./main";
 
 export default function Page() {
   return (
-    <Protected role="guest">
+    <Protected role="manager">
       <Main />
     </Protected>
   );
