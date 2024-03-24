@@ -61,6 +61,7 @@ const roomSchema = new Schema({
       message: 'Your room must have a bathroom.',
     },
   },
+  amenities: [String],
   hotel: {
     type: mongoose.Schema.ObjectId,
     ref: 'Hotel',

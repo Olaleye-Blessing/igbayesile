@@ -11,4 +11,5 @@ export interface IRoom {
   maxNumOfGuests: number;
   numOfBathrooms: number;
   hotel: Types.ObjectId;
+  amenities: string[];
 }

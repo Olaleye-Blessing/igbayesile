@@ -9,4 +9,5 @@ export interface IRoom {
   maxNumOfGuests: number;
   numOfBathrooms: number;
   hotel: string;
+  amenities: string[];
 }
