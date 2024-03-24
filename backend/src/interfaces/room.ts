@@ -12,4 +12,7 @@ export interface IRoom {
   numOfBathrooms: number;
   hotel: Types.ObjectId;
   amenities: string[];
+  country: string;
+  state: string;
+  city: string;
 }
