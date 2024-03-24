@@ -15,15 +15,6 @@ interface RoomProps {
   className?: string;
 }
 
-const amenities = [
-  "Free Wi-Fi",
-  "Coffee and Tea Maker",
-  "Mini Bar",
-  "Hair Dryer",
-  "Iron and Ironing Board",
-  "Safe",
-];
-
 // TODO: Enable manager to specify breakfast cost.
 const breakFastPrice = 20;
 
@@ -52,12 +43,17 @@ export default function Room({ room, className = "" }: RoomProps) {
       <figure className="rounded-md overflow-hidden">
         <img src={room.images[0]} alt="" />
       </figure>
-      {/* TODO: Add room amenities */}
-      <ul className="amenities mt-4 grid gap-4 grid-cols-[repeat(auto-fill,minmax(8rem,_1fr))]">
-        {amenities.map((amenity) => (
-          <AmentiyWithIcon key={amenity} amenity={amenity} />
-        ))}
-      </ul>
+      <>
+        {room.amenities.length === 0 ? (
+          <p className="error mt-4">No Amenity</p>
+        ) : (
+          <ul className="amenities mt-4 grid gap-4 grid-cols-[repeat(auto-fill,minmax(8rem,_1fr))]">
+            {room.amenities.map((amenity) => (
+              <AmentiyWithIcon key={amenity} amenity={amenity} />
+            ))}
+          </ul>
+        )}
+      </>
       <div className="mt-2 flex items-center justify-between flex-wrap">
         <p className="mb-1">
           <span>Room Price: </span>
