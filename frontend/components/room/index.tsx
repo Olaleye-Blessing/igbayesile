@@ -9,6 +9,7 @@ import AmentiyWithIcon from "@/components/amentiy-with-icon";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DatePickerWithRange } from "@/components/custom/date-picker/date-range-picker";
+import AutoPlayImages from "../custom/carousel/auto-play-images";
 
 interface RoomProps {
   room: IRoom;
@@ -35,14 +36,18 @@ export default function Room({ room, className = "" }: RoomProps) {
   if (includeBreakfast) totalCost += breakFastPrice * totalDays;
 
   return (
-    <div className={cn("cardboard p-3", className)}>
+    <div className={cn("cardboard p-3 flex flex-col", className)}>
       <header>
         <h3>{room.name}</h3>
-        <p className="text-gray-500">{room.description}</p>
+        <p className="text-gray-500 max-h-40 overflow-auto mb-4">
+          {room.description}
+        </p>
       </header>
-      <figure className="rounded-md overflow-hidden">
-        <img src={room.images[0]} alt="" />
-      </figure>
+      <AutoPlayImages
+        images={room.images}
+        nextClassName="right-0"
+        prevClassName="left-0"
+      />
       <>
         {room.amenities.length === 0 ? (
           <p className="error mt-4">No Amenity</p>
@@ -86,7 +91,7 @@ export default function Room({ room, className = "" }: RoomProps) {
         />
         <Label htmlFor={`${room._id}-breakfast`}>Include breakfast</Label>
       </div>
-      <div className="mt-4">
+      <div className="mt-4 mb-6">
         <p>
           Total price: <span className="font-semibold">${totalCost}</span> for{" "}
           <span className="font-semibold">
@@ -94,7 +99,7 @@ export default function Room({ room, className = "" }: RoomProps) {
           </span>
         </p>
       </div>
-      <Button className="w-full mt-6">Book Room</Button>
+      <Button className="w-full mt-auto">Book Room</Button>
     </div>
   );
 }
