@@ -12,7 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
 interface DatePickerWithRangeProps {
   from?: Date;
@@ -20,6 +20,7 @@ interface DatePickerWithRangeProps {
   className?: string;
   handleSetDate: (range: DateRange | undefined) => void;
   triggerClassName?: string;
+  emptyMsg?: ReactNode;
 }
 
 // TODO: Improve the interaction with this such that
@@ -30,6 +31,7 @@ export function DatePickerWithRange({
   to,
   triggerClassName = "",
   handleSetDate,
+  emptyMsg = <span>Pick a date</span>,
 }: DatePickerWithRangeProps) {
   const date = { from, to };
   const [open, setOpen] = useState(false);
@@ -58,7 +60,7 @@ export function DatePickerWithRange({
                 format(date.from, "LLL dd, y")
               )
             ) : (
-              <span>Pick a date</span>
+              <>{emptyMsg}</>
             )}
           </Button>
         </PopoverTrigger>
