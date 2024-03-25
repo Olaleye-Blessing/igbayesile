@@ -5,9 +5,10 @@ import { ICountryUnicode, IResult, IState } from "./types";
 
 const baseURL = `https://countriesnow.space/api/v0.1/countries`;
 
-export const useCountriesStates = () => {
-  const [country, setCountry] = useState("");
-  const [state, setState] = useState("");
+export const useCountriesStates = (_country = "", _state = "") => {
+  // const [country, setCountry] = useState("");
+  const [country, setCountry] = useState(_country);
+  const [state, setState] = useState(_state);
 
   const handleSetLocation = (type: "state" | "country", value: string) =>
     type === "state" ? setState(value) : setCountry(value);
