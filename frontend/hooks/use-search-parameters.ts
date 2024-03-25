@@ -14,6 +14,7 @@ const useSearchParameters = () => {
   function updateParams(
     params: { [key: string]: string },
     action: TAction = "normal",
+    scroll: boolean = false,
   ) {
     const current = new URLSearchParams(Array.from(searchParams.entries())); // -> has to use this form
 
@@ -21,33 +22,47 @@ const useSearchParameters = () => {
       current.set(key, value);
     });
 
-    return acts(current, action);
+    return acts(current, action, scroll);
   }
 
-  function deleteParams(keys: string[], type: TAction) {
+  function deleteParams(
+    keys: string[],
+    type: TAction,
+    scroll: boolean = false,
+  ) {
     const search = new URLSearchParams(Array.from(searchParams.entries()));
 
     keys.forEach((key) => search.delete(key));
 
-    return acts(search, type);
+    return acts(search, type, scroll);
   }
 
-  function acts(search: URLSearchParams, action: TAction) {
+  function entries() {
+    return searchParams.entries();
+  }
+
+  function stringnify() {
+    return searchParams.toString();
+  }
+
+  function acts(search: URLSearchParams, action: TAction, scroll = false) {
     const params = search.toString();
 
     const route = `${pathname}?${params}`;
 
     if (action === "normal") return route;
 
-    if (action === "push") return router.push(route);
+    if (action === "push") return router.push(route, { scroll });
 
-    router.replace(route);
+    router.replace(route, { scroll });
   }
 
   return {
     getParam,
     updateParams,
     deleteParams,
+    entries,
+    stringnify,
   };
 };
 
