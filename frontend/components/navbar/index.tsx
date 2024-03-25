@@ -7,6 +7,7 @@ import { Button, buttonVariants } from "../ui/button";
 import axios from "axios";
 import { API_BASE_URL } from "@/constants/backend";
 import toast from "react-hot-toast";
+import Search from "./search";
 
 const Navbar = () => {
   const user = useAuthStore((state) => state.user);
@@ -37,7 +38,7 @@ const Navbar = () => {
         <div>
           <HomeLogo />
         </div>
-        <form>search from</form>
+        <Search />
         <>
           {Boolean(user) ? (
             <div className="flex items-center justify-end">
