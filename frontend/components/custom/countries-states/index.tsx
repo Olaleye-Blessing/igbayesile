@@ -16,6 +16,8 @@ interface CountriesStatesProps {
   stateRequired?: boolean;
   countryErrMsg?: string;
   stateErrMsg?: string;
+  defaultCountry?: string;
+  defaultState?: string;
 }
 
 export default function CountriesStates({
@@ -26,10 +28,12 @@ export default function CountriesStates({
   stateRequired = false,
   countryErrMsg,
   stateErrMsg,
+  defaultCountry,
+  defaultState,
   ...props
 }: CountriesStatesProps) {
   const { countries, country, states, state, handleSetLocation } =
-    useCountriesStates();
+    useCountriesStates(defaultCountry, defaultState);
 
   const _countries = (countries.data || []).map((country) => ({
     value: country.name,
