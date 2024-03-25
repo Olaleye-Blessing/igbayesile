@@ -85,7 +85,7 @@ export function ComboboxMain({
                         setValue(currentValue === value ? "" : currentValue);
                         setOpen(false);
 
-                        onChange?.(currentValue);
+                        onChange?.(currentValue === value ? "" : currentValue);
                       }}
                     >
                       <Check
