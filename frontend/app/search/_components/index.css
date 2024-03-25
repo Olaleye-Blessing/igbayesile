@@ -1,0 +1,15 @@
+h3 {
+  @apply text-base;
+}
+
+.open-container {
+  @apply grid-rows-[1fr] border-t border-gray-200 py-2 md:border-t-0;
+}
+
+label {
+  @apply mb-1;
+}
+
+.result {
+  @apply md:col-start-2;
+}

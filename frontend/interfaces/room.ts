@@ -10,4 +10,7 @@ export interface IRoom {
   numOfBathrooms: number;
   hotel: string;
   amenities: string[];
+  country: string;
+  state: string;
+  city: string;
 }

@@ -1,12 +1,19 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 import { UseFormReturn } from "react-hook-form";
 
 interface AmenitiesProps {
   form: UseFormReturn<any, any, undefined>;
+  listClassName?: string;
+  defaultChecks?: string[];
 }
 
-export default function Amenities({ form }: AmenitiesProps) {
+export default function Amenities({
+  form,
+  listClassName,
+  defaultChecks,
+}: AmenitiesProps) {
   return (
     <div>
       <Label className="flex flex-col mb-1">
@@ -16,13 +23,19 @@ export default function Amenities({ form }: AmenitiesProps) {
         </span>
         )
       </Label>
-      <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+      <ul
+        className={cn(
+          "grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3",
+          listClassName,
+        )}
+      >
         {amenities.map((amenity) => {
           const id = amenity.replace(/\s/g, "-");
 
           return (
             <li key={id}>
               <Checkbox
+                defaultChecked={defaultChecks?.includes(amenity)}
                 id={id}
                 className="mr-2"
                 onCheckedChange={(checked) => {
