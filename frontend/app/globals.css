@@ -97,4 +97,8 @@
   .error {
     @apply text-red-600 text-sm;
   }
+
+  .global-bg {
+    @apply bg-blue-100 bg-opacity-20;
+  }
 }
