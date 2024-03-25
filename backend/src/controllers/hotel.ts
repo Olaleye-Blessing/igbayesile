@@ -1,8 +1,38 @@
+import { FilterQuery } from 'mongoose';
+import { RequestHandler } from 'express';
 import { v2 as cloudinary } from 'cloudinary';
 import catchAsync from '@/utils/catchAsync';
 import Hotel from '@/models/hotel';
 import AppError from '@/utils/AppError';
 import { IAuthUserReq } from '@/types/request';
+import { IHotel } from '@/interfaces/hotel';
+import * as factory from '@/controllers/factory';
+
+export const setHotelsFilter: RequestHandler = (req, _res, next) => {
+  const qParams = { ...req.query };
+  const filter: FilterQuery<IHotel> = {};
+
+  if (qParams.name) filter.name = { $regex: qParams.name, $options: 'i' };
+
+  if (qParams.amenities) {
+    const regExp: RegExp[] = [];
+    (qParams.amenities as string).split(',').forEach((amenity) => {
+      regExp.push(new RegExp(amenity, 'i'));
+    });
+
+    filter.amenities = { $all: regExp };
+    // filter.amenities = { $in: regExp };
+  }
+
+  req.query.igbayesile = {
+    ...((req.query.igbayesile as object) || {}),
+    filter,
+  };
+
+  next();
+};
+
+export const getHotels = factory.findAll(Hotel, 'hotels');
 
 export const getHotel = catchAsync(async (req, res, next) => {
   const hotel = await Hotel.findById(req.params.id)

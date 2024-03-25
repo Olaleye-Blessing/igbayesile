@@ -12,6 +12,7 @@ router.use('/:hotelId/rooms', roomRouter);
 
 router
   .route('/')
+  .get(hotelController.setHotelsFilter, hotelController.getHotels)
   .post(
     protect,
     restrictTo('manager'),
