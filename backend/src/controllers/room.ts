@@ -1,8 +1,33 @@
+import { RequestHandler } from 'express';
 import { v2 as cloudinary } from 'cloudinary';
+import { FilterQuery } from 'mongoose';
 import AppError from '@/utils/AppError';
 import catchAsync from '@/utils/catchAsync';
 import Room from '@/models/room';
 import Hotel from '@/models/hotel';
+import { IRoom } from '@/interfaces/room';
+import * as factory from '@/controllers/factory';
+
+export const setRoomsFilter: RequestHandler = (req, _res, next) => {
+  const filter: FilterQuery<IRoom> = {};
+
+  if (req.query.name) filter.name = { $regex: req.query.name, $options: 'i' };
+
+  req.query.igbayesile = {
+    ...((req.query.igbayesile as object) || {}),
+    filter,
+    filterNumKeys: [
+      'numberOfBeds',
+      'price',
+      'maxNumOfGuests',
+      'numOfBathrooms',
+    ],
+  };
+
+  next();
+};
+
+export const getRooms = factory.findAll(Room, 'rooms');
 
 export const createRoom = catchAsync(async (req, res, next) => {
   const imagesFiles = req.files as Express.Multer.File[];

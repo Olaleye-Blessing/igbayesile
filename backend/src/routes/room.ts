@@ -10,6 +10,7 @@ const router = express.Router({ mergeParams: true });
 
 router
   .route('/')
+  .get(roomController.setRoomsFilter, roomController.getRooms)
   .post(
     protect,
     restrictTo('manager'),

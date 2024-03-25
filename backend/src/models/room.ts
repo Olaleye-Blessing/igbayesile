@@ -73,6 +73,15 @@ const roomSchema = new Schema({
   city: String,
 });
 
+roomSchema.pre('find', function (next) {
+  this.populate({
+    path: 'hotel',
+    select: 'name',
+  });
+
+  next();
+});
+
 const Room = model('Room', roomSchema);
 
 export default Room;
