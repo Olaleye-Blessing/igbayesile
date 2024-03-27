@@ -22,6 +22,7 @@ interface DatePickerWithRangeProps {
   triggerClassName?: string;
   emptyMsg?: ReactNode;
   options?: CalendarProps;
+  disableTriggerBtn?: boolean;
 }
 
 // TODO: Improve the interaction with this such that
@@ -34,6 +35,7 @@ export function DatePickerWithRange({
   handleSetDate,
   emptyMsg = <span>Pick a date</span>,
   options,
+  disableTriggerBtn,
 }: DatePickerWithRangeProps) {
   const date = { from, to };
   const [open, setOpen] = useState(false);
@@ -50,6 +52,7 @@ export function DatePickerWithRange({
               !date && "text-muted-foreground",
               triggerClassName,
             )}
+            disabled={disableTriggerBtn}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
             {date?.from ? (

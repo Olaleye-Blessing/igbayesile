@@ -56,7 +56,7 @@ export default function Result() {
           <ul>
             {data.map((dat) => (
               <Base
-                type={(type as any) || "rooms"}
+                type={(type as any) || "hotels"}
                 key={dat._id}
                 data={dat as any}
               />
