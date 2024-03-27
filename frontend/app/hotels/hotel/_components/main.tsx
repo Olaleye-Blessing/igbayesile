@@ -96,7 +96,7 @@ export default function Main({ hotelId }: MainProps) {
             ) : (
               <ul className="grid gap-4 grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(22rem,_1fr))]">
                 {data.hotel.rooms.map((room) => (
-                  <Room key={room._id} room={room} />
+                  <Room key={room._id} room={room} hotelId={data.hotel._id} />
                 ))}
               </ul>
             )}

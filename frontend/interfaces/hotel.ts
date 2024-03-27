@@ -1,4 +1,4 @@
-import { IRoom } from "./room";
+import { IRoomDetail } from "./room";
 import { IUser } from "./user";
 
 export interface IHotel {
@@ -16,5 +16,5 @@ export interface IHotel {
 
 export interface IFullHotel extends Omit<IHotel, "manager"> {
   manager: Omit<IUser, "role"> & { role: "manager" };
-  rooms: IRoom[];
+  rooms: IRoomDetail[];
 }
