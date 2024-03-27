@@ -101,4 +101,8 @@
   .global-bg {
     @apply bg-blue-100 bg-opacity-20;
   }
+
+  .short-label {
+    @apply text-gray-500 font-semibold text-sm;
+  }
 }
