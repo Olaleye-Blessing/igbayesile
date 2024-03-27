@@ -1,3 +1,6 @@
+import { IBooking } from "./booking";
+import { IHotel } from "./hotel";
+
 export interface IRoom {
   _id: string;
   name: string;
@@ -13,4 +16,9 @@ export interface IRoom {
   country: string;
   state: string;
   city: string;
+}
+
+export interface IRoomDetail extends Omit<IRoom, "hotel"> {
+  hotel: Pick<IHotel, "_id" | "name">;
+  bookings: Pick<IBooking, "checkIn" | "checkOut">[];
 }

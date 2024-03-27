@@ -1,0 +1,7 @@
+h2 {
+  @apply text-lg;
+}
+
+.room_book {
+  @apply sm:grid sm:grid-cols-2 sm:gap-4 sm:[&>*]:!mb-0;
+}
