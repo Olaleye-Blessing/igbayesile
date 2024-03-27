@@ -8,24 +8,30 @@ import { FormField } from "@/components/custom/form-field";
 import { DatePickerWithRange } from "@/components/custom/date-picker/date-range-picker";
 import { Label } from "@/components/ui/label";
 import ToggleContainer from "./toggle-container";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
+
+const fromDate = new Date();
 
 export default function TopSearch() {
   const form = useFormContext<SearchData>();
-  const router = useRouter();
+  // const router = useRouter();
 
   return (
-    // <ToggleContainer title="Search" className="md:col-span-2 md:py-2">
     <div className="bg-white sticky p-4 top-0 left-0 z-20 md:w-full md:flex-shrink-0">
       <ToggleContainer title="Search" className="">
-        <div className="[&>*]:px-2 grid grid-cols-1 gap-0 gap-x-4 sm:grid-cols-[repeat(auto-fill,minmax(240px,_1fr))]">
+        <div className="[&>*]:px-2 grid grid-cols-1 gap-0 gap-x-4 sm:grid-cols-[repeat(auto-fill,minmax(240px,_1fr))] sm:pt-3 sm:pb-1">
           <div className="mb-3">
-            <Label htmlFor="dates">Check in - Check out</Label>
+            <Label htmlFor="dates">
+              Check in - Check out(
+              <span className="short-label text-xs">comming soon</span>)
+            </Label>
             <DatePickerWithRange
               {...form.watch("date")}
               handleSetDate={(dates) => form.setValue("date", dates)}
               emptyMsg={<span>Check in - Check out</span>}
               triggerClassName="w-full max-w-none"
+              options={{ fromDate }}
+              disableTriggerBtn
             />
           </div>
           <CountriesStates
@@ -50,7 +56,8 @@ export default function TopSearch() {
           />
           <div className="mb-3 flex items-end justify-center flex-wrap [&>*]:flex-1 sm:mt-0">
             <Button className="w-full max-w-[20rem] mr-4">Search</Button>
-            <Button
+            {/* TODO: You can add this later */}
+            {/* <Button
               className="w-full max-w-[20rem]"
               variant="destructive"
               type="button"
@@ -60,7 +67,7 @@ export default function TopSearch() {
               }}
             >
               Clear
-            </Button>
+            </Button> */}
           </div>
         </div>
       </ToggleContainer>

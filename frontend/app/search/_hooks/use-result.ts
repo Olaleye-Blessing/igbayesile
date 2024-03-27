@@ -54,7 +54,7 @@ export const useResult = () => {
   const result = useIGBQuery<IHotelResult | IRoomResult>({
     url,
     options: {
-      queryKey: ["search", { search }],
+      queryKey: ["search", { url, search }],
       enabled: Object.keys(search).length > 0,
       placeholderData: keepPreviousData,
     },

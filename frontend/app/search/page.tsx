@@ -21,12 +21,12 @@ export default function Page() {
       type: searchParams.get("type") === "rooms" ? "rooms" : "hotels",
       amenities: searchParams.get("amenities")?.split(",") || [],
       price: {
-        gte: Number(searchParams.get("minPrice")) || 0,
-        lte: Number(searchParams.get("maxPrice")) || 2000,
+        gte: Number(searchParams.get("minPrice")) || "",
+        lte: Number(searchParams.get("maxPrice")) || "",
       },
       beds: {
-        gte: Number(searchParams.get("minBeds")) || 1,
-        lte: Number(searchParams.get("maxBeds")) || 4,
+        gte: Number(searchParams.get("minBeds")) || "",
+        lte: Number(searchParams.get("maxBeds")) || "",
       },
       date: {
         from: new Date(searchParams.get("from") || Date.now()),
@@ -44,19 +44,27 @@ export default function Page() {
     const data = form.getValues();
     const path = {
       ...data,
-      ...data.date,
+      // TODO: Include this when a room knows its checked in visitors
+      // ...data.date,
       minPrice: +data.price.gte,
       maxPrice: +data.price.lte,
       minBeds: +data.beds.gte,
       maxBeds: +data.beds.lte,
-      page: 1,
-      limit: 5,
+      // page: 1,
+      // limit: 5,
     } as any;
     delete path.date;
     delete path.price;
     delete path.beds;
 
     const validPath = { ...path, page: 1 };
+
+    // TODO: Remove "minPrice" and "maxPrice" when DB knows the avg price of a hotel
+    if (data.type !== "rooms") {
+      ["minBeds", "maxBeds", "minPrice", "maxPrice"].forEach(
+        (key) => delete validPath[key],
+      );
+    }
 
     Object.keys(path).forEach((key) => {
       if (!validPath[key] || (key === "amenities" && !validPath[key].length))
