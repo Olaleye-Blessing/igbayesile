@@ -5,8 +5,11 @@ import * as roomController from '@/controllers/room';
 import { protect } from '@/controllers/auth';
 import { restrictTo } from '@/middlewares/auth';
 import { upload } from '@/middlewares/multer';
+import bookingRouter from './booking';
 
 const router = express.Router({ mergeParams: true });
+
+router.use('/:roomId/bookings', bookingRouter);
 
 router
   .route('/')
@@ -17,5 +20,7 @@ router
     upload.array('images', 5),
     roomController.createRoom,
   );
+
+router.route('/:roomId').get(roomController.getRoom);
 
 export default router;
