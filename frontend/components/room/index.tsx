@@ -23,11 +23,15 @@ interface RoomProps {
 // TODO: Enable manager to specify breakfast cost.
 const breakFastPrice = 20;
 
+const fromDate = new Date();
+
+const dayInMs = 24 * 60 * 60 * 1000;
+
 export default function Room({ room, className = "" }: RoomProps) {
   const router = useRouter();
   const [bookedDates, setBookedDates] = useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: new Date(2022, 0, 20),
+    from: new Date(),
+    to: new Date(Date.now() + dayInMs * 5),
   });
   const [includeBreakfast, setIncludeBreakfast] = useState(false);
   const [userGuests, setUserGuests] = useState(1);
@@ -114,6 +118,7 @@ export default function Room({ room, className = "" }: RoomProps) {
         <DatePickerWithRange
           {...bookedDates}
           handleSetDate={(dates) => setBookedDates(dates)}
+          options={{ fromDate }}
         />
       </div>
       <div className="flex items-center justify-betweem flex-wrap">

@@ -17,6 +17,9 @@ export const setPaymentParams = catchAsync(async (req, res, next) => {
   checkIn = new Date(checkIn);
   checkOut = new Date(checkOut);
 
+  if (checkIn < Date.now() || checkOut < Date.now)
+    return next(new AppError("You can't select dates in the past", 400));
+
   // TODO: use zod to validate date
   const totalDays = differenceInDays(checkOut, checkIn);
 
