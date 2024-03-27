@@ -6,7 +6,7 @@ import { DateRange } from "react-day-picker";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { Calendar, CalendarProps } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
@@ -21,6 +21,7 @@ interface DatePickerWithRangeProps {
   handleSetDate: (range: DateRange | undefined) => void;
   triggerClassName?: string;
   emptyMsg?: ReactNode;
+  options?: CalendarProps;
 }
 
 // TODO: Improve the interaction with this such that
@@ -32,6 +33,7 @@ export function DatePickerWithRange({
   triggerClassName = "",
   handleSetDate,
   emptyMsg = <span>Pick a date</span>,
+  options,
 }: DatePickerWithRangeProps) {
   const date = { from, to };
   const [open, setOpen] = useState(false);
@@ -66,6 +68,7 @@ export function DatePickerWithRange({
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
           <Calendar
+            {...options}
             initialFocus
             mode="range"
             defaultMonth={date?.from}
