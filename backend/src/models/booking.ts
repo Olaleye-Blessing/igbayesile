@@ -1,0 +1,52 @@
+import mongoose, { model, Schema } from 'mongoose';
+
+const bookingSchema = new Schema({
+  status: {
+    type: String,
+    required: [true, 'Booking status: Internal server error'],
+    enum: {
+      values: ['pending', 'paid'],
+      message: 'Booking status: Internal server error',
+    },
+  },
+  userId: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    required: [true, 'Provide the user of this booking.'],
+  },
+  roomId: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Room',
+    required: [true, 'Provide the room being booked.'],
+  },
+  paymentReference: {
+    type: String,
+    required: [true, 'Payment Reference: Internal server error'],
+  },
+  paymentAccessCode: {
+    type: String,
+  },
+  paymentId: {
+    type: Number,
+  },
+  guests: {
+    type: Number,
+    required: [true, 'Provide the number of guests.'],
+  },
+  checkIn: {
+    type: Date,
+    required: [true, 'Provide the check in date'],
+  },
+  checkOut: {
+    type: Date,
+    required: [true, 'Provide the check out date'],
+  },
+  totalCost: {
+    type: Number,
+    required: [true, 'Provide total cost'],
+  },
+});
+
+const Booking = model('Booking', bookingSchema);
+
+export default Booking;

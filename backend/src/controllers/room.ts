@@ -29,6 +29,17 @@ export const setRoomsFilter: RequestHandler = (req, _res, next) => {
 
 export const getRooms = factory.findAll(Room, 'rooms');
 
+export const getRoom = catchAsync(async (req, res, next) => {
+  const room = await Room.findById(req.params.roomId);
+
+  if (!room) return next(new AppError('This room does not exist', 404));
+
+  return res.status(200).json({
+    status: 'success',
+    data: { room },
+  });
+});
+
 export const createRoom = catchAsync(async (req, res, next) => {
   const imagesFiles = req.files as Express.Multer.File[];
 
