@@ -12,6 +12,8 @@ export interface IHotel {
   images: string[];
   manager: string;
   _id: string;
+  avgRoomPrice: number;
+  totalRooms: number;
 }
 
 export interface IFullHotel extends Omit<IHotel, "manager"> {

@@ -1,6 +1,12 @@
-import mongoose, { model, Schema } from 'mongoose';
+import { IRoom } from '@/interfaces/room';
+import mongoose, { Model, model, Schema } from 'mongoose';
+import Hotel from './hotel';
 
-const roomSchema = new Schema(
+interface RoomModel extends Model<IRoom, object> {
+  calcAvgHotelRoomsPrice(hotelId: string): void;
+}
+
+const roomSchema = new Schema<IRoom>(
   {
     name: {
       type: String,
@@ -114,6 +120,60 @@ roomSchema.pre(/^find/, function (next) {
   next();
 });
 
-const Room = model('Room', roomSchema);
+roomSchema.static('calcAvgHotelRoomsPrice', async function (hotelId: string) {
+  let [stat] = await this.aggregate([
+    { $match: { hotel: hotelId } },
+    {
+      $group: {
+        _id: '$hotel',
+        avgRoomPrice: { $avg: '$price' },
+        totalRooms: { $sum: 1 },
+      },
+    },
+  ]);
+
+  // This happens when all rooms are deleted
+  if (!stat) {
+    stat = {
+      avgRoomPrice: 0,
+      totalRooms: 0,
+    };
+  }
+
+  await Hotel.findByIdAndUpdate(hotelId, stat);
+});
+
+roomSchema.post('save', function () {
+  // @ts-expect-error Valid
+  this.constructor.calcAvgHotelRoomsPrice(this.hotel);
+});
+
+// findOneAndUpdate
+// findOneAndDelete
+roomSchema.pre(/^findOneAnd/, async function (next) {
+  // this._update is the list of fields that wants to get updated
+  // @ts-expect-error Valid
+  const updates = this._update;
+  if (!Object.keys(updates).includes('price')) return next();
+
+  // @ts-expect-error Valid
+  const roomToUpdate = await this.model.findOne(this.getQuery());
+
+  // @ts-expect-error Valid
+  this.roomToUpdate = roomToUpdate;
+
+  next();
+});
+
+roomSchema.post(/^findOneAnd/, function () {
+  // @ts-expect-error Valid
+  const { roomToUpdate } = this;
+
+  if (!Boolean(roomToUpdate)) return;
+
+  roomToUpdate.constructor.calcAvgHotelRoomsPrice(roomToUpdate.hotel._id);
+});
+
+const Room = model<IRoom, RoomModel>('Room', roomSchema);
 
 export default Room;

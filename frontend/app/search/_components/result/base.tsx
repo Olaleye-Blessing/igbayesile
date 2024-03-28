@@ -59,7 +59,13 @@ export default function Base({ type, data }: BaseProps) {
               </>
             </span>
             <span className="text-sm text-gray-500 -mt-1 font-normal">
-              {type === "rooms" ? <>Hotel name</> : <>29 rooms</>}
+              {type === "rooms" ? (
+                <>Hotel name</>
+              ) : (
+                <>
+                  {data.totalRooms} {data.totalRooms === 1 ? "room" : "rooms"}
+                </>
+              )}
             </span>
           </h3>
           <div className="flex items-center justify-start flex-wrap w-full">
@@ -110,7 +116,7 @@ export default function Base({ type, data }: BaseProps) {
           ) : (
             <>
               <span>Avg: </span>
-              <span className="font-bold text-lg">$560</span>
+              <span className="font-bold text-lg">${data.avgRoomPrice}</span>
             </>
           )}
         </p>

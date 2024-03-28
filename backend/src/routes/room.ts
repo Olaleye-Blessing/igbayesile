@@ -23,4 +23,11 @@ router
 
 router.route('/:roomId').get(roomController.getRoom);
 
+router.use(protect);
+
+router
+  .route('/:roomId')
+  .patch(roomController.updateRoom)
+  .delete(roomController.deleteRoom);
+
 export default router;

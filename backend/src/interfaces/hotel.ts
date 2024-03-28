@@ -13,4 +13,6 @@ export interface IHotel {
   images: string[];
   manager: Types.ObjectId;
   rooms?: IRoom[];
+  avgRoomPrice: number;
+  totalRooms: number;
 }
