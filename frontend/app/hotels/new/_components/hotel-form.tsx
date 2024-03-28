@@ -15,7 +15,10 @@ import { Button } from "@/components/ui/button";
 import useSearchParameters from "@/hooks/use-search-parameters";
 
 export interface HotelFormData
-  extends Omit<IHotel, "images" | "manager" | "_id"> {
+  extends Omit<
+    IHotel,
+    "images" | "manager" | "_id" | "avgRoomPrice" | "totalRooms"
+  > {
   images: File[];
 }
 

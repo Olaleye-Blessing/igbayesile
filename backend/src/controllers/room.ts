@@ -90,3 +90,23 @@ export const createRoom = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+export const updateRoom = catchAsync(async (req, res) => {
+  const room = await Room.findByIdAndUpdate(req.params.roomId, req.body, {
+    new: true,
+  });
+
+  return res.status(200).json({
+    status: 'success',
+    data: { room },
+  });
+});
+
+export const deleteRoom = catchAsync(async (req, res) => {
+  await Room.findByIdAndDelete(req.params.roomId);
+
+  return res.status(204).json({
+    status: 'success',
+    data: null,
+  });
+});
