@@ -4,7 +4,7 @@ export interface IReview {
   _id: Types.ObjectId;
   content: string;
   rating: number;
-  userId: Types.ObjectId;
+  user: Types.ObjectId;
   type: 'hotel' | 'room';
   targetId: string;
 }

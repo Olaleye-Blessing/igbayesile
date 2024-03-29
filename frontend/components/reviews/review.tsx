@@ -16,7 +16,7 @@ export default function Review({ review }: ReviewProps) {
           </Avatar>
         </figure>
         <div>
-          <p className="text-sm font-semibold">{review.userId.name}</p>
+          <p className="text-sm font-semibold">{review.user.name}</p>
           <div className="flex items-center justify-start">
             <div className="flex items-center justify-start">
               {Array.from({ length: Math.floor(review.rating) }).map(

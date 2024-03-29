@@ -19,7 +19,7 @@ const reviewSchema = new Schema<IReview>({
     min: [1, 'Minimum rating is 1'],
     max: [5, 'Maxmimum rating is 5'],
   },
-  userId: {
+  user: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
     required: [true, 'Provide the owner of the review'],
@@ -38,7 +38,7 @@ const reviewSchema = new Schema<IReview>({
   },
 });
 
-reviewSchema.index({ type: 1, targetId: 1, userId: 1 }, { unique: true });
+reviewSchema.index({ type: 1, targetId: 1, user: 1 }, { unique: true });
 
 reviewSchema.static(
   'calcHotelOrRoomAvgRating',
@@ -84,7 +84,7 @@ reviewSchema.pre(/^findOneand/, async function (next) {
 reviewSchema.pre(/^find/, function (next) {
   // @ts-expect-error This is correct
   this.populate({
-    path: 'userId',
+    path: 'user',
     select: 'name role',
   });
 
