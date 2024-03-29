@@ -6,10 +6,12 @@ import { protect } from '@/controllers/auth';
 import { restrictTo } from '@/middlewares/auth';
 import { upload } from '@/middlewares/multer';
 import bookingRouter from './booking';
+import reviewRouter from './review';
 
 const router = express.Router({ mergeParams: true });
 
 router.use('/:roomId/bookings', bookingRouter);
+router.use('/:roomId/reviews', reviewRouter);
 
 router
   .route('/')

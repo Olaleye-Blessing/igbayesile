@@ -57,6 +57,15 @@ const hotelSchema = new Schema<IHotel>(
       type: Number,
       default: 0,
     },
+    ratings: {
+      type: Number,
+      default: 0,
+      set: (val: number) => Math.round(val * 10) / 10,
+    },
+    totalReviews: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     toJSON: { virtuals: true },

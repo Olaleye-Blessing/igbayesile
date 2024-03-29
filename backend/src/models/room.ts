@@ -78,6 +78,15 @@ const roomSchema = new Schema<IRoom>(
     country: String,
     state: String,
     city: String,
+    ratings: {
+      type: Number,
+      default: 0,
+      set: (val: number) => Math.round(val * 10) / 10,
+    },
+    totalReviews: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -95,7 +104,10 @@ roomSchema.pre(/^find/, function (next) {
   // @ts-expect-error This is correct
   this.populate({
     path: 'hotel',
-    select: 'name',
+    select: 'name manager',
+    // populate: {
+    //   path: ""
+    // }
   });
 
   next();
