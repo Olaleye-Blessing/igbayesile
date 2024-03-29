@@ -67,13 +67,13 @@ export const createReview = catchAsync(async (req, res, next) => {
   if (!result)
     return next(new AppError(`This ${reviewType} doesn't exist`, 400));
 
-  const userId = (req as IAuthUserReq).user._id;
+  const user = (req as IAuthUserReq).user._id;
 
   const isOwner =
     reviewType === 'hotel'
-      ? result.manager.toString() === userId.toString()
+      ? result.manager.toString() === user.toString()
       : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (result.hotel as any).manager.toString() === userId.toString();
+        (result.hotel as any).manager.toString() === user.toString();
 
   if (isOwner) {
     const message =
@@ -85,14 +85,14 @@ export const createReview = catchAsync(async (req, res, next) => {
   }
 
   req.body.targetId = targetId;
-  req.body.userId = userId;
+  req.body.user = user;
 
   const body = filterObj<IReview>(req.body, [
     'content',
     'rating',
     'type',
     'targetId',
-    'userId',
+    'user',
   ]);
 
   console.log(body);
