@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { IReview } from '@/interfaces/review';
 import Hotel from '@/models/hotel';
 import Review from '@/models/review';
@@ -7,6 +7,34 @@ import { IAuthUserReq } from '@/types/request';
 import AppError from '@/utils/AppError';
 import catchAsync from '@/utils/catchAsync';
 import { filterObj } from '@/utils/filter-obj';
+import * as factory from '@/controllers/factory';
+import { RequestHandler } from 'express';
+
+export const setReviewFilters: RequestHandler = (req, res, next) => {
+  const qParams = { ...req.params };
+  const filter: FilterQuery<IReview> = {};
+
+  if (qParams.roomId) {
+    filter.targetId = qParams.roomId;
+    filter.type = 'room';
+
+    delete qParams.roomId;
+  } else if (qParams.hotelId) {
+    filter.targetId = qParams.hotelId;
+    filter.type = 'hotel';
+
+    delete qParams.hotelId;
+  }
+
+  req.query = {
+    ...req.query,
+    ...filter,
+  };
+
+  next();
+};
+
+export const getReviews = factory.findAll(Review, 'reviews');
 
 export const createReview = catchAsync(async (req, res, next) => {
   const reviewType = req.body.type;
@@ -16,7 +44,7 @@ export const createReview = catchAsync(async (req, res, next) => {
       new AppError(`Provide the type of this review: hotel or room`, 400),
     );
 
-  if (reviewType !== 'hotel' || reviewType !== 'room')
+  if (reviewType !== 'hotel' && reviewType !== 'room')
     return next(new AppError(`Type can only be hotel or room`, 400));
 
   const targetId =

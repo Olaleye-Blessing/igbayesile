@@ -32,8 +32,8 @@ export const findAll = <IDoc>(
       .filter(
         // TODO: update request type to have this object on all request.
         // I used this name casue express should never have this name internally
-        ((req.query.igbayesile as any).filterNumKeys as string[]) || [],
-        (req.query.igbayesile as any).filter || {},
+        ((req.query?.igbayesile as any)?.filterNumKeys as string[]) || [],
+        (req.query?.igbayesile as any)?.filter || {},
       )
       .fields()
       .sort()

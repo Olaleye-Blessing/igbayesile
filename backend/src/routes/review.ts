@@ -4,6 +4,9 @@ import express from 'express';
 
 const router = express.Router({ mergeParams: true });
 
-router.route('/').post(protect, reviewController.createReview);
+router
+  .route('/')
+  .get(reviewController.setReviewFilters, reviewController.getReviews)
+  .post(protect, reviewController.createReview);
 
 export default router;
