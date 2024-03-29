@@ -16,6 +16,8 @@ export interface IRoom {
   country: string;
   state: string;
   city: string;
+  ratings: number;
+  totalReviews: number;
 }
 
 export interface IRoomDetail extends Omit<IRoom, "hotel"> {

@@ -7,6 +7,8 @@ import { MapPin } from "lucide-react";
 import AmentiyWithIcon from "@/components/amentiy-with-icon";
 import BookRoom from "@/components/custom/book-room";
 import "./index.css";
+import RatingsReviewBadge from "@/components/rating-review-badge";
+import Reviews from "@/components/reviews";
 
 interface MainProps {
   roomId: string;
@@ -25,8 +27,17 @@ export default function Main({ roomId }: MainProps) {
       {data ? (
         <div className="room mb-8 pt-4 lg:flex lg:items-start lg:justify-between">
           <div className="">
-            <header className="">
-              <h1 className="mb-2">{data.room.name}</h1>
+            <header className="mb-4">
+              <h1 className="mb-2 mr-2">{data.room.name}</h1>
+              <button
+                type="button"
+                className="flex items-center justify-start flex-shrink-0 -mt-2"
+              >
+                <RatingsReviewBadge
+                  reviews={data.room.totalReviews}
+                  ratings={data.room.ratings}
+                />
+              </button>
             </header>
             <section className="space-y-2">
               <AutoPlayImages
@@ -75,12 +86,7 @@ export default function Main({ roomId }: MainProps) {
                 <BookRoom room={data.room} />
               </div>
             </section>
-            <section className="mt-4">
-              <header>
-                <h2>Reviews</h2>
-              </header>
-              <p>Coming soon....</p>
-            </section>
+            <Reviews showHeader type="room" roomId={roomId} />
           </div>
           <section className="cardboard hidden p-4 lg:block lg:sticky lg:top-4 lg:right-4 lg:max-w-80 lg:flex-shrink-0">
             <header>
