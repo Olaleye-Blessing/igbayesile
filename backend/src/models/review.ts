@@ -81,6 +81,16 @@ reviewSchema.pre(/^findOneand/, async function (next) {
   next();
 });
 
+reviewSchema.pre(/^find/, function (next) {
+  // @ts-expect-error This is correct
+  this.populate({
+    path: 'userId',
+    select: 'name role',
+  });
+
+  next();
+});
+
 const Review = model<IReview, ReviewModel>('Review', reviewSchema);
 
 export default Review;
