@@ -15,4 +15,6 @@ export interface IHotel {
   rooms?: IRoom[];
   avgRoomPrice: number;
   totalRooms: number;
+  ratings: number;
+  totalReviews: number;
 }

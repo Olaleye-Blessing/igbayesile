@@ -2,6 +2,7 @@ import express from 'express';
 
 import * as hotelController from '@/controllers/hotel';
 import roomRouter from './room';
+import reviewRouter from './review';
 import { upload } from '@/middlewares/multer';
 import { protect } from '@/controllers/auth';
 import { restrictTo } from '@/middlewares/auth';
@@ -9,6 +10,7 @@ import { restrictTo } from '@/middlewares/auth';
 const router = express.Router();
 
 router.use('/:hotelId/rooms', roomRouter);
+router.use('/:hotelId/reviews', reviewRouter);
 
 router
   .route('/')
