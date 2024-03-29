@@ -3,7 +3,7 @@
 import CountriesStates from "@/components/custom/countries-states";
 import { Button } from "@/components/ui/button";
 import { useFormContext } from "react-hook-form";
-import { SearchData } from "../types";
+import { SearchData } from "../_types";
 import { FormField } from "@/components/custom/form-field";
 import { DatePickerWithRange } from "@/components/custom/date-picker/date-range-picker";
 import { Label } from "@/components/ui/label";

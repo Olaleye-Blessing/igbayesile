@@ -5,7 +5,7 @@ import Result from "./_components/result";
 import SubSearch from "./_components/sub-search";
 import TopSearch from "./_components/top-search";
 import { FormProvider, useForm } from "react-hook-form";
-import { SearchData } from "./types";
+import { SearchData } from "./_types";
 import "./_components/index.css";
 import { useRouter, useSearchParams } from "next/navigation";
 

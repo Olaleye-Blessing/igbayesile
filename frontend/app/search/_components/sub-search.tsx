@@ -1,7 +1,7 @@
 "use client";
 
 import { FormField } from "@/components/custom/form-field";
-import { SearchData } from "../types";
+import { SearchData } from "../_types";
 import { Controller, useFormContext } from "react-hook-form";
 import { FormRadioField } from "@/components/custom/form-radio-field";
 import Amenities from "@/app/hotels/new/_components/amenities";
