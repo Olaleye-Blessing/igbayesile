@@ -98,12 +98,12 @@ export default function Base({ type, data }: BaseProps) {
           <div className="text-right mr-1">
             <p className="text-sm">Good</p>
             <p className="text-xs -mt-1">
-              <span>22</span>
+              <span>{data.totalReviews}</span>
               <span className=""> reviews</span>
             </p>
           </div>
           <p className="w-8 h-8 rounded-full flex items-center justify-center text-center font-bold bg-primary text-sm text-white">
-            7.0
+            {data.ratings}
           </p>
         </div>
         <p className="mr-1">

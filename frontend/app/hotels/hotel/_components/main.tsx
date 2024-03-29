@@ -8,6 +8,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Room from "@/components/room";
 import AmentiyWithIcon from "@/components/amentiy-with-icon";
 import AutoPlayImages from "@/components/custom/carousel/auto-play-images";
+import RatingsReviewBadge from "@/components/rating-review-badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Reviews from "@/components/reviews";
+import useSearchParameters from "@/hooks/use-search-parameters";
 
 interface MainProps {
   hotelId: string;
@@ -21,12 +25,25 @@ export default function Main({ hotelId }: MainProps) {
     },
   });
 
+  const searchParams = useSearchParameters();
+
+  const tab = searchParams.getParam("tab") || "rooms";
+
   return (
     <>
       {data?.hotel ? (
         <>
-          <header className="pt-4">
-            <h1 className="mb-2">{data.hotel.name}</h1>
+          <header className="pt-4 mb-4">
+            <h1 className="mb-2 mr-2">{data.hotel.name}</h1>
+            <button
+              type="button"
+              className="flex items-center justify-start flex-shrink-0 -mt-2"
+            >
+              <RatingsReviewBadge
+                reviews={data.hotel.totalReviews}
+                ratings={data.hotel.ratings}
+              />
+            </button>
           </header>
           <section className="space-y-2">
             <AutoPlayImages
@@ -84,23 +101,33 @@ export default function Main({ hotelId }: MainProps) {
               </div>
             </div>
           </section>
-          <section>
-            <h3 className="text-base mt-4">Rooms</h3>
-            {data.hotel.rooms.length > 0 && (
-              <p className="mb-2">
-                These are the rooms available in this hotel
-              </p>
-            )}
-            {data.hotel.rooms.length === 0 ? (
-              <p>No rooms yet</p>
-            ) : (
-              <ul className="grid gap-4 grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(22rem,_1fr))]">
-                {data.hotel.rooms.map((room) => (
-                  <Room key={room._id} room={room} hotelId={data.hotel._id} />
-                ))}
-              </ul>
-            )}
-          </section>
+          <Tabs
+            defaultValue={tab}
+            className=""
+            value={tab}
+            onValueChange={(tab) => {
+              searchParams.updateParams({ tab }, "push");
+            }}
+          >
+            <TabsList className="sticky top-0 left-0 right-0 z-[999] global-bg w-full justify-start py-4">
+              <TabsTrigger value="rooms">Rooms</TabsTrigger>
+              <TabsTrigger value="reviews">Reviews</TabsTrigger>
+            </TabsList>
+            <TabsContent value="rooms" className="">
+              {data.hotel.rooms.length === 0 ? (
+                <p>No rooms yet</p>
+              ) : (
+                <ul className="grid gap-4 grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(22rem,_1fr))]">
+                  {data.hotel.rooms.map((room) => (
+                    <Room key={room._id} room={room} hotelId={data.hotel._id} />
+                  ))}
+                </ul>
+              )}
+            </TabsContent>
+            <TabsContent value="reviews">
+              <Reviews type="hotel" hotelId={hotelId} />
+            </TabsContent>
+          </Tabs>
         </>
       ) : error ? (
         <p className="error">{error.message}</p>
