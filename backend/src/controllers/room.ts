@@ -12,6 +12,7 @@ export const setRoomsFilter: RequestHandler = (req, _res, next) => {
   const filter: FilterQuery<IRoom> = {};
 
   if (req.query.name) filter.name = { $regex: req.query.name, $options: 'i' };
+  if (req.params.hotelId) req.query.hotel = req.params.hotelId;
 
   req.query.igbayesile = {
     ...((req.query.igbayesile as object) || {}),
