@@ -13,20 +13,23 @@ type FQuery<T> = QueryWithHelpers<T[], T, object, T, 'find'>;
 export default class FilterFeatures<T> {
   query: FQuery<T>;
   queryObj: QueryObj & object;
+  queryFilter: QueryObj & object = {};
 
   constructor(query: FQuery<T>, queryObj = {}) {
     this.query = query;
     this.queryObj = queryObj;
   }
 
-  filter(numberFields = [''], options = {}) {
+  filter() {
     let filter: FilterQuery<T> = { ...this.queryObj };
     const excludedParams = ['page', 'sort', 'fields', 'limit', 'igbayesile'];
+
+    filter = parseNumFilter(filter, filter.igbayesile?.filterNumKeys || []);
+
     excludedParams.forEach((param) => delete filter[param]);
 
-    filter = parseNumFilter(filter, numberFields);
-
-    this.query = this.query.find({ ...filter, ...options });
+    this.queryFilter = { ...filter };
+    this.query = this.query.find({ ...filter });
 
     return this;
   }

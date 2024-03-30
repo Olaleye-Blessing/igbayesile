@@ -24,15 +24,17 @@ export const setHotelsFilter: RequestHandler = (req, _res, next) => {
     // filter.amenities = { $in: regExp };
   }
 
+  req.query = { ...req.query, ...filter };
+
   req.query.igbayesile = {
     ...((req.query.igbayesile as object) || {}),
-    filter,
+    filterNumKeys: ['avgRoomPrice', 'totalRooms', 'ratings', 'totalReviews'],
   };
 
   next();
 };
 
-export const getHotels = factory.findAll(Hotel, 'hotels');
+export const getHotels = factory.findAll(Hotel);
 
 export const getHotel = catchAsync(async (req, res, next) => {
   const hotel = await Hotel.findById(req.params.id).populate('manager');
