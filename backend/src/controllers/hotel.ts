@@ -35,9 +35,7 @@ export const setHotelsFilter: RequestHandler = (req, _res, next) => {
 export const getHotels = factory.findAll(Hotel, 'hotels');
 
 export const getHotel = catchAsync(async (req, res, next) => {
-  const hotel = await Hotel.findById(req.params.id)
-    .populate('rooms')
-    .populate('manager');
+  const hotel = await Hotel.findById(req.params.id).populate('manager');
 
   if (!hotel) return next(new AppError('This hotel does not exist', 404));
 

@@ -5,13 +5,13 @@ import { IFullHotel } from "@/interfaces/hotel";
 import { hotelsKeys } from "../../utils/query-key-factory";
 import { MapPin } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import Room from "@/components/room";
 import AmentiyWithIcon from "@/components/amentiy-with-icon";
 import AutoPlayImages from "@/components/custom/carousel/auto-play-images";
 import RatingsReviewBadge from "@/components/rating-review-badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Reviews from "@/components/reviews";
 import useSearchParameters from "@/hooks/use-search-parameters";
+import Rooms from "./rooms";
 
 interface MainProps {
   hotelId: string;
@@ -114,15 +114,7 @@ export default function Main({ hotelId }: MainProps) {
               <TabsTrigger value="reviews">Reviews</TabsTrigger>
             </TabsList>
             <TabsContent value="rooms" className="">
-              {data.hotel.rooms.length === 0 ? (
-                <p>No rooms yet</p>
-              ) : (
-                <ul className="grid gap-4 grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(22rem,_1fr))]">
-                  {data.hotel.rooms.map((room) => (
-                    <Room key={room._id} room={room} hotelId={data.hotel._id} />
-                  ))}
-                </ul>
-              )}
+              <Rooms hotelId={hotelId} />
             </TabsContent>
             <TabsContent value="reviews">
               <Reviews type="hotel" hotelId={hotelId} />

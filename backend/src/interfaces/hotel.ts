@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import { IRoom } from './room';
+// import { IRoom } from './room';
 
 export interface IHotel {
   _id: Types.ObjectId;
@@ -12,7 +12,7 @@ export interface IHotel {
   amenities: string[];
   images: string[];
   manager: Types.ObjectId;
-  rooms?: IRoom[];
+  // rooms?: IRoom[];
   avgRoomPrice: number;
   totalRooms: number;
   ratings: number;
