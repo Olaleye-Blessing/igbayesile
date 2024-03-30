@@ -7,7 +7,6 @@ import {
   IPayStackInitSuccesRes,
   IPayStackVerifyErrorRes,
   IPayStackVerifySuccessRes,
-  PaystackVerificationStatues,
 } from '@/interfaces/paystack';
 import AppError from '@/utils/AppError';
 
@@ -68,10 +67,6 @@ export const verifyPayment = catchAsync(async (req, res, next) => {
         });
 
         _res.on('end', () => {
-          console.log('VERIFICATION ENDS');
-
-          console.log(JSON.parse(data));
-
           const verificationData:
             | IPayStackVerifyErrorRes
             | IPayStackVerifySuccessRes = JSON.parse(data);
@@ -88,19 +83,6 @@ export const verifyPayment = catchAsync(async (req, res, next) => {
 
             // TODO: Create a logging system
             return next(new Error('Internal server error!'));
-          }
-
-          if (
-            verificationData.data.status !== PaystackVerificationStatues.success
-          ) {
-            // It's a successful response, just that the user hasn't paid.
-            // Or better still, check paystack doc
-            return res.status(200).json({
-              status: 'success',
-              data: {
-                status: verificationData.data.status,
-              },
-            });
           }
 
           // TODO: Extend express request

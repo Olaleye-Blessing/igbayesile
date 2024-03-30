@@ -115,7 +115,10 @@ export const confirmBookingPayment = catchAsync(async (req, res, next) => {
   const paymentReference = paymentVerification.data.reference;
 
   const filter = { userId, roomId, paymentReference };
-  const update = { status: 'paid', paymentId: paymentVerification.data.id };
+  const update = {
+    status: paymentVerification.data.status,
+    paymentId: paymentVerification.data.id,
+  };
 
   const booking = await Booking.findOneAndUpdate(filter, update, {
     runValidators: false,
@@ -131,7 +134,10 @@ export const confirmBookingPayment = catchAsync(async (req, res, next) => {
     status: 'success',
     data: {
       booking,
-      status: 'Payment Received',
+      status:
+        paymentVerification.data.status === 'success'
+          ? 'Payment received'
+          : `Payment status: ${paymentVerification.data.status}`,
     },
   });
 });

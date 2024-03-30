@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/app/loading";
 import { useIGBInstance } from "@/hooks/use-igb-instance";
 import { IBooking } from "@/interfaces/booking";
 import { handleIgbayesileAPIError } from "@/utils/handle-igbayesile-api-error";
@@ -44,22 +45,36 @@ export default function Page() {
         setVerification({ loading: false, status: "error", error: message });
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  console.log(
+    verification.loading === false &&
+      verification.status === "success" &&
+      verification.message,
+  );
 
   return (
     <main className="global-bg min-h-[calc(100vh-4rem)]">
       <div className="layout">
         <header>
-          <h1 className="text-center mb-4">Confirmation page</h1>
+          <h1 className="text-center mb-4 pt-4">Booking Confirmation</h1>
         </header>
         <div className="flex items-center justify-center text-center">
           {verification.loading ? (
-            // TODO: Replace with general loading
-            <p className="text-primary">Loading</p>
+            <Loading />
           ) : (
             <>
               {verification.status === "success" ? (
-                <p className="text-green-500">{verification.message}</p>
+                <p
+                  className={
+                    verification.message.includes("received")
+                      ? "text-green-500"
+                      : "error"
+                  }
+                >
+                  {verification.message}
+                </p>
               ) : (
                 <p className="error">{verification.error}</p>
               )}

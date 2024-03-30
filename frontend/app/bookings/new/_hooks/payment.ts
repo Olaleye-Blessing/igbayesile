@@ -22,7 +22,7 @@ export const usePayment = () => {
 
   const initializePayment = useMutation({
     mutationFn: async (
-      body: Omit<IBooking, "status" | "userId" | "totalCost" | "_id">,
+      body: Pick<IBooking, "roomId" | "guests" | "checkIn" | "checkOut">,
     ) => {
       try {
         let res = await igbInstance().post<IResult>(
