@@ -54,6 +54,22 @@ export const createHotel = catchAsync(async (req, res, next) => {
   if (imagesFiles.length < 3)
     return next(new AppError('Provide at least 3 hotel pictures', 400));
 
+  if (
+    await Hotel.exists({
+      name: req.body.name,
+      country: req.body.country,
+      state: req.body.state,
+      city: req.body.city,
+      manager: req.body.manager,
+    })
+  )
+    return next(
+      new AppError(
+        `Duplicate hotel name, ${req.body.name}, in the same location ${req.body.city}-${req.body.state}-${req.body.country}, by the same manager.`,
+        400,
+      ),
+    );
+
   // TODO: Learn about possible errors that could happen from cloudinary
   const imagesUrls = imagesFiles.map((image) => {
     const b64 = Buffer.from(image.buffer).toString('base64');
