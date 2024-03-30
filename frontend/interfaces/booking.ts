@@ -9,4 +9,6 @@ export interface IBooking {
   checkIn: string;
   checkOut: string;
   totalCost: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
