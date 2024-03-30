@@ -8,6 +8,7 @@ import axios from "axios";
 import { API_BASE_URL } from "@/constants/backend";
 import toast from "react-hot-toast";
 import Search from "./search";
+import LoggedInMenu from "./logged-in-menu";
 
 const Navbar = () => {
   const user = useAuthStore((state) => state.user);
@@ -28,7 +29,7 @@ const Navbar = () => {
 
       toast.success("See you soon", { id: toastId });
     } catch (error) {
-      console.info(error);
+      toast.error((error as Error).message, { id: toastId });
     }
   };
 
@@ -38,16 +39,17 @@ const Navbar = () => {
         <div>
           <HomeLogo />
         </div>
-        <Search />
+        <Search className="hidden sm:block" />
         <>
-          {Boolean(user) ? (
+          {user ? (
             <div className="flex items-center justify-end">
-              <p className="mr-2">avatar</p>
+              <LoggedInMenu user={user} logout={logout} />
               <Button
                 variant="destructive"
                 size="sm"
                 type="button"
                 onClick={logout}
+                className="hidden sm:block sm:ml-3"
               >
                 Log Out
               </Button>

@@ -105,4 +105,12 @@
   .short-label {
     @apply text-gray-500 font-semibold text-sm;
   }
+
+  .divider {
+    @apply w-full h-[0.05rem] bg-gray-500 bg-opacity-30;
+  }
+
+  .body-min-screen-h {
+    min-height: calc(100vh - 4rem);
+  }
 }

@@ -3,8 +3,13 @@
 import { FormEventHandler } from "react";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
-export default function Search() {
+interface SearchProps {
+  className?: string;
+}
+
+export default function Search({ className }: SearchProps) {
   const router = useRouter();
   const handleSearch: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
@@ -19,7 +24,11 @@ export default function Search() {
   };
 
   return (
-    <form onSubmit={handleSearch} className="flex-1 max-w-80" role="search">
+    <form
+      onSubmit={handleSearch}
+      className={cn("flex-1 max-w-80", className)}
+      role="search"
+    >
       <Input
         type="search"
         placeholder="Search for hotel name"
