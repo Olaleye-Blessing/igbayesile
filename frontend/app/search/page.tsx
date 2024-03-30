@@ -57,7 +57,8 @@ export default function Page() {
     delete path.price;
     delete path.beds;
 
-    const validPath = { ...path, page: 1 };
+    // const validPath = { ...path, page: 1 };
+    const validPath = { ...path };
 
     // TODO: Remove "minPrice" and "maxPrice" when DB knows the avg price of a hotel
     if (data.type !== "rooms") {

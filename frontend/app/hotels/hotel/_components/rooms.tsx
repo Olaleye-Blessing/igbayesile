@@ -1,7 +1,6 @@
-import Loading from "@/app/loading";
+import Paginated from "@/components/paginated";
+import { usePagination } from "@/components/paginated/use-pagination";
 import Room from "@/components/room";
-import { useIGBQuery } from "@/hooks/use-igb-query";
-import { TPaginatedFetch } from "@/interfaces/fetch";
 import { IRoomDetail } from "@/interfaces/room";
 
 interface RoomsProps {
@@ -9,35 +8,27 @@ interface RoomsProps {
 }
 
 export default function Rooms({ hotelId }: RoomsProps) {
-  const { data, error } = useIGBQuery<
-    TPaginatedFetch<{ rooms: IRoomDetail[] }>
-  >({
-    // TODO: Update this limit when there is a hook for pagination
+  const {
+    result,
+    loadMore,
+    totalData: totalRooms,
+  } = usePagination<IRoomDetail>({
     url: `/hotels/${hotelId}/rooms?limit=100`,
     options: {
       queryKey: ["hotels", { hotel: hotelId }, "rooms"],
+      refetchOnMount: false,
     },
   });
 
   return (
     <>
-      {data ? (
-        <>
-          {data.rooms.length === 0 ? (
-            <p>No rooms yet</p>
-          ) : (
-            <ul className="grid gap-4 grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(22rem,_1fr))]">
-              {data.rooms.map((room) => (
-                <Room key={room._id} room={room} hotelId={hotelId} />
-              ))}
-            </ul>
-          )}
-        </>
-      ) : error ? (
-        <p className="error">{error.message}</p>
-      ) : (
-        <Loading />
-      )}
+      <Paginated loadMore={loadMore} result={result} data={totalRooms}>
+        <ul className="grid gap-4 grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(22rem,_1fr))]">
+          {totalRooms.map((room) => (
+            <Room key={room._id} room={room} hotelId={hotelId} />
+          ))}
+        </ul>
+      </Paginated>
     </>
   );
 }

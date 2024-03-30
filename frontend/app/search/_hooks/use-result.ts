@@ -1,26 +1,18 @@
-import { useIGBQuery } from "@/hooks/use-igb-query";
+import { usePagination } from "@/components/paginated/use-pagination";
 import useSearchParameters from "@/hooks/use-search-parameters";
 import { IHotel } from "@/interfaces/hotel";
 import { IRoom } from "@/interfaces/room";
-import { keepPreviousData } from "@tanstack/react-query";
+// import { keepPreviousData } from "@tanstack/react-query";
 
 const roomsSpecificKeys = ["minPrice", "maxPrice", "minBeds", "maxBeds"];
-
-type IResult = {
-  total: number;
-  page: number;
-  limit: number;
-};
-export type IHotelResult = { hotels: IHotel[] } & IResult;
-export type IRoomResult = { rooms: IRoom[] } & IResult;
 
 export const useResult = () => {
   const searchParams = useSearchParameters();
   const search = (Object.fromEntries(searchParams.entries()) || {}) as any;
 
   // default search
-  if (!search.page) search.page = 1;
-  if (!search.limit) search.limit = 5;
+  // if (!search.page) search.page = 1;
+  if (!search.limit) search.limit = 3;
   if (!search.type) search.type = "hotels";
 
   if (search.type === "hotels")
@@ -51,25 +43,21 @@ export const useResult = () => {
   delete search.type;
   url += new URLSearchParams(search).toString();
 
-  const result = useIGBQuery<IHotelResult | IRoomResult>({
+  // const { result, loadMore, totalData } = usePagination<IHotelResult | IRoomResult>({
+  const { result, loadMore, totalData } = usePagination<IHotel | IRoom>({
     url,
     options: {
       queryKey: ["search", { url, search }],
       enabled: Object.keys(search).length > 0,
-      placeholderData: keepPreviousData,
+      staleTime: 0,
     },
   });
 
-  function loadMore() {
-    const page = String(Number(searchParams.getParam("page") || 1) + 1);
-
-    searchParams.updateParams({ page }, "push");
-  }
-
   return {
-    searchParams,
+    // searchParams,
     result,
     loadMore,
     type: searchParams.getParam("type"),
+    totalData,
   };
 };
