@@ -78,6 +78,7 @@ export default function Main({ roomId }: MainProps) {
                 </ul>
               )}
             </section>
+            {/* MOBILE */}
             <section className="mt-4 w-full lg:hidden">
               <header className="">
                 <h2 className="">Book this room</h2>
@@ -86,8 +87,10 @@ export default function Main({ roomId }: MainProps) {
                 <BookRoom room={data.room} />
               </div>
             </section>
+            {/* MOBILE */}
             <Reviews showHeader type="room" roomId={roomId} />
           </div>
+          {/* DESKTOP */}
           <section className="cardboard hidden p-4 lg:block lg:sticky lg:top-4 lg:right-4 lg:max-w-80 lg:flex-shrink-0">
             <header>
               <h2>Book this room</h2>
