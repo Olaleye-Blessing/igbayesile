@@ -1,8 +1,8 @@
 // convert filters like
 /**
- * { name: /hotel/i, price: { gte: '500', lte: '900' }, room: { lt: '2' } }
+ * { ratings: 2, price: { gte: '500', lte: '900' }, room: { lt: '2' } }
  * to
- * { name: /hotel/i, price: { '$gte': '500', '$lte': '900' }, room: { '$lt': '2' } }
+ * { ratings: 2, price: { '$gte': '500', '$lte': '900' }, room: { '$lt': '2' } }
  */
 export const parseNumFilter = <Filter extends object>(
   filter: Filter,
@@ -14,6 +14,13 @@ export const parseNumFilter = <Filter extends object>(
     const val = filter[key];
 
     if (!val) return;
+
+    if (typeof val !== 'object') {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      body[key] = Number(val) as any;
+
+      return;
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const newVal = {} as any;

@@ -14,9 +14,10 @@ export const setRoomsFilter: RequestHandler = (req, _res, next) => {
   if (req.query.name) filter.name = { $regex: req.query.name, $options: 'i' };
   if (req.params.hotelId) req.query.hotel = req.params.hotelId;
 
+  req.query = { ...req.query, ...filter };
+
   req.query.igbayesile = {
     ...((req.query.igbayesile as object) || {}),
-    filter,
     filterNumKeys: [
       'numberOfBeds',
       'price',
@@ -28,7 +29,7 @@ export const setRoomsFilter: RequestHandler = (req, _res, next) => {
   next();
 };
 
-export const getRooms = factory.findAll(Room, 'rooms');
+export const getRooms = factory.findAll(Room);
 
 export const getRoom = catchAsync(async (req, res, next) => {
   const room = await Room.findById(req.params.roomId);
