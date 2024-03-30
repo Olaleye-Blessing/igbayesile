@@ -6,7 +6,7 @@ const bookingSchema = new Schema(
       type: String,
       required: [true, 'Booking status: Internal server error'],
       enum: {
-        values: ['pending', 'paid'],
+        values: ['pending', 'paid', 'failed'],
         message: 'Booking status: Internal server error',
       },
     },

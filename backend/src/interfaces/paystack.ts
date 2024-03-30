@@ -58,7 +58,7 @@ export interface IPayStackVerifySuccessRes {
   data: {
     id: 2009945086;
     domain: string;
-    status: PaystackVerificationStatues.success;
+    status: PaystackVerificationStatues;
     reference: string;
     amount: number;
     message: null;
