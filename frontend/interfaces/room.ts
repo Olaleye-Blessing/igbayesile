@@ -18,6 +18,8 @@ export interface IRoom {
   city: string;
   ratings: number;
   totalReviews: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IRoomDetail extends Omit<IRoom, "hotel"> {

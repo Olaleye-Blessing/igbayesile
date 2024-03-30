@@ -17,4 +17,6 @@ export interface IHotel {
   totalRooms: number;
   ratings: number;
   totalReviews: number;
+  createdAt: Date;
+  updatedAt: Date;
 }

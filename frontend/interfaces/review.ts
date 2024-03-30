@@ -7,4 +7,6 @@ export interface IReview {
   user: Pick<IUser, "_id" | "name" | "role">;
   type: "hotel" | "room";
   targetId: string;
+  createdAt: Date;
+  updatedAt: Date;
 }

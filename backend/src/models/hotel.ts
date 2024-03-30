@@ -68,6 +68,7 @@ const hotelSchema = new Schema<IHotel>(
     },
   },
   {
+    timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   },

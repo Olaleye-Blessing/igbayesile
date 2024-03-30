@@ -89,6 +89,7 @@ const roomSchema = new Schema<IRoom>(
     },
   },
   {
+    timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   },

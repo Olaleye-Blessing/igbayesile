@@ -7,36 +7,41 @@ interface ReviewModel extends Model<IReview, object> {
   calcHotelOrRoomAvgRating(type: 'hotel' | 'room', id: string): void;
 }
 
-const reviewSchema = new Schema<IReview>({
-  content: {
-    type: String,
-    required: [true, "Review content can't be empty"],
-    trim: true,
-  },
-  rating: {
-    type: Number,
-    default: 3,
-    min: [1, 'Minimum rating is 1'],
-    max: [5, 'Maxmimum rating is 5'],
-  },
-  user: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'User',
-    required: [true, 'Provide the owner of the review'],
-  },
-  type: {
-    type: String,
-    enum: {
-      values: ['hotel', 'room'],
-      message: 'You can only be a hotel or room',
+const reviewSchema = new Schema<IReview>(
+  {
+    content: {
+      type: String,
+      required: [true, "Review content can't be empty"],
+      trim: true,
     },
-    required: [true, 'Provide the hotel/room you are reviewing'],
+    rating: {
+      type: Number,
+      default: 3,
+      min: [1, 'Minimum rating is 1'],
+      max: [5, 'Maxmimum rating is 5'],
+    },
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+      required: [true, 'Provide the owner of the review'],
+    },
+    type: {
+      type: String,
+      enum: {
+        values: ['hotel', 'room'],
+        message: 'You can only be a hotel or room',
+      },
+      required: [true, 'Provide the hotel/room you are reviewing'],
+    },
+    targetId: {
+      type: String,
+      required: [true, 'Provide the id of the hotel/room'],
+    },
   },
-  targetId: {
-    type: String,
-    required: [true, 'Provide the id of the hotel/room'],
+  {
+    timestamps: true,
   },
-});
+);
 
 reviewSchema.index({ type: 1, targetId: 1, user: 1 }, { unique: true });
 

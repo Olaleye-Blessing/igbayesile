@@ -7,4 +7,6 @@ export interface IReview {
   user: Types.ObjectId;
   type: 'hotel' | 'room';
   targetId: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
