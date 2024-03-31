@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import catchAsync from '@/utils/catchAsync';
 import FilterFeatures from '@/utils/filterFeatures';
-import { Model } from 'mongoose';
+import { Model, PopulateOptions } from 'mongoose';
 
 /** 
  * model: Model<
@@ -25,6 +25,7 @@ export const findAll = <IDoc>(
     // any, // THydratedDocumentType
     // any // TSchema
   >,
+  populateOpts: PopulateOptions[] = [],
 ) =>
   catchAsync(async (req, res) => {
     const features = new FilterFeatures<IDoc>(model.find(), { ...req.query })
@@ -33,9 +34,16 @@ export const findAll = <IDoc>(
       .sort()
       .paginate();
 
+    const query = features.query;
+    if (populateOpts.length > 0) {
+      populateOpts.forEach((option) => {
+        query.populate(option);
+      });
+    }
+
     const [total, docs] = await Promise.all([
       model.countDocuments(features.queryFilter),
-      features.query,
+      query,
     ]);
 
     return res.status(200).json({

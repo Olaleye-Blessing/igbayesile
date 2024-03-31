@@ -29,7 +29,10 @@ export const setRoomsFilter: RequestHandler = (req, _res, next) => {
   next();
 };
 
-export const getRooms = factory.findAll(Room);
+export const getRooms = factory.findAll(Room, [
+  { path: 'hotel', select: 'name manager' },
+  { path: 'bookings', select: 'checkIn checkOut' },
+]);
 
 export const getRoom = catchAsync(async (req, res, next) => {
   const room = await Room.findById(req.params.roomId);

@@ -101,38 +101,6 @@ roomSchema.virtual('bookings', {
   localField: '_id',
 });
 
-roomSchema.pre(/^find/, function (next) {
-  // @ts-expect-error This is correct
-  this.populate({
-    path: 'hotel',
-    select: 'name manager',
-    // populate: {
-    //   path: ""
-    // }
-  });
-
-  next();
-});
-
-// roomSchema.pre('findOne', function (next) {
-//   this.populate({
-//     path: 'bookings',
-//     select: 'checkIn checkOut',
-//   });
-
-//   next();
-// });
-
-roomSchema.pre(/^find/, function (next) {
-  // @ts-expect-error This is correct
-  this.populate({
-    path: 'bookings',
-    select: 'checkIn checkOut',
-  });
-
-  next();
-});
-
 roomSchema.static('calcAvgHotelRoomsPrice', async function (hotelId: string) {
   let [stat] = await this.aggregate([
     { $match: { hotel: hotelId } },
