@@ -45,7 +45,7 @@ export default function Main() {
             value="settings"
             className="px-4 sm:px-0 sm:pr-4 lg:pr-0"
           >
-            <Settings />
+            <Settings user={user} />
           </TabsContent>
         </Tabs>
       </div>
