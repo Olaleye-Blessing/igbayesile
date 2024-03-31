@@ -16,7 +16,7 @@ export default function Header({ user }: HeaderProps) {
 
   // TODO: Make the bg transparent. Then change it to white when user scrolls to the top.
   return (
-    <TabsList className="h-auto w-full max-w-none flex-wrap py-2 sticky top-0 left-0 border-b border-gray-500 border-opacity-30 rounded-none">
+    <TabsList className="h-auto w-full max-w-none flex-wrap py-2 sticky top-0 left-0 z-[40] border-b border-gray-500 border-opacity-30 rounded-none">
       {tabs.map((tab) => {
         return (
           <TabsTrigger
