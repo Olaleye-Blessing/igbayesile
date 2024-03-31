@@ -135,6 +135,32 @@ export const resetPassword = catchAsync(async (req, res, next) => {
   });
 });
 
+export const updatePassword = catchAsync(async (req, res, next) => {
+  const { currentPassword, password, passwordConfirm } = req.body;
+
+  if (!currentPassword || !password || !passwordConfirm)
+    return next(new AppError('Preovide all required fields', 400));
+
+  // There will always be a user since this is a protected route
+  const user = (await User.findById((req as IAuthUserReq).user._id).select(
+    '+password',
+  ))!;
+
+  const isPwdCorrect = await user.correctPassword(
+    currentPassword,
+    user.password,
+  );
+
+  if (!isPwdCorrect) return next(new AppError(`Incorrect password`, 400));
+
+  user.password = password;
+  user.passwordConfirm = passwordConfirm;
+
+  await user.save();
+
+  sendToken(user, res);
+});
+
 function signToken(userId: Types.ObjectId) {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET!, {
     expiresIn: process.env.JWT_LOGGED_IN_EXPIRES!,
