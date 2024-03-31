@@ -1,11 +1,10 @@
-import { IAuthUserReq } from '@/types/request';
 import catchAsync from '@/utils/catchAsync';
 
 export const getMe = catchAsync(async (req, res) => {
   console.log(req.query);
 
   const fields = ((req.query?.fields as string)?.split(',') || []) as string[];
-  const user = (req as IAuthUserReq).user;
+  const user = req.user!;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let formattedUser = {} as { [key: string]: any };

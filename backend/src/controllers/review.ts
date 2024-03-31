@@ -3,7 +3,6 @@ import { IReview } from '@/interfaces/review';
 import Hotel from '@/models/hotel';
 import Review from '@/models/review';
 import Room from '@/models/room';
-import { IAuthUserReq } from '@/types/request';
 import AppError from '@/utils/AppError';
 import catchAsync from '@/utils/catchAsync';
 import { filterObj } from '@/utils/filter-obj';
@@ -67,7 +66,7 @@ export const createReview = catchAsync(async (req, res, next) => {
   if (!result)
     return next(new AppError(`This ${reviewType} doesn't exist`, 400));
 
-  const user = (req as IAuthUserReq).user._id;
+  const user = req.user!._id;
 
   const isOwner =
     reviewType === 'hotel'

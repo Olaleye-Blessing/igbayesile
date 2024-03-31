@@ -6,7 +6,6 @@ import User from '@/models/user';
 import { IMongoUser } from '@/interfaces/user';
 import AppError from '@/utils/AppError';
 import catchAsync from '@/utils/catchAsync';
-import { IAuthUserReq } from '@/types/request';
 
 export const signup = catchAsync(async (req, res, next) => {
   const { name, email, password, passwordConfirm, role } = req.body;
@@ -72,7 +71,7 @@ export const protect = catchAsync(async (req, res, next) => {
       ),
     );
 
-  (req as IAuthUserReq).user = user;
+  req.user = user;
   next();
 });
 
@@ -148,9 +147,7 @@ export const updatePassword = catchAsync(async (req, res, next) => {
     return next(new AppError('Preovide all required fields', 400));
 
   // There will always be a user since this is a protected route
-  const user = (await User.findById((req as IAuthUserReq).user._id).select(
-    '+password',
-  ))!;
+  const user = (await User.findById(req.user!._id).select('+password'))!;
 
   const isPwdCorrect = await user.correctPassword(
     currentPassword,
