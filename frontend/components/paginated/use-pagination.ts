@@ -23,7 +23,7 @@ export const usePagination = <TData = unknown>({
   const [page, setPage] = useState(1);
   const [totalData, setTotalData] = useState<TData[]>([]);
 
-  const [base, path] = url.split("?");
+  const [base, path = ""] = url.split("?");
   const search = new URLSearchParams(path.trim());
   search.set("page", String(page));
   search.set("limit", "3");

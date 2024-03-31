@@ -39,7 +39,7 @@ export default function Main() {
             <Bookings />
           </TabsContent>
           <TabsContent value="hotels" className="px-4 sm:px-0 sm:pr-4 lg:pr-0">
-            <Hotels />
+            <Hotels user={user} />
           </TabsContent>
           <TabsContent
             value="settings"
