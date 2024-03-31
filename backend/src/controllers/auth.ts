@@ -91,9 +91,15 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
   const resetToken = user.setPasswordResetToken();
   await user.save({ validateBeforeSave: false });
 
-  const resetUrl = `${req.protocol}:://${req.get(
-    'host',
-  )}/api/v1/auth/reset-password/${resetToken}`;
+  let resetUrl = '';
+
+  if (process.env.NODE_ENV === 'production' || req.headers.origin) {
+    resetUrl = `${process.env.FRONTEND_URL}/auth/reset-password/?token=${resetToken}`;
+  } else {
+    resetUrl = `${req.protocol}:://${req.get(
+      'host',
+    )}/api/v1/auth/reset-password/?token=${resetToken}`;
+  }
 
   // TODO: send a mail
 

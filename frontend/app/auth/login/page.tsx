@@ -94,18 +94,31 @@ export default function Page() {
           Log In
         </Button>
       </form>
-      <p>
-        No account?{" "}
-        <Link
-          href="/auth/signup"
-          className={buttonVariants({
-            variant: "link",
-            className: "!px-0",
-          })}
-        >
-          Sign up
-        </Link>
-      </p>
+      <div className="flex items-center justify-between flex-wrap">
+        <p>
+          No account?{" "}
+          <Link
+            href="/auth/signup"
+            className={buttonVariants({
+              variant: "link",
+              className: "!px-0",
+            })}
+          >
+            Sign up
+          </Link>
+        </p>
+        <p>
+          <Link
+            href="/auth/forgot-password"
+            className={buttonVariants({
+              variant: "link",
+              className: "!px-0",
+            })}
+          >
+            Forgot your password?
+          </Link>
+        </p>
+      </div>
     </main>
   );
 }
