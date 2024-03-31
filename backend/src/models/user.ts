@@ -10,6 +10,7 @@ interface IUserMethods {
     dbPassword: string,
   ): Promise<boolean>;
   setPasswordResetToken(): string;
+  pwdChangedAfterTokenIssued(tokenIssuedAt: number): string;
 }
 
 interface UserModel extends Model<IUser, object, IUserMethods> {
@@ -88,6 +89,16 @@ userSchema.methods.setPasswordResetToken = function () {
   this.passwordResetExpires = new Date(Date.now() + 1 * 60 * 60 * 1000);
 
   return resetToken;
+};
+
+userSchema.methods.pwdChangedAfterTokenIssued = function (
+  tokenIssuedAt: number,
+) {
+  if (!this.passwordResetAt) return false;
+
+  // issued -> Sunday 11th -> 900 in secs
+  // pwdResetAt -> Monday 12th -> 1000 in secs
+  return this.passwordResetAt.getTime() > tokenIssuedAt * 1000;
 };
 
 userSchema.pre('save', async function (next) {
