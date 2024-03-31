@@ -91,7 +91,7 @@ export default function SignUp() {
   };
 
   return (
-    <main className="">
+    <main className="auth__main">
       <form
         className="cardboard p-4"
         onSubmit={form.handleSubmit(signUp, () => {
