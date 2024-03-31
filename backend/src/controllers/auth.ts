@@ -64,7 +64,13 @@ export const protect = catchAsync(async (req, res, next) => {
 
   if (!user) return next(new AppError('This user does not exist', 400));
 
-  // TODO: Check if password hasn't been changed
+  if (user.pwdChangedAfterTokenIssued(decodedToken.iat!))
+    return next(
+      new AppError(
+        'Your password has recently been changed. Log in with the new password',
+        400,
+      ),
+    );
 
   (req as IAuthUserReq).user = user;
   next();
