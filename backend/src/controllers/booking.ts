@@ -1,5 +1,4 @@
 import catchAsync from '@/utils/catchAsync';
-import { IAuthUserReq } from '@/types/request';
 import {
   IPayStackInitParams,
   IPayStackVerifySuccessRes,
@@ -37,7 +36,7 @@ export const setPaymentParams = catchAsync(async (req, res, next) => {
 
   const payment: IPayStackInitParams = {
     amount,
-    email: (req as IAuthUserReq).user.email,
+    email: req.user!.email,
     callback_url:
       process.env.NODE_ENV === 'production'
         ? `${req.protocol}:://${req.get('host')}`
@@ -57,7 +56,7 @@ export const setPaymentParams = catchAsync(async (req, res, next) => {
         {
           display_name: 'User ID',
           variable_name: 'userID',
-          value: (req as IAuthUserReq).user._id,
+          value: req.user!._id,
         },
       ],
     },
@@ -86,8 +85,7 @@ export const createBooking = catchAsync(async (req, res) => {
   req.body = {
     ...req.body,
     status: 'pending',
-    // TODO: Extend express request
-    userId: (req as IAuthUserReq).user._id,
+    userId: req.user!._id,
     roomId: req.params.roomId,
     paymentReference: paymentInit.reference,
     paymentAccessCode: paymentInit.access_code,
@@ -110,7 +108,7 @@ export const confirmBookingPayment = catchAsync(async (req, res, next) => {
   const paymentVerification = (req as any)
     .payment_verification as IPayStackVerifySuccessRes;
 
-  const userId = (req as IAuthUserReq).user._id;
+  const userId = req.user!._id;
   const roomId = req.params.roomId;
   const paymentReference = paymentVerification.data.reference;
 

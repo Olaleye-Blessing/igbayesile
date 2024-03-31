@@ -11,7 +11,7 @@ import {
 import AppError from '@/utils/AppError';
 
 export const initializePayStack = catchAsync(async (req, res, next) => {
-  // TODO: Extend express req to have user and payment.
+  // TODO: Extend express req to have payment.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const payment = (req as any).payment as IPayStackInitParams;
 

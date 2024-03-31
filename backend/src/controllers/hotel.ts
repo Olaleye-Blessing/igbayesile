@@ -4,7 +4,6 @@ import { v2 as cloudinary } from 'cloudinary';
 import catchAsync from '@/utils/catchAsync';
 import Hotel from '@/models/hotel';
 import AppError from '@/utils/AppError';
-import { IAuthUserReq } from '@/types/request';
 import { IHotel } from '@/interfaces/hotel';
 import * as factory from '@/controllers/factory';
 
@@ -84,7 +83,7 @@ export const createHotel = catchAsync(async (req, res, next) => {
   const body = {
     ...req.body,
     images: results.map((img) => img.secure_url),
-    manager: (req as IAuthUserReq).user._id,
+    manager: req.user!._id,
   };
 
   const hotel = await Hotel.create(body);
