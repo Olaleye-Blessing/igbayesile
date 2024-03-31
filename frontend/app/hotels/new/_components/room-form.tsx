@@ -66,8 +66,8 @@ export default function RoomForm({ hotelId }: RoomFormProps) {
 
       toast.success("Room created successfully", { id: toastId });
       setIsSubmitting(false);
-      // TODO: Redirect to hotels page
-      router.push("/");
+
+      form.reset();
     } catch (error) {
       toast.error(handleIgbayesileAPIError(error), { id: toastId });
       setIsSubmitting(false);
@@ -197,7 +197,7 @@ export default function RoomForm({ hotelId }: RoomFormProps) {
       </form>
       {/* TODO: Redirect to my hotels page */}
       <Link
-        href="/"
+        href="/profile/?tab=hotels"
         className={buttonVariants({
           variant: "destructive",
           className: "w-full max-w-40 mt-6 ml-auto !block text-center mb-4",
