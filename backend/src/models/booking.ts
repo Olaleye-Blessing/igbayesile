@@ -1,6 +1,7 @@
+import { IBooking } from '@/interfaces/booking';
 import mongoose, { model, Schema } from 'mongoose';
 
-const bookingSchema = new Schema(
+const bookingSchema = new Schema<IBooking>(
   {
     status: {
       type: String,

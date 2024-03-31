@@ -9,6 +9,7 @@ router.use(protect);
 
 router
   .route('/')
+  .get(bookingController.setBookingsFilter, bookingController.getBookings)
   .post(
     bookingController.setPaymentParams,
     initializePayStack,

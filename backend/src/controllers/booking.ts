@@ -7,6 +7,24 @@ import AppError from '@/utils/AppError';
 import Room from '@/models/room';
 import { differenceInDays } from 'date-fns';
 import Booking from '@/models/booking';
+import { RequestHandler } from 'express';
+import { FilterQuery } from 'mongoose';
+import { IBooking } from '@/interfaces/booking';
+import * as factory from './factory';
+
+export const setBookingsFilter: RequestHandler = (req, res, next) => {
+  const filter: FilterQuery<IBooking> = {};
+  filter.userId = req.user!._id;
+  filter.fields = '-paymentAccessCode,-paymentId';
+
+  req.query = { ...req.query, ...filter };
+
+  next();
+};
+
+export const getBookings = factory.findAll(Booking, [
+  { path: 'roomId', select: '-bookings' },
+]);
 
 export const setPaymentParams = catchAsync(async (req, res, next) => {
   let { checkIn, checkOut } = req.body;

@@ -10,6 +10,7 @@ const Bookings = dynamic(() => import("./bookings"), {
   ssr: false,
   loading: () => <Loading />,
 });
+
 const Hotels = dynamic(() => import("./hotels"), {
   ssr: false,
   loading: () => <Loading />,

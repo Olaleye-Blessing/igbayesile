@@ -1,3 +1,5 @@
+import { IRoomDetail } from "./room";
+
 export interface IBooking {
   _id: string;
   status: "pending" | "paid";
@@ -11,4 +13,10 @@ export interface IBooking {
   totalCost: number;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface IUserBooking extends Omit<IBooking, "roomId"> {
+  roomId: IRoomDetail;
+  paymentReference: string;
+  totalCost: number;
 }
