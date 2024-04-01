@@ -10,7 +10,6 @@ import { rhfErrMsg } from "@/utils/rhf-error-msg";
 import { TextAreaField } from "@/components/custom/TextAreaField";
 import ImagesPreview from "./images-preview";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Amenities from "./amenities";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -25,7 +24,6 @@ interface RoomFormProps {
 }
 
 export default function RoomForm({ hotelId }: RoomFormProps) {
-  const router = useRouter();
   // TODO: Fix this: form.formState.isSubmitting is true always
   const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<RoomFormData>({
