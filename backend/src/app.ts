@@ -15,6 +15,11 @@ import { protect } from './controllers/auth';
 
 const app: Express = express();
 
+if (process.env.NODE_ENV === 'production')
+  app.use((req, res) => {
+    res.status(200).json({ message: 'coming soon' });
+  });
+
 if (process.env.NODE_ENV !== 'production') app.use(morgan('dev'));
 
 app.use(cookieParser());
