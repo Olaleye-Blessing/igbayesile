@@ -25,8 +25,6 @@ const dayInMs = 24 * 60 * 60 * 1000;
 export default function BookRoom({ room }: BookRoomProps) {
   const router = useRouter();
   const [bookingDates, setBookingDates] = useState<DateRange | undefined>({
-    // from: new Date(),
-    // to: new Date(Date.now() + dayInMs * 5),
     from: undefined,
     to: undefined,
   });
@@ -59,8 +57,8 @@ export default function BookRoom({ room }: BookRoomProps) {
     searchParams.set("breakfast", String(includeBreakfast));
     // Replace with breakfast price
     if (includeBreakfast) searchParams.set("breakfastPrice", String(20));
-    searchParams.set("checkIn", bookingDates.from.toISOString());
-    searchParams.set("checkOut", bookingDates.to.toISOString());
+    searchParams.set("checkIn", bookingDates.from.toString());
+    searchParams.set("checkOut", bookingDates.to.toString());
     searchParams.set("userGuests", String(userGuests));
     searchParams.set("city", room.city);
     searchParams.set("state", room.state);
