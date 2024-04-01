@@ -6,6 +6,7 @@ import User from '@/models/user';
 import { IMongoUser } from '@/interfaces/user';
 import AppError from '@/utils/AppError';
 import catchAsync from '@/utils/catchAsync';
+import { loggedInCookieName } from '@/configs/igbayesile';
 
 export const signup = catchAsync(async (req, res, next) => {
   const { name, email, password, passwordConfirm, role } = req.body;
@@ -45,7 +46,7 @@ export const login = catchAsync(
 );
 
 export const logout = catchAsync(async (req, res) => {
-  res.cookie('loggedIn', '', { expires: new Date(0) });
+  res.cookie(loggedInCookieName, '', { expires: new Date(0) });
 
   res.status(200).json({
     status: 'success',
@@ -54,7 +55,7 @@ export const logout = catchAsync(async (req, res) => {
 });
 
 export const protect = catchAsync(async (req, res, next) => {
-  const token = req.cookies.loggedIn;
+  const token = req.cookies[loggedInCookieName];
   if (!token) return next(new AppError('Please provide a login token', 400));
 
   const decodedToken = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
@@ -179,10 +180,12 @@ function signToken(userId: Types.ObjectId) {
 function sendToken(user: IMongoUser, res: Response) {
   const token = signToken(user._id);
 
-  res.cookie('loggedIn', token, {
+  res.cookie(loggedInCookieName, token, {
     httpOnly: true,
     secure: true,
     expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    path: '/',
+    sameSite: 'strict',
   });
 
   // @ts-expect-error Do not send password to the client;
