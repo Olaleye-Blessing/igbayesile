@@ -20,7 +20,7 @@ export default function Booking({ booking }: BookingProps) {
       <header className="flex items-center justify-between">
         <h3>{booking.roomId.name}</h3>
         <span
-          className={`text-sm rounded-lg px-[0.2rem] py-[0.1rem] pb-1 ${booking.status === "paid" ? "bg-green-200 text-green-800" : booking.status === "pending" ? "bg-yellow-200 text-yellow-800" : "bg-red-200 text-red-800"}`}
+          className={`text-sm rounded-sm px-[0.4rem] py-[0.15rem] pb-1 ${booking.status === "paid" ? "bg-green-200 text-green-800" : booking.status === "pending" ? "bg-yellow-200 text-yellow-800" : "bg-red-200 text-red-800"}`}
         >
           {booking.status}
         </span>

@@ -11,6 +11,7 @@ import { RequestHandler } from 'express';
 import { FilterQuery } from 'mongoose';
 import { IBooking } from '@/interfaces/booking';
 import * as factory from './factory';
+import { dateWithoutTimezone } from '@/utils/date-without-timezone';
 
 export const setBookingsFilter: RequestHandler = (req, res, next) => {
   const filter: FilterQuery<IBooking> = {};
@@ -31,10 +32,14 @@ export const setPaymentParams = catchAsync(async (req, res, next) => {
   if (!checkIn || !checkOut)
     return next(new AppError('Provide check in and check out dates', 400));
 
-  checkIn = new Date(checkIn);
-  checkOut = new Date(checkOut);
+  checkIn = dateWithoutTimezone(new Date(checkIn));
+  checkOut = dateWithoutTimezone(new Date(checkOut));
 
-  if (checkIn < Date.now() || checkOut < Date.now)
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const currentDate = dateWithoutTimezone(now);
+
+  if (checkIn < currentDate || checkOut < currentDate)
     return next(new AppError("You can't select dates in the past", 400));
 
   // TODO: use zod to validate date
@@ -131,8 +136,9 @@ export const confirmBookingPayment = catchAsync(async (req, res, next) => {
   const paymentReference = paymentVerification.data.reference;
 
   const filter = { userId, roomId, paymentReference };
+  const paymentStatus = paymentVerification.data.status;
   const update = {
-    status: paymentVerification.data.status,
+    status: paymentStatus === 'success' ? 'paid' : paymentStatus,
     paymentId: paymentVerification.data.id,
   };
 
@@ -151,9 +157,9 @@ export const confirmBookingPayment = catchAsync(async (req, res, next) => {
     data: {
       booking,
       status:
-        paymentVerification.data.status === 'success'
+        paymentStatus === 'success'
           ? 'Payment received'
-          : `Payment status: ${paymentVerification.data.status}`,
+          : `Payment status: ${paymentStatus}`,
     },
   });
 });
