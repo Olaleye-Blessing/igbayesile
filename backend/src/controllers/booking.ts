@@ -163,3 +163,22 @@ export const confirmBookingPayment = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+export const continuePayment = catchAsync(async (req, res, next) => {
+  const booking = await Booking.findOne({
+    _id: req.params.bookingId,
+    user: req.user!._id,
+  });
+
+  if (!booking) return next(new AppError('This booking does not exist', 404));
+
+  if (booking.status === 'paid')
+    return next(new AppError('This booking has been paid for', 400));
+
+  return res.status(200).json({
+    status: 'success',
+    data: {
+      authorization_url: `https://checkout.paystack.com/${booking.paymentAccessCode}`,
+    },
+  });
+});

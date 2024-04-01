@@ -4,8 +4,9 @@ import Loading from "@/app/loading";
 import { useIGBInstance } from "@/hooks/use-igb-instance";
 import { IBooking } from "@/interfaces/booking";
 import { handleIgbayesileAPIError } from "@/utils/handle-igbayesile-api-error";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 type TVerification =
   | { loading: true }
@@ -13,6 +14,7 @@ type TVerification =
   | { loading: false; status: "error"; error: string };
 
 export default function Page() {
+  const router = useRouter();
   const searchParams = useSearchParams();
 
   const reference = searchParams.get("reference");
@@ -40,6 +42,13 @@ export default function Page() {
           message: data.status,
         });
         data;
+
+        toast.success("Redirecting in 2 seconds...", {
+          id: "payment-confirmed",
+        });
+        setTimeout(() => {
+          router.replace("/profile");
+        }, 2000);
       } catch (error) {
         let message = handleIgbayesileAPIError(error);
         setVerification({ loading: false, status: "error", error: message });

@@ -1,20 +1,54 @@
 import AmentiyWithIcon from "@/components/amentiy-with-icon";
 import BookRoom from "@/components/custom/book-room";
 import AutoPlayImages from "@/components/custom/carousel/auto-play-images";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { IUserBooking } from "@/interfaces/booking";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Item from "./item";
-import { Clock, Clock10, HandCoins, Users } from "lucide-react";
+import { Clock, Clock10, HandCoins, Terminal, Users } from "lucide-react";
 import { convertDateToLocale } from "@/utils/convert-date-to-locale";
 import { formatCurrency } from "@/utils/format-currency";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useIGBInstance } from "@/hooks/use-igb-instance";
+import toast from "react-hot-toast";
+import { handleIgbayesileAPIError } from "@/utils/handle-igbayesile-api-error";
 
 interface BookingProps {
   booking: IUserBooking;
 }
 
+interface IContinuePayment {
+  status: string;
+  data: {
+    authorization_url: string;
+  };
+}
+
 export default function Booking({ booking }: BookingProps) {
+  const { igbInstance } = useIGBInstance();
+  const continuePayment = async () => {
+    if (booking.status === "paid")
+      return toast.success("This booking has been paid for", {
+        id: `booking-paid-${booking._id}`,
+      });
+
+    const toastId = `cont-payment-${booking._id}`;
+
+    toast.loading("Checking status...", { id: toastId });
+
+    try {
+      const { data } = await igbInstance().patch<IContinuePayment>(
+        `/bookings/${booking._id}/continue-payment`,
+        {},
+      );
+
+      window.location.href = data.data.authorization_url;
+    } catch (error) {
+      toast.error(handleIgbayesileAPIError(error), { id: toastId });
+    }
+  };
+
   return (
     <div className={cn("cardboard p-3 flex flex-col")}>
       <header className="flex items-center justify-between">
@@ -47,7 +81,30 @@ export default function Booking({ booking }: BookingProps) {
           })}
         />
       </div>
-      <section className="h-full flex flex-col mt-4">
+      <div className="flex items-center justify-start">
+        {booking.status !== "paid" && (
+          <Alert variant="destructive" className="bg-red-100">
+            <Terminal className="h-4 w-4" />
+            <AlertTitle>Note!</AlertTitle>
+            <AlertDescription>
+              <p className="mr-2">
+                This room will not be reserved until you pay,{" "}
+                <Button
+                  className="p-0"
+                  variant="link"
+                  type="button"
+                  onClick={continuePayment}
+                >
+                  Continue Payment
+                </Button>
+                .
+              </p>
+            </AlertDescription>
+          </Alert>
+        )}
+      </div>
+
+      <section className="h-full flex flex-col mt-2">
         <header>
           <h3 className="text-lg">Current Room Details</h3>
         </header>
