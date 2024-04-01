@@ -84,7 +84,7 @@ export default function Confirm({ bookInfo }: ConfrimProps) {
     toast.loading("Initializing payment", { id: toastId });
 
     const body = {
-      roomId: roomInfo.data.room._id,
+      room: roomInfo.data.room._id,
       guests: bookInfo.guests,
       checkIn: bookInfo.checkIn,
       checkOut: bookInfo.checkOut,

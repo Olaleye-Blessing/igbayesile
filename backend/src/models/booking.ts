@@ -11,12 +11,12 @@ const bookingSchema = new Schema<IBooking>(
         message: 'Booking status: Internal server error',
       },
     },
-    userId: {
+    user: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
       required: [true, 'Provide the user of this booking.'],
     },
-    roomId: {
+    room: {
       type: mongoose.Schema.ObjectId,
       ref: 'Room',
       required: [true, 'Provide the room being booked.'],

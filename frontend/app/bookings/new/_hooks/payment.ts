@@ -22,11 +22,11 @@ export const usePayment = () => {
 
   const initializePayment = useMutation({
     mutationFn: async (
-      body: Pick<IBooking, "roomId" | "guests" | "checkIn" | "checkOut">,
+      body: Pick<IBooking, "room" | "guests" | "checkIn" | "checkOut">,
     ) => {
       try {
         let res = await igbInstance().post<IResult>(
-          `/rooms/${body.roomId}/bookings`,
+          `/rooms/${body.room}/bookings`,
           { ...body },
         );
 
