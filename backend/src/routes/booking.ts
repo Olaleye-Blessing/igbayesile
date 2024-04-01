@@ -22,4 +22,6 @@ router.post(
   bookingController.confirmBookingPayment,
 );
 
+router.patch('/:bookingId/continue-payment', bookingController.continuePayment);
+
 export default router;

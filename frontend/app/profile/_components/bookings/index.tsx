@@ -3,7 +3,7 @@ import { usePagination } from "@/components/paginated/use-pagination";
 import { IUserBooking } from "@/interfaces/booking";
 import Booking from "./booking";
 
-const url = `/bookings`;
+const url = `/bookings?sort=-createdAt`;
 
 export default function Bookings() {
   const {
