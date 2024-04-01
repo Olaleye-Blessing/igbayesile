@@ -23,6 +23,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../../frontend/dist')));
 app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 
+if (process.env.NODE_ENV === 'production')
+  app.use((req, res) => {
+    res.status(200).json({ message: 'coming soon' });
+  });
+
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', protect, userRouter);
 app.use('/api/v1/hotels', hotelRouter);
