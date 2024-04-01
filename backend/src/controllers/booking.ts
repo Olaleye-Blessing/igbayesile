@@ -15,7 +15,7 @@ import { dateWithoutTimezone } from '@/utils/date-without-timezone';
 
 export const setBookingsFilter: RequestHandler = (req, res, next) => {
   const filter: FilterQuery<IBooking> = {};
-  filter.userId = req.user!._id;
+  filter.user = req.user!._id;
   filter.fields = '-paymentAccessCode,-paymentId';
 
   req.query = { ...req.query, ...filter };
@@ -24,7 +24,7 @@ export const setBookingsFilter: RequestHandler = (req, res, next) => {
 };
 
 export const getBookings = factory.findAll(Booking, [
-  { path: 'roomId', select: '-bookings' },
+  { path: 'room', select: '-bookings' },
 ]);
 
 export const setPaymentParams = catchAsync(async (req, res, next) => {
@@ -89,7 +89,7 @@ export const setPaymentParams = catchAsync(async (req, res, next) => {
     ...req.body,
     checkIn,
     checkOut,
-    roomId,
+    room: roomId,
     totalCost: amount,
   };
 
@@ -108,8 +108,8 @@ export const createBooking = catchAsync(async (req, res) => {
   req.body = {
     ...req.body,
     status: 'pending',
-    userId: req.user!._id,
-    roomId: req.params.roomId,
+    user: req.user!._id,
+    room: req.params.roomId,
     paymentReference: paymentInit.reference,
     paymentAccessCode: paymentInit.access_code,
   };
@@ -131,11 +131,11 @@ export const confirmBookingPayment = catchAsync(async (req, res, next) => {
   const paymentVerification = (req as any)
     .payment_verification as IPayStackVerifySuccessRes;
 
-  const userId = req.user!._id;
-  const roomId = req.params.roomId;
+  const user = req.user!._id;
+  const room = req.params.roomId;
   const paymentReference = paymentVerification.data.reference;
 
-  const filter = { userId, roomId, paymentReference };
+  const filter = { user, room, paymentReference };
   const paymentStatus = paymentVerification.data.status;
   const update = {
     status: paymentStatus === 'success' ? 'paid' : paymentStatus,

@@ -3,8 +3,8 @@ import { Types } from 'mongoose';
 export interface IBooking {
   _id: Types.ObjectId;
   status: 'pending' | 'paid';
-  userId: Types.ObjectId;
-  roomId: Types.ObjectId;
+  user: Types.ObjectId;
+  room: Types.ObjectId;
   guests: number;
   paymentReference: string;
   paymentAccessCode?: string;

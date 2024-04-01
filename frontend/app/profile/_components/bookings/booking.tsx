@@ -18,7 +18,7 @@ export default function Booking({ booking }: BookingProps) {
   return (
     <div className={cn("cardboard p-3 flex flex-col")}>
       <header className="flex items-center justify-between">
-        <h3>{booking.roomId.name}</h3>
+        <h3>{booking.room.name}</h3>
         <span
           className={`text-sm rounded-sm px-[0.4rem] py-[0.15rem] pb-1 ${booking.status === "paid" ? "bg-green-200 text-green-800" : booking.status === "pending" ? "bg-yellow-200 text-yellow-800" : "bg-red-200 text-red-800"}`}
         >
@@ -52,27 +52,27 @@ export default function Booking({ booking }: BookingProps) {
           <h3 className="text-lg">Current Room Details</h3>
         </header>
         <p className="text-gray-500 max-h-40 overflow-auto mb-4">
-          {booking.roomId.description}
+          {booking.room.description}
         </p>
         <AutoPlayImages
-          images={booking.roomId.images}
+          images={booking.room.images}
           nextClassName="right-0"
           prevClassName="left-0"
         />
         <>
-          {booking.roomId.amenities.length === 0 ? (
+          {booking.room.amenities.length === 0 ? (
             <p className="error mt-4">No Amenity</p>
           ) : (
             <ul className="amenities mt-4 grid gap-4 grid-cols-[repeat(auto-fill,minmax(8rem,_1fr))]">
-              {booking.roomId.amenities.map((amenity) => (
+              {booking.room.amenities.map((amenity) => (
                 <AmentiyWithIcon key={amenity} amenity={amenity} />
               ))}
             </ul>
           )}
         </>
-        <BookRoom room={booking.roomId} />
+        <BookRoom room={booking.room} />
         <Link
-          href={`/rooms/room/?roomId=${booking.roomId._id}&hotelId=${booking.roomId.hotel}`}
+          href={`/rooms/room/?roomId=${booking.room._id}&hotelId=${booking.room.hotel}`}
           className={buttonVariants({
             variant: "secondary",
             className: "w-full mt-2",

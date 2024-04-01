@@ -3,8 +3,8 @@ import { IRoomDetail } from "./room";
 export interface IBooking {
   _id: string;
   status: "pending" | "paid";
-  userId: string;
-  roomId: string;
+  user: string;
+  room: string;
   // payment_reference: string
   // payment_id: string
   guests: number;
@@ -15,8 +15,8 @@ export interface IBooking {
   updatedAt: Date;
 }
 
-export interface IUserBooking extends Omit<IBooking, "roomId"> {
-  roomId: IRoomDetail;
+export interface IUserBooking extends Omit<IBooking, "room"> {
+  room: IRoomDetail;
   paymentReference: string;
   totalCost: number;
 }
