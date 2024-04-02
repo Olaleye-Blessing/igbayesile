@@ -5,7 +5,7 @@ import {
 } from '@/interfaces/paystack';
 import AppError from '@/utils/AppError';
 import Room from '@/models/room';
-import { differenceInDays } from 'date-fns';
+import { areIntervalsOverlapping, differenceInDays } from 'date-fns';
 import Booking from '@/models/booking';
 import { RequestHandler } from 'express';
 import { FilterQuery } from 'mongoose';
@@ -51,9 +51,27 @@ export const setPaymentParams = catchAsync(async (req, res, next) => {
 
   if (!roomId) return next(new AppError('Room not found', 404));
 
-  const room = await Room.findById(roomId);
+  const room = await Room.findById(roomId).populate({
+    path: 'bookings',
+    select: 'checkIn checkOut',
+  });
 
   if (!room) return next(new AppError('Room not found', 404));
+
+  if (
+    datesisOverlapping({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      bookings: (room as any).bookings as IBooking[],
+      checkIn,
+      checkOut,
+    })
+  )
+    return next(
+      new AppError(
+        'Some of the dates are overlapping. Select another dates range',
+        400,
+      ),
+    );
 
   const amount = room.price * Number(totalDays) * 100; // in kobo
 
@@ -182,3 +200,31 @@ export const continuePayment = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+function datesisOverlapping({
+  bookings,
+  checkIn,
+  checkOut,
+}: {
+  bookings: IBooking[];
+  checkIn: string | Date;
+  checkOut: string | Date;
+}) {
+  const bookedDates =
+    bookings.map((booking) => ({
+      start: booking.checkIn,
+      end: booking.checkOut,
+    })) || [];
+
+  if (bookedDates.length === 0) return false;
+
+  const overlapped = bookedDates.some((date) =>
+    areIntervalsOverlapping(
+      { ...date },
+      { start: checkIn, end: checkOut },
+      { inclusive: true },
+    ),
+  );
+
+  return overlapped;
+}

@@ -97,7 +97,7 @@ const roomSchema = new Schema<IRoom>(
 
 roomSchema.virtual('bookings', {
   ref: 'Booking',
-  foreignField: 'roomId',
+  foreignField: 'room',
   localField: '_id',
 });
 

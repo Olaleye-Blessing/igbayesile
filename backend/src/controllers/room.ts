@@ -35,7 +35,10 @@ export const getRooms = factory.findAll(Room, [
 ]);
 
 export const getRoom = catchAsync(async (req, res, next) => {
-  const room = await Room.findById(req.params.roomId);
+  const room = await Room.findById(req.params.roomId).populate({
+    path: 'bookings',
+    select: 'checkIn checkOut',
+  });
 
   if (!room) return next(new AppError('This room does not exist', 404));
 
