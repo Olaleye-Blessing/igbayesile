@@ -25,6 +25,7 @@ export const setBookingsFilter: RequestHandler = (req, res, next) => {
 
 export const getBookings = factory.findAll(Booking, [
   { path: 'room', select: '-bookings' },
+  { path: 'reviews' },
 ]);
 
 export const setPaymentParams = catchAsync(async (req, res, next) => {

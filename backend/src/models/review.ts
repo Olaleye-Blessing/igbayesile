@@ -33,6 +33,10 @@ const reviewSchema = new Schema<IReview>(
       },
       required: [true, 'Provide the hotel/room you are reviewing'],
     },
+    booking: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Booking',
+    },
     targetId: {
       type: String,
       required: [true, 'Provide the id of the hotel/room'],
@@ -43,7 +47,10 @@ const reviewSchema = new Schema<IReview>(
   },
 );
 
-reviewSchema.index({ type: 1, targetId: 1, user: 1 }, { unique: true });
+reviewSchema.index(
+  { booking: 1, type: 1, targetId: 1, user: 1 },
+  { unique: true },
+);
 
 reviewSchema.static(
   'calcHotelOrRoomAvgRating',
