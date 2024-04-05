@@ -1,5 +1,5 @@
-import { protect } from '@/controllers/auth';
 import { getMe } from '@/controllers/user';
+import { protect } from '@/middlewares/auth';
 import express from 'express';
 
 const router = express.Router();

@@ -1,6 +1,6 @@
-import { protect } from '@/controllers/auth';
 import * as bookingController from '@/controllers/booking';
 import { initializePayStack, verifyPayment } from '@/controllers/payment';
+import { protect } from '@/middlewares/auth';
 import express from 'express';
 
 const router = express.Router({ mergeParams: true });
