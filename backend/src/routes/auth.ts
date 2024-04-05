@@ -1,6 +1,7 @@
 import express from 'express';
 
 import * as authController from '@/controllers/auth';
+import { protect } from '@/middlewares/auth';
 
 const router = express.Router();
 
@@ -10,7 +11,7 @@ router.post('/logout', authController.logout);
 router.post('/forgot-password', authController.forgotPassword);
 router.post('/reset-password/:token', authController.resetPassword);
 
-router.use(authController.protect);
+router.use(protect);
 
 router.patch('/me/update-password', authController.updatePassword);
 

@@ -3,8 +3,7 @@ import express from 'express';
 import * as hotelController from '@/controllers/hotel';
 import roomRouter from './room';
 import reviewRouter from './review';
-import { protect } from '@/controllers/auth';
-import { restrictTo } from '@/middlewares/auth';
+import { protect, restrictTo } from '@/middlewares/auth';
 import { imgsUpload } from '@/middlewares/multer';
 
 const router = express.Router();

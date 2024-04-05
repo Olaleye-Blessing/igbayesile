@@ -11,7 +11,7 @@ import roomRouter from '@/routes/room';
 import bookingRouter from '@/routes/booking';
 import reviewRouter from '@/routes/review';
 import globalErrorHanlder from '@/controllers/error';
-import { protect } from './controllers/auth';
+import { protect } from './middlewares/auth';
 
 const app: Express = express();
 

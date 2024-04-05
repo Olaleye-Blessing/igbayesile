@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { NextFunction, Request, Response } from 'express';
 import { Types } from 'mongoose';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import User from '@/models/user';
 import { IMongoUser } from '@/interfaces/user';
 import AppError from '@/utils/AppError';
@@ -54,27 +54,7 @@ export const logout = catchAsync(async (req, res) => {
   });
 });
 
-export const protect = catchAsync(async (req, res, next) => {
-  const token = req.cookies[loggedInCookieName];
-  if (!token) return next(new AppError('Please provide a login token', 400));
 
-  const decodedToken = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
-
-  const user = await User.findById(decodedToken.id);
-
-  if (!user) return next(new AppError('This user does not exist', 400));
-
-  if (user.pwdChangedAfterTokenIssued(decodedToken.iat!))
-    return next(
-      new AppError(
-        'Your password has recently been changed. Log in with the new password',
-        400,
-      ),
-    );
-
-  req.user = user;
-  next();
-});
 
 export const forgotPassword = catchAsync(async (req, res, next) => {
   const email = req.body.email;

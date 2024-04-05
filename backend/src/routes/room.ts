@@ -2,8 +2,7 @@
 import express from 'express';
 
 import * as roomController from '@/controllers/room';
-import { protect } from '@/controllers/auth';
-import { restrictTo } from '@/middlewares/auth';
+import { protect, restrictTo } from '@/middlewares/auth';
 import { upload } from '@/middlewares/multer';
 import bookingRouter from './booking';
 import reviewRouter from './review';
