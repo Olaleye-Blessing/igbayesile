@@ -7,7 +7,7 @@ interface ReviewProps {
 }
 export default function Review({ review }: ReviewProps) {
   return (
-    <li>
+    <li className="cardboard px-2 py-3">
       <div className="flex items-start justify-start">
         <figure className="mr-1">
           <Avatar>

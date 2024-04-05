@@ -12,6 +12,7 @@ export interface IBooking {
   checkIn: Date;
   checkOut: Date;
   totalCost: number;
+  reviews?: Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
 }

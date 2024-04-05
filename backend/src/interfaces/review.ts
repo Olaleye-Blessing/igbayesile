@@ -9,4 +9,5 @@ export interface IReview {
   targetId: string;
   createdAt: Date;
   updatedAt: Date;
+  booking?: Types.ObjectId;
 }

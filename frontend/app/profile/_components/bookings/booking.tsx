@@ -1,6 +1,5 @@
-import AmentiyWithIcon from "@/components/amentiy-with-icon";
-import BookRoom from "@/components/custom/book-room";
-import AutoPlayImages from "@/components/custom/carousel/auto-play-images";
+// import AmentiyWithIcon from "@/components/amentiy-with-icon";
+// import AutoPlayImages from "@/components/custom/carousel/auto-play-images";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { IUserBooking } from "@/interfaces/booking";
 import { cn } from "@/lib/utils";
@@ -13,6 +12,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useIGBInstance } from "@/hooks/use-igb-instance";
 import toast from "react-hot-toast";
 import { handleIgbayesileAPIError } from "@/utils/handle-igbayesile-api-error";
+import Reviews from "./reviews";
 
 interface BookingProps {
   booking: IUserBooking;
@@ -104,40 +104,21 @@ export default function Booking({ booking }: BookingProps) {
         )}
       </div>
 
-      <section className="h-full flex flex-col mt-2">
-        <header>
-          <h3 className="text-lg">Current Room Details</h3>
-        </header>
-        <p className="text-gray-500 max-h-40 overflow-auto mb-4">
-          {booking.room.description}
-        </p>
-        <AutoPlayImages
-          images={booking.room.images}
-          nextClassName="right-0"
-          prevClassName="left-0"
-        />
-        <>
-          {booking.room.amenities.length === 0 ? (
-            <p className="error mt-4">No Amenity</p>
-          ) : (
-            <ul className="amenities mt-4 grid gap-4 grid-cols-[repeat(auto-fill,minmax(8rem,_1fr))]">
-              {booking.room.amenities.map((amenity) => (
-                <AmentiyWithIcon key={amenity} amenity={amenity} />
-              ))}
-            </ul>
-          )}
-        </>
-        <BookRoom room={booking.room} />
-        <Link
-          href={`/rooms/room/?roomId=${booking.room._id}&hotelId=${booking.room.hotel}`}
-          className={buttonVariants({
-            variant: "secondary",
-            className: "w-full mt-2",
-          })}
-        >
-          View Detail
-        </Link>
-      </section>
+      {booking.status === "paid" && (
+        <div className="mb-4">
+          <Reviews booking={booking} igbInstance={igbInstance} />
+        </div>
+      )}
+
+      <Link
+        href={`/rooms/room/?roomId=${booking.room._id}&hotelId=${booking.room.hotel}`}
+        className={buttonVariants({
+          variant: "secondary",
+          className: "w-full mt-auto",
+        })}
+      >
+        View Detail
+      </Link>
     </div>
   );
 }

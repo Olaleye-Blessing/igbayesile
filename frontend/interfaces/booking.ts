@@ -1,3 +1,4 @@
+import { IReview } from "./review";
 import { IRoomDetail } from "./room";
 
 export interface IBooking {
@@ -16,7 +17,8 @@ export interface IBooking {
 }
 
 export interface IUserBooking extends Omit<IBooking, "room"> {
-  room: IRoomDetail;
+  room: Omit<IRoomDetail, "hotel"> & { hotel: string };
   paymentReference: string;
   totalCost: number;
+  reviews: IReview[];
 }

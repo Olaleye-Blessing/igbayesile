@@ -8,6 +8,7 @@ import catchAsync from '@/utils/catchAsync';
 import { filterObj } from '@/utils/filter-obj';
 import * as factory from '@/controllers/factory';
 import { RequestHandler } from 'express';
+import Booking from '@/models/booking';
 
 export const setReviewFilters: RequestHandler = (req, res, next) => {
   const qParams = { ...req.params };
@@ -59,7 +60,11 @@ export const createReview = catchAsync(async (req, res, next) => {
   const model: Model<any, any> = reviewType === 'hotel' ? Hotel : Room;
   let query = model.findById(targetId);
 
-  if (reviewType === 'hotel') query = query.select('_id manager');
+  if (reviewType === 'hotel') {
+    query = query.select('_id manager');
+  } else {
+    query = query.populate({ path: 'hotel', select: 'manager' });
+  }
 
   const result = await query;
 
@@ -92,11 +97,16 @@ export const createReview = catchAsync(async (req, res, next) => {
     'type',
     'targetId',
     'user',
+    'booking',
   ]);
 
-  console.log(body);
-
   const review = await Review.create(body);
+
+  await Booking.findByIdAndUpdate(
+    req.body.booking,
+    { $push: { reviews: review._id } },
+    { runValidators: false },
+  );
 
   res.status(201).json({
     status: 'success',

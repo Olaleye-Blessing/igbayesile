@@ -47,6 +47,12 @@ const bookingSchema = new Schema<IBooking>(
       type: Number,
       required: [true, 'Provide total cost'],
     },
+    reviews: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Review',
+      },
+    ],
   },
   {
     timestamps: true,

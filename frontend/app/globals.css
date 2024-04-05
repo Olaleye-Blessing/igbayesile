@@ -115,4 +115,16 @@
   .body-min-screen-h {
     min-height: calc(100vh - 4rem);
   }
+
+  .ratBadge {
+    @apply bg-primary h-8 w-8 p-[0.0625rem] flex items-center justify-center rounded-full;
+  }
+
+  .ratBadge > span:nth-child(1) {
+    @apply text-base text-white;
+  }
+
+  .ratBadge > span:nth-child(2) {
+    @apply text-[#acb4bf] text-xs font-semibold pt-[0.125rem];
+  }
 }
