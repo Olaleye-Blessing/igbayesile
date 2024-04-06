@@ -1,37 +1,23 @@
 "use client";
-import { BACKEND_URL } from "@/constants/backend";
-import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import axios from "axios";
 import { useState } from "react";
-import { handleIgbayesileAPIError } from "@/utils/handle-igbayesile-api-error";
+import { useIGBQuery } from "@/hooks/use-igb-query";
 
 export default function Home() {
   const [loadUsers, setLoadUsers] = useState(false);
 
-  const { data, error, refetch, isFetched, isFetching } = useQuery<
-    {
-      message: string;
+  const { data, error, refetch, isFetched, isFetching } = useIGBQuery<{
+    message: string;
+  }>({
+    url: `/users`,
+    options: {
+      queryKey: ["users"],
+      enabled: loadUsers,
     },
-    Error
-  >({
-    queryKey: ["users"],
-    enabled: loadUsers,
-    queryFn: async () => {
-      try {
-        let { data } = await axios.get(`${BACKEND_URL}/api/v1/users`, {
-          withCredentials: true,
-        });
-        return data;
-      } catch (error) {
-        throw new Error(handleIgbayesileAPIError(error));
-      }
-    },
-    retry: 0,
   });
 
   return (
-    <main>
+    <main className="home">
       <h1 className=" text-center">Home Page</h1>
 
       <div className="my-4 flex flex-col items-center justify-center">

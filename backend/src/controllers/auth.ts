@@ -1,12 +1,14 @@
 import crypto from 'crypto';
 import { NextFunction, Request, Response } from 'express';
-import { Types } from 'mongoose';
-import jwt from 'jsonwebtoken';
 import User from '@/models/user';
-import { IMongoUser } from '@/interfaces/user';
 import AppError from '@/utils/AppError';
 import catchAsync from '@/utils/catchAsync';
-import { loggedInCookieName } from '@/configs/igbayesile';
+import {
+  JWT_REFRESH_LOGIN_SECRET,
+  refreshLoginCookieName,
+} from '@/configs/igbayesile';
+import { authenticateUser } from '@/utils/auth';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 export const signup = catchAsync(async (req, res, next) => {
   const { name, email, password, passwordConfirm, role } = req.body;
@@ -22,7 +24,7 @@ export const signup = catchAsync(async (req, res, next) => {
     role,
   });
 
-  sendToken(user, res);
+  authenticateUser(user, res, 201);
 });
 
 export const login = catchAsync(
@@ -41,20 +43,49 @@ export const login = catchAsync(
     if (!user || !(await user.correctPassword(password, user.password)))
       return next(new AppError('Incorrect email or password', 400));
 
-    sendToken(user, res);
+    authenticateUser(user, res, 200);
   },
 );
 
+export const refreshAuthToken = catchAsync(async (req, res, next) => {
+  await new Promise((r) => setTimeout(r, 5_000));
+
+  const token = req.cookies[refreshLoginCookieName];
+
+  if (!token) return next(new AppError('Provide a refresh token', 400));
+
+  const decodedToken = jwt.verify(
+    token,
+    JWT_REFRESH_LOGIN_SECRET,
+  ) as JwtPayload;
+
+  const user = await User.findById(decodedToken.id);
+
+  if (!user) return next(new AppError('This user does not exist', 400));
+
+  if (user.pwdChangedAfterTokenIssued(decodedToken.iat!))
+    return next(
+      new AppError(
+        'Your password has recently been changed. Log in with the new password',
+        400,
+      ),
+    );
+
+  authenticateUser(user, res, 200);
+});
+
 export const logout = catchAsync(async (req, res) => {
-  res.cookie(loggedInCookieName, '', { expires: new Date(0) });
+  res.cookie(refreshLoginCookieName, '', { expires: new Date(0) });
 
   res.status(200).json({
     status: 'success',
     message: 'Successfully logged out!',
+    data: {
+      authToken: '',
+      user: null,
+    },
   });
 });
-
-
 
 export const forgotPassword = catchAsync(async (req, res, next) => {
   const email = req.body.email;
@@ -148,35 +179,5 @@ export const updatePassword = catchAsync(async (req, res, next) => {
 
   await user.save();
 
-  sendToken(user, res);
+  authenticateUser(user, res, 200);
 });
-
-function signToken(userId: Types.ObjectId) {
-  return jwt.sign({ id: userId }, process.env.JWT_SECRET!, {
-    expiresIn: process.env.JWT_LOGGED_IN_EXPIRES!,
-  });
-}
-
-function sendToken(user: IMongoUser, res: Response) {
-  const token = signToken(user._id);
-
-  res.cookie(loggedInCookieName, token, {
-    httpOnly: true,
-    secure: true,
-    expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-    path: '/',
-    sameSite: 'strict',
-  });
-
-  // @ts-expect-error Do not send password to the client;
-  user.password = undefined;
-  // @ts-expect-error Do not send password to the client;
-  user.passwordConfirm = undefined;
-
-  return res.status(201).json({
-    status: 'success',
-    data: {
-      user,
-    },
-  });
-}

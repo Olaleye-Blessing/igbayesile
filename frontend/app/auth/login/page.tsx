@@ -8,9 +8,9 @@ import toast from "react-hot-toast";
 import { FormField } from "@/components/custom/form-field";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { API_BASE_URL } from "@/constants/backend";
-import { IUser } from "@/interfaces/user";
 import { handleIgbayesileAPIError } from "@/utils/handle-igbayesile-api-error";
 import useAuthStore from "@/stores/auth";
+import { ILoginResponse } from "../_types";
 
 interface FormData {
   email: string;
@@ -34,10 +34,8 @@ export default function Page() {
 
     try {
       const {
-        data: {
-          data: { user },
-        },
-      } = await axios.post<{ data: { user: IUser } }>(
+        data: { data: result },
+      } = await axios.post<{ data: ILoginResponse }>(
         `${API_BASE_URL}/auth/login`,
         data,
         {
@@ -45,7 +43,7 @@ export default function Page() {
         },
       );
       toast.success("Signed in successfully", { id: toastId });
-      storeLogin(user);
+      storeLogin(result.user, result.authToken);
       router.push(redirectPage);
     } catch (error) {
       toast.error(handleIgbayesileAPIError(error), { id: toastId });

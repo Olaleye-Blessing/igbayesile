@@ -51,7 +51,7 @@ const globalErrorHanlder = async (
   } else if (err.name === 'ValidationError') {
     error = handleMongoValidationError(err);
   } else if (err.name === 'TokenExpiredError') {
-    error = new AppError('Token expired! Please login again', 400);
+    error = new AppError('Token expired! Please login again', 401);
   } else if (err.name === 'JsonWebTokenError') {
     error = new AppError('Invalid token! Please log in again', 400);
   } else if (err.name === 'MulterError') {
