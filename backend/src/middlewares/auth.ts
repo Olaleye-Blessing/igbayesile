@@ -1,7 +1,7 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import AppError from '@/utils/AppError';
 import catchAsync from '@/utils/catchAsync';
-import { loggedInCookieName } from '@/configs/igbayesile';
+import { JWT_LOGIN_SECRET } from '@/configs/igbayesile';
 import User from '@/models/user';
 
 export const restrictTo = (...roles: string[]) =>
@@ -15,10 +15,12 @@ export const restrictTo = (...roles: string[]) =>
   });
 
 export const protect = catchAsync(async (req, res, next) => {
-  const token = req.cookies[loggedInCookieName];
+  const { authorization } = req.headers;
+  const token = authorization?.split(' ')[1];
+
   if (!token) return next(new AppError('Please provide a login token', 400));
 
-  const decodedToken = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+  const decodedToken = jwt.verify(token, JWT_LOGIN_SECRET) as JwtPayload;
 
   const user = await User.findById(decodedToken.id);
 

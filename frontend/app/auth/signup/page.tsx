@@ -10,8 +10,8 @@ import { FormField } from "@/components/custom/form-field";
 import { API_BASE_URL } from "@/constants/backend";
 import { FormRadioField } from "@/components/custom/form-radio-field";
 import { handleIgbayesileAPIError } from "@/utils/handle-igbayesile-api-error";
-import { IUser } from "@/interfaces/user";
 import useAuthStore from "@/stores/auth";
+import { ILoginResponse } from "../_types";
 
 interface FormData {
   name: string;
@@ -72,10 +72,8 @@ export default function SignUp() {
 
     try {
       const {
-        data: {
-          data: { user },
-        },
-      } = await axios.post<{ data: { user: IUser } }>(
+        data: { data: result },
+      } = await axios.post<{ data: ILoginResponse }>(
         `${API_BASE_URL}/auth/signup`,
         data,
         {
@@ -83,7 +81,7 @@ export default function SignUp() {
         },
       );
       toast.success("Account created successfully", { id: toastId });
-      storeLogin(user);
+      storeLogin(result.user, result.authToken);
       router.push(redirectPage);
     } catch (error) {
       toast.error(handleIgbayesileAPIError(error), { id: toastId });

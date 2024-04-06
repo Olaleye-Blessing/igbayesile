@@ -1,2 +1,10 @@
-export const loggedInCookieName =
-  process.env.NODE_ENV === 'production' ? '__Host-igba-user' : 'loggedIn';
+export const refreshLoginCookieName =
+  process.env.NODE_ENV === 'production' ? '__Secure-igba-ra' : 'refreshToken';
+
+export const JWT_LOGGED_IN_EXPIRES = process.env.JWT_LOGGED_IN_EXPIRES!;
+
+export const JWT_LOGIN_SECRET = process.env.JWT_LOGIN_SECRET!;
+
+export const JWT_REFRESH_LOGIN_SECRET = process.env.JWT_REFRESH_LOGIN_SECRET!;
+
+export const JWT_REFRESH_LOGIN_EXPIRES = process.env.JWT_REFRESH_LOGIN_EXPIRES!;
