@@ -33,10 +33,12 @@ export const setHotelsFilter: RequestHandler = (req, _res, next) => {
   next();
 };
 
-export const getHotels = factory.findAll(Hotel);
+export const getHotels = factory.findAll(Hotel, [{ path: 'amenities' }]);
 
 export const getHotel = catchAsync(async (req, res, next) => {
-  const hotel = await Hotel.findById(req.params.id).populate('manager');
+  const hotel = await Hotel.findById(req.params.id)
+    .populate('manager')
+    .populate('amenities');
 
   if (!hotel) return next(new AppError('This hotel does not exist', 404));
 
@@ -47,6 +49,9 @@ export const getHotel = catchAsync(async (req, res, next) => {
 });
 
 export const createHotel = catchAsync(async (req, res, next) => {
+  if (req.body.amenities < 3)
+    return next(new AppError('Provide at least 3 amenities', 400));
+
   const imagesFiles = req.files as Express.Multer.File[];
 
   // Checking here so as not to waste time uploading

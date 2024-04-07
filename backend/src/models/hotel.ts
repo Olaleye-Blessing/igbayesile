@@ -33,7 +33,13 @@ const hotelSchema = new Schema<IHotel>(
       ],
       trim: true,
     },
-    amenities: [String],
+    amenities: {
+      type: [{ type: mongoose.Schema.ObjectId, ref: 'Amenity' }],
+      validate: {
+        validator: (amenities: string[]) => amenities.length > 3,
+        message: 'Provide at least 3 amenities',
+      },
+    },
     images: {
       type: [String],
       validate: {

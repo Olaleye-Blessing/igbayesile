@@ -1,5 +1,4 @@
 import { Types } from 'mongoose';
-// import { IRoom } from './room';
 
 export interface IHotel {
   _id: Types.ObjectId;
@@ -9,10 +8,10 @@ export interface IHotel {
   state: string;
   city: string;
   location_description: string;
-  amenities: string[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  amenities: any[];
   images: string[];
   manager: Types.ObjectId;
-  // rooms?: IRoom[];
   avgRoomPrice: number;
   totalRooms: number;
   ratings: number;
