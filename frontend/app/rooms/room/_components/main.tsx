@@ -4,11 +4,11 @@ import { IRoomDetail } from "@/interfaces/room";
 import Loading from "@/app/loading";
 import AutoPlayImages from "@/components/custom/carousel/auto-play-images";
 import { MapPin } from "lucide-react";
-import AmentiyWithIcon from "@/components/amentiy-with-icon";
 import BookRoom from "@/components/custom/book-room";
 import "./index.css";
 import RatingsReviewBadge from "@/components/rating-review-badge";
 import Reviews from "@/components/reviews";
+import Amenity from "@/components/amenities/amenity";
 
 interface MainProps {
   roomId: string;
@@ -73,7 +73,12 @@ export default function Main({ roomId }: MainProps) {
               ) : (
                 <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
                   {data.room.amenities.map((amenity) => (
-                    <AmentiyWithIcon key={amenity} amenity={amenity} />
+                    <p
+                      key={amenity._id}
+                      className="flex items-center justify-start"
+                    >
+                      <Amenity amenity={amenity} />
+                    </p>
                   ))}
                 </ul>
               )}
