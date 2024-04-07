@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
+import "./material-icons.css";
 import Navbar from "@/components/navbar";
 import Providers from "@/components/providers";
 import InitializeConfigs from "@/components/initialize-configs";

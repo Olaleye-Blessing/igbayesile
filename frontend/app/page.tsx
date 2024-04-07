@@ -18,7 +18,10 @@ export default function Home() {
 
   return (
     <main className="home">
-      <h1 className=" text-center">Home Page</h1>
+      <h1 className=" text-center">
+        <span>Home Page</span>
+        <span className="material-symbols-outlined text-red-900">face</span>
+      </h1>
 
       <div className="my-4 flex flex-col items-center justify-center">
         {isFetched ? (
