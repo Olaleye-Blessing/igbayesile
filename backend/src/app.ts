@@ -10,6 +10,7 @@ import hotelRouter from '@/routes/hotel';
 import roomRouter from '@/routes/room';
 import bookingRouter from '@/routes/booking';
 import reviewRouter from '@/routes/review';
+import amenityRouter from '@/routes/amenity';
 import globalErrorHanlder from '@/controllers/error';
 import { protect } from './middlewares/auth';
 
@@ -34,6 +35,7 @@ app.use('/api/v1/hotels', hotelRouter);
 app.use('/api/v1/rooms', roomRouter);
 app.use('/api/v1/bookings', bookingRouter);
 app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/amenities', amenityRouter);
 
 app.use(globalErrorHanlder);
 
