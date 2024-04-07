@@ -13,7 +13,6 @@ import { IUser } from "@/interfaces/user";
 import { commonPaths, guestPaths, managerPaths } from "./_utils/paths";
 import Search from "./search";
 import Divider from "./divider";
-
 interface LoggedInMenuProps {
   user: IUser;
   logout: () => Promise<void>;
@@ -59,16 +58,12 @@ export default function LoggedInMenu({ user, logout }: LoggedInMenuProps) {
                   variant: "ghost",
                   className: "!justify-start w-full",
                 })}
+                onClick={() => setOpen(false)}
               >
-                <span
-                  className="flex items-center justify-start"
-                  onClick={() => setOpen(false)}
-                >
-                  <span className="mr-2">
-                    <path.Icon className="h-5 w-4" />
-                  </span>
-                  <span className="text-sm">{path.label}</span>
+                <span className="mr-2">
+                  <path.Icon className="h-5 w-4" />
                 </span>
+                <span className="text-sm">{path.label}</span>
               </Link>
             </li>
           ))}
