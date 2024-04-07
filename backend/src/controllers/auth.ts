@@ -48,8 +48,6 @@ export const login = catchAsync(
 );
 
 export const refreshAuthToken = catchAsync(async (req, res, next) => {
-  await new Promise((r) => setTimeout(r, 5_000));
-
   const token = req.cookies[refreshLoginCookieName];
 
   if (!token) return next(new AppError('Provide a refresh token', 400));
