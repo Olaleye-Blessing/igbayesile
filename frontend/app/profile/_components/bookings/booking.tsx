@@ -1,5 +1,3 @@
-// import AmentiyWithIcon from "@/components/amentiy-with-icon";
-// import AutoPlayImages from "@/components/custom/carousel/auto-play-images";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { IUserBooking } from "@/interfaces/booking";
 import { cn } from "@/lib/utils";

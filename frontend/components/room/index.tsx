@@ -2,10 +2,10 @@
 import { IRoomDetail } from "@/interfaces/room";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import AmentiyWithIcon from "@/components/amentiy-with-icon";
 import AutoPlayImages from "../custom/carousel/auto-play-images";
 import Link from "next/link";
 import BookRoom from "../custom/book-room";
+import Amenity from "@/components/amenities/amenity";
 
 interface RoomProps {
   room: IRoomDetail;
@@ -33,7 +33,9 @@ export default function Room({ room, hotelId, className = "" }: RoomProps) {
         ) : (
           <ul className="amenities mt-4 grid gap-4 grid-cols-[repeat(auto-fill,minmax(8rem,_1fr))]">
             {room.amenities.map((amenity) => (
-              <AmentiyWithIcon key={amenity} amenity={amenity} />
+              <p key={amenity._id} className="flex items-center justify-start">
+                <Amenity amenity={amenity} />
+              </p>
             ))}
           </ul>
         )}

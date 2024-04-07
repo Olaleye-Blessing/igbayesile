@@ -5,13 +5,13 @@ import { IFullHotel } from "@/interfaces/hotel";
 import { hotelsKeys } from "../../utils/query-key-factory";
 import { MapPin } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import AmentiyWithIcon from "@/components/amentiy-with-icon";
 import AutoPlayImages from "@/components/custom/carousel/auto-play-images";
 import RatingsReviewBadge from "@/components/rating-review-badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Reviews from "@/components/reviews";
 import useSearchParameters from "@/hooks/use-search-parameters";
 import Rooms from "./rooms";
+import Amenity from "@/components/amenities/amenity";
 
 interface MainProps {
   hotelId: string;
@@ -79,7 +79,12 @@ export default function Main({ hotelId }: MainProps) {
             ) : (
               <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
                 {data.hotel.amenities.map((amenity) => (
-                  <AmentiyWithIcon key={amenity} amenity={amenity} />
+                  <p
+                    key={amenity._id}
+                    className="flex items-center justify-start"
+                  >
+                    <Amenity amenity={amenity} />
+                  </p>
                 ))}
               </ul>
             )}
