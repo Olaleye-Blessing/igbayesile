@@ -1,7 +1,6 @@
 import { API_BASE_URL } from "@/constants/backend";
 import { IRoom } from "@/interfaces/room";
 import { handleIgbayesileAPIError } from "@/utils/handle-igbayesile-api-error";
-import axios from "axios";
 import { BaseSyntheticEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -14,9 +13,12 @@ import Link from "next/link";
 import Amenities from "./amenities";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Terminal } from "lucide-react";
+import { useIGBInstance } from "@/hooks/use-igb-instance";
 
-export interface RoomFormData extends Omit<IRoom, "images" | "_id" | "hotel"> {
+export interface RoomFormData
+  extends Omit<IRoom, "images" | "_id" | "hotel" | "amenities"> {
   images: File[];
+  amenities: string[];
 }
 
 interface RoomFormProps {
@@ -24,6 +26,7 @@ interface RoomFormProps {
 }
 
 export default function RoomForm({ hotelId }: RoomFormProps) {
+  const { igbInstance } = useIGBInstance();
   // TODO: Fix this: form.formState.isSubmitting is true always
   const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<RoomFormData>({
@@ -54,7 +57,7 @@ export default function RoomForm({ hotelId }: RoomFormProps) {
     try {
       toast.loading("Creating your room", { id: toastId });
 
-      await axios.post<{ data: { room: IRoom } }>(
+      await igbInstance().post<{ data: { room: IRoom } }>(
         `${API_BASE_URL}/rooms`,
         roomData,
         {
