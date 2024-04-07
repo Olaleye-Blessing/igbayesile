@@ -68,7 +68,13 @@ const roomSchema = new Schema<IRoom>(
         message: 'Your room must have a bathroom.',
       },
     },
-    amenities: [String],
+    amenities: {
+      type: [{ type: mongoose.Schema.ObjectId, ref: 'Amenity' }],
+      validate: {
+        validator: (amenities: string[]) => amenities.length > 3,
+        message: 'Provide at least 3 amenities',
+      },
+    },
     hotel: {
       type: mongoose.Schema.ObjectId,
       ref: 'Hotel',
@@ -127,6 +133,13 @@ roomSchema.static('calcAvgHotelRoomsPrice', async function (hotelId: string) {
 roomSchema.post('save', function () {
   // @ts-expect-error Valid
   this.constructor.calcAvgHotelRoomsPrice(this.hotel);
+});
+
+roomSchema.pre(/^find/, function (next) {
+  // @ts-expect-error This is correct
+  this.populate('amenities');
+
+  next();
 });
 
 // findOneAndUpdate

@@ -11,7 +11,8 @@ export interface IRoom {
   maxNumOfGuests: number;
   numOfBathrooms: number;
   hotel: Types.ObjectId;
-  amenities: string[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  amenities: any[];
   country: string;
   state: string;
   city: string;

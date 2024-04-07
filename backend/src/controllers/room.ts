@@ -49,6 +49,9 @@ export const getRoom = catchAsync(async (req, res, next) => {
 });
 
 export const createRoom = catchAsync(async (req, res, next) => {
+  if (req.body.amenities < 3)
+    return next(new AppError('Provide at least 3 amenities', 400));
+
   const imagesFiles = req.files as Express.Multer.File[];
 
   // Checking here so as not to waste time uploading
