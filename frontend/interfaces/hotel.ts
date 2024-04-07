@@ -1,3 +1,4 @@
+import { IAmenity } from "./amenity";
 import { IUser } from "./user";
 
 export interface IHotel {
@@ -7,7 +8,7 @@ export interface IHotel {
   state: string;
   city: string;
   location_description: string;
-  amenities: string[];
+  amenities: IAmenity[];
   images: string[];
   manager: string;
   _id: string;

@@ -1,3 +1,4 @@
+import { IAmenity } from "./amenity";
 import { IBooking } from "./booking";
 import { IHotel } from "./hotel";
 
@@ -12,7 +13,7 @@ export interface IRoom {
   maxNumOfGuests: number;
   numOfBathrooms: number;
   hotel: string;
-  amenities: string[];
+  amenities: IAmenity[];
   country: string;
   state: string;
   city: string;

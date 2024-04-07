@@ -1,7 +1,6 @@
 import { API_BASE_URL } from "@/constants/backend";
 import { IHotel } from "@/interfaces/hotel";
 import { handleIgbayesileAPIError } from "@/utils/handle-igbayesile-api-error";
-import axios from "axios";
 import { BaseSyntheticEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -13,18 +12,21 @@ import ImagesPreview from "./images-preview";
 import Amenities from "./amenities";
 import { Button } from "@/components/ui/button";
 import useSearchParameters from "@/hooks/use-search-parameters";
+import { useIGBInstance } from "@/hooks/use-igb-instance";
 
 export interface HotelFormData
   extends Omit<
     IHotel,
-    "images" | "manager" | "_id" | "avgRoomPrice" | "totalRooms"
+    "images" | "manager" | "_id" | "avgRoomPrice" | "totalRooms" | "amenities"
   > {
   images: File[];
+  amenities: string[];
 }
 
 interface HotelFormProps {}
 
 export default function HotelForm({}: HotelFormProps) {
+  const { igbInstance } = useIGBInstance();
   const searchParams = useSearchParameters();
   // TODO: Fix this: form.formState.isSubmitting is true always
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -58,7 +60,7 @@ export default function HotelForm({}: HotelFormProps) {
     try {
       toast.loading("Creating your hotel", { id: toastId });
 
-      const res = await axios.post<{ data: { hotel: IHotel } }>(
+      const res = await igbInstance().post<{ data: { hotel: IHotel } }>(
         `${API_BASE_URL}/hotels`,
         hotelData,
         {
