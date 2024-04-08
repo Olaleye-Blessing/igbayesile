@@ -8,7 +8,7 @@ export default function RatingsReviewBadge({
 }: RatingsReviewBadgeProps) {
   return (
     <>
-      <span className="rounded-md px-2 pt-0.5 pb-1 w-auto h-auto flex items-center justify-center text-center bg-primary text-white text-sm mr-1">
+      <span className="rounded-md px-2 pt-0.5 pb-1 w-auto h-auto flex items-center justify-center text-center bg-primary text-foreground text-sm mr-1">
         {ratings}/5
       </span>
       <span className="short-label">

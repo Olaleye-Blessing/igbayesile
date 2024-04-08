@@ -21,9 +21,10 @@ type AmenitiesList = {
 type AmenitiesProps = (AmenitiesForm | AmenitiesList) & {
   target: IAmenity["target"];
   className?: string;
+  limit?: number;
 };
 
-let url = `/amenities?limit=${50}`;
+let url = `/amenities`;
 
 export default function Amenities({
   target,
@@ -31,7 +32,10 @@ export default function Amenities({
   onSelect,
   defaultChecks = [],
   className,
+  limit,
 }: AmenitiesProps) {
+  if (!limit) limit = 5;
+  url += `?limit=${limit}`;
   if (target !== "both") url += `&target=${target}`;
 
   const { data, error, isFetching } = useIGBQuery<{
@@ -54,7 +58,10 @@ export default function Amenities({
         >
           {data.results.map((amenity) => {
             return (
-              <li key={amenity._id} className="flex items-center justify-start">
+              <li
+                key={amenity._id}
+                className="amenity flex items-center justify-start"
+              >
                 {mode === "form" ? (
                   <>
                     <Checkbox
@@ -62,7 +69,7 @@ export default function Amenities({
                       className="mr-2"
                       defaultChecked={defaultChecks?.includes(amenity._id)}
                       onCheckedChange={(checked) =>
-                        onSelect(checked as boolean, amenity)
+                        onSelect!(checked as boolean, amenity)
                       }
                     />
                     <Label
