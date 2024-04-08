@@ -34,6 +34,13 @@ export const getRooms = factory.findAll(Room, [
   { path: 'bookings', select: 'checkIn checkOut' },
 ]);
 
+export const getCheapestRooms: RequestHandler = async (req, res, next) => {
+  req.query.sort = '-price,-ratings,-reviews,createdAt';
+  req.query.limit = '5';
+
+  next();
+};
+
 export const getRoom = catchAsync(async (req, res, next) => {
   const room = await Room.findById(req.params.roomId).populate({
     path: 'bookings',

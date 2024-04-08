@@ -12,6 +12,12 @@ const router = express.Router({ mergeParams: true });
 router.use('/:roomId/bookings', bookingRouter);
 router.use('/:roomId/reviews', reviewRouter);
 
+router.get(
+  '/best-deal',
+  roomController.getCheapestRooms,
+  roomController.getRooms,
+);
+
 router
   .route('/')
   .get(roomController.setRoomsFilter, roomController.getRooms)

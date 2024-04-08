@@ -35,6 +35,13 @@ export const setHotelsFilter: RequestHandler = (req, _res, next) => {
 
 export const getHotels = factory.findAll(Hotel, [{ path: 'amenities' }]);
 
+export const getTopRated: RequestHandler = async (req, res, next) => {
+  req.query.sort = '-ratings,-totalReviews,createdAt';
+  req.query.limit = '1';
+
+  next();
+};
+
 export const getHotel = catchAsync(async (req, res, next) => {
   const hotel = await Hotel.findById(req.params.id)
     .populate('manager')

@@ -11,6 +11,12 @@ const router = express.Router();
 router.use('/:hotelId/rooms', roomRouter);
 router.use('/:hotelId/reviews', reviewRouter);
 
+router.get(
+  '/top-rated',
+  hotelController.getTopRated,
+  hotelController.getHotels,
+);
+
 router
   .route('/')
   .get(hotelController.setHotelsFilter, hotelController.getHotels)
