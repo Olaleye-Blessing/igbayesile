@@ -87,7 +87,7 @@
   }
 
   .cardboard {
-    @apply rounded-md border bg-white transition duration-200 ease-linear shadow-md hover:shadow-sm;
+    @apply rounded-md border bg-card transition duration-200 ease-linear shadow-sm hover:shadow text-card-foreground;
   }
 
   .cardboard--outline {
@@ -96,11 +96,6 @@
 
   .error {
     @apply text-red-600 text-sm;
-  }
-
-  main:not(.auth__main),
-  .global-bg {
-    @apply bg-blue-100 bg-opacity-20;
   }
 
   .short-label {

@@ -17,7 +17,7 @@ export default function TopSearch() {
   // const router = useRouter();
 
   return (
-    <div className="bg-white sticky p-4 top-0 left-0 z-20 md:w-full md:flex-shrink-0">
+    <div className="sticky p-4 top-0 left-0 z-20 md:w-full md:flex-shrink-0 md:bg-background">
       <ToggleContainer title="Search" className="">
         <div className="[&>*]:px-2 grid grid-cols-1 gap-0 gap-x-4 sm:grid-cols-[repeat(auto-fill,minmax(240px,_1fr))] sm:pt-3 sm:pb-1">
           <div className="mb-3">
