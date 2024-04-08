@@ -5,13 +5,7 @@ import {
   UndefinedInitialDataOptions,
 } from "@tanstack/react-query";
 import { useIGBQuery } from "@/hooks/use-igb-query";
-
-export type IPaginatedResult<Data> = {
-  limit: number;
-  page: number;
-  total: number;
-  results: Data[];
-};
+import { IPaginatedResult } from "@/types/paginate";
 
 export const usePagination = <TData = unknown>({
   url,
