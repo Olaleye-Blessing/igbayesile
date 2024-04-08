@@ -76,7 +76,7 @@ export default function Page() {
   };
 
   return (
-    <main className="bg-blue-100 bg-opacity-20 min-h-screen pb-8">
+    <main className="min-h-screen pb-8">
       <div className="layout px-0">
         <header>
           <h1 className="sr-only">Search</h1>
