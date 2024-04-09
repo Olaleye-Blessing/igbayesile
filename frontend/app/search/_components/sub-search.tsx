@@ -24,7 +24,7 @@ export default function SubSearch() {
 
   return (
     // <ToggleContainer title="Filter" className="md:col-start-1 md:col-end-2">
-    <div className="bg-white p-4 md:p-0 md:bg-transparent md:max-w-[15rem] md:w-full md:flex-1 md:min-w-[12rem] md:self-start md:sticky md:top-48 md:py-0 md:pl-0 md:mr-4 md:flex-shrink-0">
+    <div className="bg-background p-4 md:p-0 md:bg-transparent md:max-w-[15rem] md:w-full md:flex-1 md:min-w-[12rem] md:self-start md:sticky md:top-48 md:py-0 md:pl-0 md:mr-4 md:flex-shrink-0">
       <ToggleContainer
         title="Filter"
         // className="md:max-w-[15rem] md:w-full md:flex-1 md:sticky md:top-40 md:left-0"
@@ -101,8 +101,9 @@ export default function SubSearch() {
             <h3>Filter by Amenities</h3>
             <Amenities
               form={form}
-              listClassName="md:grid-cols-[repeat(auto-fill,minmax(30rem,_1fr))]"
+              listClassName="md:grid-cols-[repeat(auto-fill,minmax(30rem,_1fr))] max-h-[22rem] overflow-y-auto"
               defaultChecks={form.getValues("amenities")}
+              target={type === "hotels" ? "hotel" : "room"}
             />
           </section>
           {/* TODO: */}

@@ -5,12 +5,14 @@ interface AmenitiesProps {
   form: UseFormReturn<any, any, undefined>;
   listClassName?: string;
   defaultChecks?: string[];
+  target: IAmenity["target"];
 }
 
 export default function Amenities({
   form,
   listClassName,
   defaultChecks,
+  target,
 }: AmenitiesProps) {
   const onSelectAmenity = (checked: boolean, amenity: IAmenity) => {
     let _amenities = [...form.getValues("amenities")];
@@ -34,11 +36,12 @@ export default function Amenities({
         )
       </p>
       <AmenitiesComp
-        target="hotel"
+        target={target}
         mode="form"
         onSelect={onSelectAmenity}
         defaultChecks={defaultChecks}
         className={listClassName}
+        limit={100}
       />
     </div>
   );
