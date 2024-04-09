@@ -14,6 +14,11 @@ export const setRoomsFilter: RequestHandler = (req, _res, next) => {
   if (req.query.name) filter.name = { $regex: req.query.name, $options: 'i' };
   if (req.params.hotelId) req.query.hotel = req.params.hotelId;
 
+  if (req.query.amenities) {
+    filter.amenities = { $all: (req.query.amenities as string).split(',') };
+    // filter.amenities = { $in: (req.query.amenities as string).split(',') };
+  }
+
   req.query = { ...req.query, ...filter };
 
   req.query.igbayesile = {

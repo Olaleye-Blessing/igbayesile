@@ -181,7 +181,7 @@ export default function RoomForm({ hotelId }: RoomFormProps) {
           />
           {images && <ImagesPreview form={form} images={images} />}
         </div>
-        <Amenities form={form} />
+        <Amenities form={form} target="room" />
         <Alert className="bg-red-100 bg-opacity-20 text-red-600">
           <Terminal className="h-4 w-4" />
           <AlertTitle>Note!</AlertTitle>

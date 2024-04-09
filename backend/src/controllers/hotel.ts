@@ -14,13 +14,8 @@ export const setHotelsFilter: RequestHandler = (req, _res, next) => {
   if (qParams.name) filter.name = { $regex: qParams.name, $options: 'i' };
 
   if (qParams.amenities) {
-    const regExp: RegExp[] = [];
-    (qParams.amenities as string).split(',').forEach((amenity) => {
-      regExp.push(new RegExp(amenity, 'i'));
-    });
-
-    filter.amenities = { $all: regExp };
-    // filter.amenities = { $in: regExp };
+    filter.amenities = { $all: (qParams.amenities as string).split(',') };
+    // filter.amenities = { $in: (qParams.amenities as string).split(',') };
   }
 
   req.query = { ...req.query, ...filter };
