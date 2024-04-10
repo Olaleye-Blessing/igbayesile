@@ -3,7 +3,7 @@
 import useSearchParameters from "@/hooks/use-search-parameters";
 import Stepper from "./_components/stepper";
 import HotelForm from "./_components/hotel-form";
-import RoomForm from "./_components/room-form";
+import RoomForm from "@/components/room-form";
 
 export default function Main() {
   const hotelId: null | string = useSearchParameters().getParam("hotel");

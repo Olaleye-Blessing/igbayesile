@@ -12,6 +12,7 @@ import Reviews from "@/components/reviews";
 import useSearchParameters from "@/hooks/use-search-parameters";
 import Rooms from "./rooms";
 import Amenity from "@/components/amenities/amenity";
+import NewRoom from "./new-room";
 
 interface MainProps {
   hotelId: string;
@@ -33,17 +34,20 @@ export default function Main({ hotelId }: MainProps) {
     <>
       {data?.hotel ? (
         <>
-          <header className="pt-4 mb-4">
-            <h1 className="mb-2 mr-2">{data.hotel.name}</h1>
-            <button
-              type="button"
-              className="flex items-center justify-start flex-shrink-0 -mt-2"
-            >
-              <RatingsReviewBadge
-                reviews={data.hotel.totalReviews}
-                ratings={data.hotel.ratings}
-              />
-            </button>
+          <header className="pt-4 mb-2 flex items-center justify-between flex-wrap">
+            <div className="flex-items-center justify-between mb-2 mr-1">
+              <h1 className="mb-2 mr-2">{data.hotel.name}</h1>
+              <button
+                type="button"
+                className="flex items-center justify-start flex-shrink-0 -mt-2"
+              >
+                <RatingsReviewBadge
+                  reviews={data.hotel.totalReviews}
+                  ratings={data.hotel.ratings}
+                />
+              </button>
+            </div>
+            <NewRoom hotel={data.hotel} />
           </header>
           <section className="space-y-2">
             <AutoPlayImages

@@ -20,7 +20,7 @@ export const usePagination = <TData = unknown>({
   const [base, path = ""] = url.split("?");
   const search = new URLSearchParams(path.trim());
   search.set("page", String(page));
-  search.set("limit", "3");
+  if (!url.includes("limit")) search.set("limit", "10");
 
   const result = useIGBQuery<IPaginatedResult<TData>>({
     url: `${base}?${search.toString()}`,
