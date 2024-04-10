@@ -7,13 +7,15 @@ import toast from "react-hot-toast";
 import { FormField } from "@/components/custom/form-field";
 import { rhfErrMsg } from "@/utils/rhf-error-msg";
 import { TextAreaField } from "@/components/custom/TextAreaField";
-import ImagesPreview from "./images-preview";
+import ImagesPreview from "../app/hotels/new/_components/images-preview";
 import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
-import Amenities from "./amenities";
+import Amenities from "../app/hotels/new/_components/amenities";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Terminal } from "lucide-react";
 import { useIGBInstance } from "@/hooks/use-igb-instance";
+import { useQueryClient } from "@tanstack/react-query";
+import { hotelsKeys } from "@/app/hotels/utils/query-key-factory";
 
 export interface RoomFormData
   extends Omit<IRoom, "images" | "_id" | "hotel" | "amenities"> {
@@ -23,9 +25,14 @@ export interface RoomFormData
 
 interface RoomFormProps {
   hotelId: string;
+  showRedirect?: boolean;
 }
 
-export default function RoomForm({ hotelId }: RoomFormProps) {
+export default function RoomForm({
+  hotelId,
+  showRedirect = true,
+}: RoomFormProps) {
+  const queryClient = useQueryClient();
   const { igbInstance } = useIGBInstance();
   // TODO: Fix this: form.formState.isSubmitting is true always
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -69,6 +76,7 @@ export default function RoomForm({ hotelId }: RoomFormProps) {
       setIsSubmitting(false);
 
       form.reset();
+      queryClient.invalidateQueries({ queryKey: hotelsKeys.rooms(hotelId) });
     } catch (error) {
       toast.error(handleIgbayesileAPIError(error), { id: toastId });
       setIsSubmitting(false);
@@ -197,15 +205,17 @@ export default function RoomForm({ hotelId }: RoomFormProps) {
         </Button>
       </form>
       {/* TODO: Redirect to my hotels page */}
-      <Link
-        href="/profile/?tab=hotels"
-        className={buttonVariants({
-          variant: "destructive",
-          className: "w-full max-w-40 mt-6 ml-auto !block text-center mb-4",
-        })}
-      >
-        Skip
-      </Link>
+      {showRedirect && (
+        <Link
+          href="/profile/?tab=hotels"
+          className={buttonVariants({
+            variant: "destructive",
+            className: "w-full max-w-40 mt-6 ml-auto !block text-center mb-4",
+          })}
+        >
+          Skip
+        </Link>
+      )}
     </div>
   );
 }

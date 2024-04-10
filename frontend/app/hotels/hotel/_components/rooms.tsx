@@ -2,6 +2,7 @@ import Paginated from "@/components/paginated";
 import { usePagination } from "@/components/paginated/use-pagination";
 import Room from "@/components/room";
 import { IRoomDetail } from "@/interfaces/room";
+import { hotelsKeys } from "../../utils/query-key-factory";
 
 interface RoomsProps {
   hotelId: string;
@@ -15,7 +16,7 @@ export default function Rooms({ hotelId }: RoomsProps) {
   } = usePagination<IRoomDetail>({
     url: `/hotels/${hotelId}/rooms?limit=100`,
     options: {
-      queryKey: ["hotels", { hotel: hotelId }, "rooms"],
+      queryKey: hotelsKeys.rooms(hotelId),
       refetchOnMount: false,
     },
   });
