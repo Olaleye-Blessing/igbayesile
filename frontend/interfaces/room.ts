@@ -24,6 +24,7 @@ export interface IRoom {
 }
 
 export interface IRoomDetail extends Omit<IRoom, "hotel"> {
-  hotel: Pick<IHotel, "_id" | "name">;
+  // hotel: Pick<IHotel, "_id" | "name">;
+  hotel: Pick<IHotel, "_id" | "manager">;
   bookings: Pick<IBooking, "checkIn" | "checkOut">[];
 }

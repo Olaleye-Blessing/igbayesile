@@ -122,4 +122,12 @@
   .ratBadge > span:nth-child(2) {
     @apply text-[#acb4bf] text-xs font-semibold pt-[0.125rem];
   }
+
+  .lucide-icon {
+    @apply w-4 h-4;
+  }
+
+  .lucide-icon:first-child {
+    @apply mr-1;
+  }
 }

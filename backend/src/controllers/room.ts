@@ -1,12 +1,14 @@
 import { RequestHandler } from 'express';
 import { v2 as cloudinary } from 'cloudinary';
-import { FilterQuery } from 'mongoose';
+import { FilterQuery, Types } from 'mongoose';
 import AppError from '@/utils/AppError';
 import catchAsync from '@/utils/catchAsync';
 import Room from '@/models/room';
 import Hotel from '@/models/hotel';
 import { IRoom } from '@/interfaces/room';
 import * as factory from '@/controllers/factory';
+import Booking from '@/models/booking';
+import { filterObj } from '@/utils/filter-obj';
 
 export const setRoomsFilter: RequestHandler = (req, _res, next) => {
   const filter: FilterQuery<IRoom> = {};
@@ -47,10 +49,15 @@ export const getCheapestRooms: RequestHandler = async (req, res, next) => {
 };
 
 export const getRoom = catchAsync(async (req, res, next) => {
-  const room = await Room.findById(req.params.roomId).populate({
-    path: 'bookings',
-    select: 'checkIn checkOut',
-  });
+  const room = await Room.findById(req.params.roomId)
+    .populate({
+      path: 'bookings',
+      select: 'checkIn checkOut',
+    })
+    .populate({
+      path: 'hotel',
+      select: 'manager',
+    });
 
   if (!room) return next(new AppError('This room does not exist', 404));
 
@@ -114,10 +121,53 @@ export const createRoom = catchAsync(async (req, res, next) => {
   });
 });
 
-export const updateRoom = catchAsync(async (req, res) => {
-  const room = await Room.findByIdAndUpdate(req.params.roomId, req.body, {
-    new: true,
+export const updateRoom = catchAsync(async (req, res, next) => {
+  const roomId = req.params.roomId;
+
+  let room = await Room.findById(roomId)
+    .populate({
+      path: 'hotel',
+      match: { manager: new Types.ObjectId(req.user!._id) },
+      select: 'manager',
+    })
+    .populate({
+      path: 'bookings',
+      select: 'checkIn checkOut',
+    });
+
+  if (!room) return next(new AppError('This hotel does not exist', 404));
+
+  const activeRoomBookings = await Booking.find({
+    room: roomId,
+    status: 'paid',
+    checkOut: { $gt: new Date() },
   });
+
+  if (activeRoomBookings.length)
+    return next(
+      new AppError(
+        `Unable to Update Room: This room has existing paid bookings and cannot be updated at this time.`,
+        400,
+      ),
+    );
+
+  const body = filterObj({ ...req.body } as IRoom, [
+    'name',
+    'description',
+    'location_description',
+    'numberOfBeds',
+    'price',
+    'maxNumOfGuests',
+    'numOfBathrooms',
+    'amenities',
+  ]);
+
+  Object.keys(body).forEach((key) => {
+    // @ts-expect-error correct
+    room[key] = body[key];
+  });
+
+  room = await room.save({ validateBeforeSave: true });
 
   return res.status(200).json({
     status: 'success',
