@@ -9,12 +9,15 @@ import "./index.css";
 import RatingsReviewBadge from "@/components/rating-review-badge";
 import Reviews from "@/components/reviews";
 import Amenity from "@/components/amenities/amenity";
+import EditRoom from "./edit-room";
+import useAuthStore from "@/stores/auth";
 
 interface MainProps {
   roomId: string;
 }
 
 export default function Main({ roomId }: MainProps) {
+  const user = useAuthStore((state) => state.user);
   const { data, error } = useIGBQuery<{ room: IRoomDetail }>({
     url: `/rooms/${roomId}`,
     options: {
@@ -27,18 +30,23 @@ export default function Main({ roomId }: MainProps) {
       {data ? (
         <div className="room mb-8 pt-4 lg:flex lg:items-start lg:justify-between">
           <div className="">
-            <header className="mb-4">
-              <h1 className="mb-2 mr-2">{data.room.name}</h1>
-              <button
-                type="button"
-                className="flex items-center justify-start flex-shrink-0 -mt-2"
-              >
-                <RatingsReviewBadge
-                  reviews={data.room.totalReviews}
-                  ratings={data.room.ratings}
-                />
-              </button>
-            </header>
+            <div className="flex items-center justify-between mb-2">
+              <header className="mb-2">
+                <h1 className="mb-2 mr-2">{data.room.name}</h1>
+                <button
+                  type="button"
+                  className="flex items-center justify-start flex-shrink-0 -mt-2"
+                >
+                  <RatingsReviewBadge
+                    reviews={data.room.totalReviews}
+                    ratings={data.room.ratings}
+                  />
+                </button>
+              </header>
+              {user && user._id === data.room.hotel.manager && (
+                <EditRoom room={data.room} />
+              )}
+            </div>
             <section className="space-y-2">
               <AutoPlayImages
                 images={data.room.images}

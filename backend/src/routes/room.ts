@@ -34,7 +34,7 @@ router.use(protect);
 
 router
   .route('/:roomId')
-  .patch(roomController.updateRoom)
+  .patch(restrictTo('manager'), upload.none(), roomController.updateRoom)
   .delete(roomController.deleteRoom);
 
 export default router;
