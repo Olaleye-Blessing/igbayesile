@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef } from "react";
+import { forwardRef, ReactNode } from "react";
 import { Label } from "@/components/ui/label";
 import {
   RadioGroup,
@@ -11,7 +11,7 @@ import {
 interface FormRadioFieldProps {
   label: string;
   options: {
-    label?: string;
+    label?: ReactNode;
     id: string;
     value: string;
   }[];

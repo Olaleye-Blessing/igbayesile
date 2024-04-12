@@ -35,6 +35,10 @@ export const useResult = () => {
     search["price[lte]"] = +search.maxPrice;
     delete search.maxPrice;
   }
+  if (search.ratings) {
+    search["ratings[gte]"] = search.ratings;
+    delete search.ratings;
+  }
   // TODO: Implement searching by booking date
   if (search.from) delete search.from;
   if (search.to) delete search.to;

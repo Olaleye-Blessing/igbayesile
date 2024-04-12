@@ -19,6 +19,7 @@ export default function Page() {
       city: searchParams.get("city") || "",
       name: searchParams.get("name") || "",
       type: searchParams.get("type") === "rooms" ? "rooms" : "hotels",
+      ratings: searchParams.get("ratings") || "",
       amenities: searchParams.get("amenities")?.split(",") || [],
       price: {
         gte: Number(searchParams.get("minPrice")) || "",
@@ -50,6 +51,7 @@ export default function Page() {
       maxPrice: +data.price.lte,
       minBeds: +data.beds.gte,
       maxBeds: +data.beds.lte,
+      ratings: +data.ratings,
       // page: 1,
       // limit: 5,
     } as any;

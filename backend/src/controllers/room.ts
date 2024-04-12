@@ -30,6 +30,7 @@ export const setRoomsFilter: RequestHandler = (req, _res, next) => {
       'price',
       'maxNumOfGuests',
       'numOfBathrooms',
+      'ratings',
     ],
   };
 
