@@ -2,7 +2,7 @@ import { UseQueryResult } from "@tanstack/react-query";
 import Loading from "@/app/loading";
 import { Button } from "@/components/ui/button";
 import { ReactNode } from "react";
-import { IPaginatedResult } from "./use-pagination";
+import { IPaginatedResult } from "@/types/paginate";
 
 interface PaginatedProps {
   data: any[];
