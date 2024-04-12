@@ -6,6 +6,7 @@ export interface SearchData {
   city: string;
   name: string;
   type: "hotels" | "rooms";
+  ratings: string;
   amenities: string[];
   price: {
     gte: number | string;
