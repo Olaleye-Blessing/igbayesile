@@ -41,23 +41,23 @@ export const setPaymentParams = catchAsync(async (req, res, next) => {
   const currentDate = dateWithoutTimezone(now);
 
   if (checkIn < currentDate || checkOut < currentDate)
-    return next(new AppError("You can't select dates in the past", 400));
+    return next(new AppError("You can't select dates in the past", 422));
 
   // TODO: use zod to validate date
   const totalDays = differenceInDays(checkOut, checkIn);
 
-  if (totalDays <= 0) return next(new AppError('Invalid stay days', 400));
+  if (totalDays <= 0) return next(new AppError('Invalid stay days', 422));
 
   const roomId = req.params.roomId;
 
-  if (!roomId) return next(new AppError('Room not found', 404));
+  if (!roomId) return next(new AppError('Provide the booking room', 400));
 
   const room = await Room.findById(roomId).populate({
     path: 'bookings',
     select: 'checkIn checkOut',
   });
 
-  if (!room) return next(new AppError('Room not found', 404));
+  if (!room) return next(new AppError('Room not found', 422));
 
   if (
     datesisOverlapping({
@@ -70,7 +70,7 @@ export const setPaymentParams = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         'Some of the dates are overlapping. Select another dates range',
-        400,
+        422,
       ),
     );
 
@@ -192,7 +192,7 @@ export const continuePayment = catchAsync(async (req, res, next) => {
   if (!booking) return next(new AppError('This booking does not exist', 404));
 
   if (booking.status === 'paid')
-    return next(new AppError('This booking has been paid for', 400));
+    return next(new AppError('This booking has been paid for', 409));
 
   return res.status(200).json({
     status: 'success',

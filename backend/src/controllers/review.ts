@@ -45,7 +45,7 @@ export const createReview = catchAsync(async (req, res, next) => {
     );
 
   if (reviewType !== 'hotel' && reviewType !== 'room')
-    return next(new AppError(`Type can only be hotel or room`, 400));
+    return next(new AppError(`Type can only be hotel or room`, 422));
 
   const targetId =
     req.body.targetId ||
@@ -85,7 +85,7 @@ export const createReview = catchAsync(async (req, res, next) => {
         ? `You can't leave a review on personal hotels`
         : `You can't leave reviews on rooms of your hotel`;
 
-    return next(new AppError(message, 400));
+    return next(new AppError(message, 422));
   }
 
   req.body.targetId = targetId;

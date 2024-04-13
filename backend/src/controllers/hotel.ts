@@ -72,7 +72,7 @@ export const createHotel = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `Duplicate hotel name, ${req.body.name}, in the same location ${req.body.city}-${req.body.state}-${req.body.country}, by the same manager.`,
-        400,
+        422,
       ),
     );
 

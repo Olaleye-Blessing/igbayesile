@@ -18,19 +18,19 @@ export const protect = catchAsync(async (req, res, next) => {
   const { authorization } = req.headers;
   const token = authorization?.split(' ')[1];
 
-  if (!token) return next(new AppError('Please provide a login token', 400));
+  if (!token) return next(new AppError('Please provide a login token', 401));
 
   const decodedToken = jwt.verify(token, JWT_LOGIN_SECRET) as JwtPayload;
 
   const user = await User.findById(decodedToken.id);
 
-  if (!user) return next(new AppError('This user does not exist', 400));
+  if (!user) return next(new AppError('This user does not exist', 401));
 
   if (user.pwdChangedAfterTokenIssued(decodedToken.iat!))
     return next(
       new AppError(
         'Your password has recently been changed. Log in with the new password',
-        400,
+        401,
       ),
     );
 

@@ -93,7 +93,7 @@ export const createRoom = catchAsync(async (req, res, next) => {
       hotel: req.body.hotel || req.params.hotelId,
     })
   )
-    return next(new AppError('Duplicate room in the same hotel', 400));
+    return next(new AppError('Duplicate room in the same hotel', 422));
 
   req.body.country = hotel.country;
   req.body.state = hotel.state;
@@ -148,7 +148,7 @@ export const updateRoom = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `Unable to Update Room: This room has existing paid bookings and cannot be updated at this time.`,
-        400,
+        422,
       ),
     );
 

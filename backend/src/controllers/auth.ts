@@ -41,7 +41,7 @@ export const login = catchAsync(
 
     // Investigate this issue
     if (!user || !(await user.correctPassword(password, user.password)))
-      return next(new AppError('Incorrect email or password', 400));
+      return next(new AppError('Incorrect email or password', 401));
 
     authenticateUser(user, res, 200);
   },
@@ -59,13 +59,13 @@ export const refreshAuthToken = catchAsync(async (req, res, next) => {
 
   const user = await User.findById(decodedToken.id);
 
-  if (!user) return next(new AppError('This user does not exist', 400));
+  if (!user) return next(new AppError('This user does not exist', 401));
 
   if (user.pwdChangedAfterTokenIssued(decodedToken.iat!))
     return next(
       new AppError(
         'Your password has recently been changed. Log in with the new password',
-        400,
+        401,
       ),
     );
 
@@ -75,6 +75,7 @@ export const refreshAuthToken = catchAsync(async (req, res, next) => {
 export const logout = catchAsync(async (req, res) => {
   res.cookie(refreshLoginCookieName, '', { expires: new Date(0) });
 
+  // TODO: Decide if a cache-control header should be set: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
   res.status(200).json({
     status: 'success',
     message: 'Successfully logged out!',
@@ -87,7 +88,7 @@ export const logout = catchAsync(async (req, res) => {
 
 export const forgotPassword = catchAsync(async (req, res, next) => {
   const email = req.body.email;
-  if (!email) return next(new AppError('Please provide a email!'));
+  if (!email) return next(new AppError('Please provide a email!', 400));
 
   const user = await User.findOne({ email });
 
@@ -137,7 +138,7 @@ export const resetPassword = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         'This token is invalid or expired! Request for a new one',
-        400,
+        401,
       ),
     );
 
@@ -170,7 +171,7 @@ export const updatePassword = catchAsync(async (req, res, next) => {
     user.password,
   );
 
-  if (!isPwdCorrect) return next(new AppError(`Incorrect password`, 400));
+  if (!isPwdCorrect) return next(new AppError(`Incorrect password`, 401));
 
   user.password = password;
   user.passwordConfirm = passwordConfirm;
