@@ -24,7 +24,7 @@ export const signup = catchAsync(async (req, res, next) => {
     role,
   });
 
-  authenticateUser(user, res, 201);
+  authenticateUser(user, res, 'login', 201);
 });
 
 export const login = catchAsync(
@@ -43,7 +43,7 @@ export const login = catchAsync(
     if (!user || !(await user.correctPassword(password, user.password)))
       return next(new AppError('Incorrect email or password', 401));
 
-    authenticateUser(user, res, 200);
+    authenticateUser(user, res, 'login', 200);
   },
 );
 
@@ -69,9 +69,15 @@ export const refreshAuthToken = catchAsync(async (req, res, next) => {
       ),
     );
 
-  authenticateUser(user, res, 200);
+  authenticateUser(user, res, 'refresh', 200);
 });
 
+/**
+ * TODO: Some ideas on invalidating jwt token:
+ * https://stackoverflow.com/questions/21978658/invalidating-json-web-tokens
+ * https://stackoverflow.com/a/53994938
+ * Revoke refresh token: https://www.youtube.com/watch?v=25GS0MLT8JU&t=4580s
+ */
 export const logout = catchAsync(async (req, res) => {
   res.cookie(refreshLoginCookieName, '', { expires: new Date(0) });
 
@@ -178,5 +184,5 @@ export const updatePassword = catchAsync(async (req, res, next) => {
 
   await user.save();
 
-  authenticateUser(user, res, 200);
+  authenticateUser(user, res, 'login', 200);
 });
