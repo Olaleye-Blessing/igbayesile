@@ -26,7 +26,7 @@ app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 
 if (process.env.NODE_ENV === 'production')
   app.use((req, res) => {
-    res.status(200).json({ message: 'coming soon' });
+    res.status(503).json({ message: 'Coming soon' });
   });
 
 app.use('/api/v1/auth', authRouter);

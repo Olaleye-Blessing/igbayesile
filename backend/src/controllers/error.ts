@@ -11,7 +11,7 @@ const duplicateMongoError = (err: Error | AppError) => {
     Object.values((err as any).keyValue)[0]
   }`;
 
-  return new AppError(msg, 400);
+  return new AppError(msg, 422);
 };
 
 const handleMongoValidationError = (err: Error | AppError) => {
@@ -30,7 +30,7 @@ const handleMulterErrors = (err: MulterError) => {
     return new AppError('Maximum number of fields exceeded', 400);
 
   if (err.code === 'LIMIT_FILE_SIZE')
-    return new AppError('File(s) too large', 400);
+    return new AppError('File(s) too large', 413);
 
   return new AppError('Internal server error! Try again', 500);
 };
@@ -53,7 +53,7 @@ const globalErrorHanlder = async (
   } else if (err.name === 'TokenExpiredError') {
     error = new AppError('Token expired! Please login again', 401);
   } else if (err.name === 'JsonWebTokenError') {
-    error = new AppError('Invalid token! Please log in again', 400);
+    error = new AppError('Invalid token! Please log in again', 401);
   } else if (err.name === 'MulterError') {
     error = handleMulterErrors(err as unknown as MulterError);
   } else {
