@@ -2,7 +2,8 @@ import { IUser } from "@/interfaces/user";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { jwtDecode, JwtPayload } from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
+import { IAuthJWTPayLoad } from "@/interfaces/auth";
 
 type TTokenUnAuth = {
   status: "not-authenticated";
@@ -13,7 +14,7 @@ type TTokenUnAuth = {
 type TTokenAuth = {
   status: "stable" | "refreshing";
   jwt: string;
-  decoded: JwtPayload;
+  decoded: IAuthJWTPayLoad;
 };
 
 type IToken = TTokenAuth | TTokenUnAuth;
@@ -73,6 +74,6 @@ const useAuthStore = create<Store>()(
   ),
 );
 
-const decodeToken = (token: string) => jwtDecode<JwtPayload>(token);
+const decodeToken = (token: string) => jwtDecode<IAuthJWTPayLoad>(token);
 
 export default useAuthStore;

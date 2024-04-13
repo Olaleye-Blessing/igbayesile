@@ -1,8 +1,9 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import AppError from '@/utils/AppError';
 import catchAsync from '@/utils/catchAsync';
 import { JWT_LOGIN_SECRET } from '@/configs/igbayesile';
 import User from '@/models/user';
+import { IAuthJWTPayLoad } from '@/interfaces/auth';
 
 export const restrictTo = (...roles: string[]) =>
   catchAsync(async (req, res, next) => {
@@ -20,7 +21,7 @@ export const protect = catchAsync(async (req, res, next) => {
 
   if (!token) return next(new AppError('Please provide a login token', 401));
 
-  const decodedToken = jwt.verify(token, JWT_LOGIN_SECRET) as JwtPayload;
+  const decodedToken = jwt.verify(token, JWT_LOGIN_SECRET) as IAuthJWTPayLoad;
 
   const user = await User.findById(decodedToken.id);
 
@@ -35,5 +36,13 @@ export const protect = catchAsync(async (req, res, next) => {
     );
 
   req.user = user;
+  req.decodedAuthToken = decodedToken;
+  next();
+});
+
+export const justLoggedIn = catchAsync(async (req, res, next) => {
+  if (req.decodedAuthToken!.mode !== 'login')
+    return next(new AppError('Login again to perform this action', 403));
+
   next();
 });

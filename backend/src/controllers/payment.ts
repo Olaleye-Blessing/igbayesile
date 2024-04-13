@@ -10,6 +10,8 @@ import {
 } from '@/interfaces/paystack';
 import AppError from '@/utils/AppError';
 
+// TODO: Ensure that the user just logins before initializing payment.
+// Make use of the "justLoggedIn" middleware in routes that initialize payment
 export const initializePayStack = catchAsync(async (req, res, next) => {
   // TODO: Extend express req to have payment.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
