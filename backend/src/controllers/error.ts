@@ -51,6 +51,10 @@ const globalErrorHanlder = async (
   } else if (err.name === 'ValidationError') {
     error = handleMongoValidationError(err);
   } else if (err.name === 'TokenExpiredError') {
+    // Token expiration should be handled locally. This global error means
+    // all expired token will have the message. This has a consequence in the
+    // frontend. There is no way to know when to retry refreshing of auth token
+    // since all expired tokens have the same structure
     error = new AppError('Token expired! Please login again', 401);
   } else if (err.name === 'JsonWebTokenError') {
     error = new AppError('Invalid token! Please log in again', 401);

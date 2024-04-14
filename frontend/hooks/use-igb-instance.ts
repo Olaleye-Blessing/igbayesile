@@ -65,7 +65,12 @@ export const useIGBInstance = () => {
       async (error: AxiosError) => {
         const { response, config } = error;
 
-        if (response?.status !== 401 || !config) return Promise.reject(error);
+        const tokenNotExpired =
+          !/token expired! please login/i.test(
+            (response?.data as any).message,
+          ) || !config;
+
+        if (tokenNotExpired) return Promise.reject(error);
 
         try {
           const response = await refreshToken();
