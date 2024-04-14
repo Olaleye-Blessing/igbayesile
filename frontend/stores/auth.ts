@@ -38,6 +38,7 @@ interface Actions {
   login: (user: IUser, token: string) => void;
   logout: () => void;
   updateToken: (payload: ITokenPayload) => void;
+  updateUser: (user: IUser) => void;
 }
 
 type Store = State & Actions;
@@ -70,6 +71,7 @@ const useAuthStore = create<Store>()(
             state.token.decoded = decodeToken(payload.token);
           }
         }),
+      updateUser: (user) => set({ user }),
     })),
   ),
 );

@@ -186,3 +186,20 @@ export const updatePassword = catchAsync(async (req, res, next) => {
 
   authenticateUser(user, res, 'login', 200);
 });
+
+export const loginMe = catchAsync(async (req, res, next) => {
+  req.body.email = req.user!.email;
+
+  next();
+});
+
+export const updateEmail = catchAsync(async (req, res) => {
+  const email = req.body.email;
+
+  req.user!.email = email;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const user = await (req.user! as any).save();
+
+  res.status(200).json({ status: 'success', data: { user } });
+});

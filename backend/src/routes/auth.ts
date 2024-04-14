@@ -1,7 +1,7 @@
 import express from 'express';
 
 import * as authController from '@/controllers/auth';
-import { protect } from '@/middlewares/auth';
+import { justLoggedIn, protect } from '@/middlewares/auth';
 
 const router = express.Router();
 
@@ -15,5 +15,7 @@ router.post('/reset-password/:token', authController.resetPassword);
 router.use(protect);
 
 router.patch('/me/update-password', authController.updatePassword);
+router.post('/me/login', authController.loginMe, authController.login);
+router.patch('/me/email', justLoggedIn, authController.updateEmail);
 
 export default router;
