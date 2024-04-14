@@ -61,12 +61,9 @@ export const refreshAuthToken = catchAsync(async (req, res, next) => {
 
   if (!user) return next(new AppError('This user does not exist', 401));
 
-  if (user.pwdChangedAfterTokenIssued(decodedToken.iat!))
+  if (user.credentialsChangedAfterTokenIssued(decodedToken.iat!))
     return next(
-      new AppError(
-        'Your password has recently been changed. Log in with the new password',
-        401,
-      ),
+      new AppError('Your credentials changed recently. Log in again', 401),
     );
 
   authenticateUser(user, res, 'refresh', 200);

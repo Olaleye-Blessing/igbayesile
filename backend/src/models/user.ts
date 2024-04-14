@@ -10,7 +10,7 @@ interface IUserMethods {
     dbPassword: string,
   ): Promise<boolean>;
   setPasswordResetToken(): string;
-  pwdChangedAfterTokenIssued(tokenIssuedAt: number): string;
+  credentialsChangedAfterTokenIssued(tokenIssuedAt: number): string;
 }
 
 interface UserModel extends Model<IUser, object, IUserMethods> {
@@ -29,6 +29,7 @@ const userSchema = new Schema<IUser>({
     validate: [valdatior.isEmail, 'Please provide a valid email'],
     unique: true,
   },
+  emailChangedAt: Date,
   role: {
     type: String,
     required: [true, 'Please select the type of user you are.'],
@@ -91,14 +92,14 @@ userSchema.methods.setPasswordResetToken = function () {
   return resetToken;
 };
 
-userSchema.methods.pwdChangedAfterTokenIssued = function (
+userSchema.methods.credentialsChangedAfterTokenIssued = function (
   tokenIssuedAt: number,
 ) {
-  if (!this.passwordResetAt) return false;
+  const fields: (keyof IUser)[] = ['passwordResetAt', 'emailChangedAt'];
 
-  // issued -> Sunday 11th -> 900 in secs
-  // pwdResetAt -> Monday 12th -> 1000 in secs
-  return this.passwordResetAt.getTime() > tokenIssuedAt * 1000;
+  const fieldValues = fields.map((field) => this[field]).filter((val) => val);
+
+  return fieldValues.some((val) => val.getTime() > tokenIssuedAt * 1000);
 };
 
 userSchema.pre('save', async function (next) {
@@ -111,9 +112,13 @@ userSchema.pre('save', async function (next) {
 });
 
 userSchema.pre('save', async function (next) {
-  if (!this.isModified('password') || this.isNew) return next();
+  if (this.isNew) return next();
 
-  this.passwordResetAt = new Date(Date.now() - 1000);
+  if (this.isModified('password')) {
+    this.passwordResetAt = new Date(Date.now() - 1000);
+  } else if (this.isModified('email')) {
+    this.emailChangedAt = new Date(Date.now() - 1000);
+  }
 
   next();
 });

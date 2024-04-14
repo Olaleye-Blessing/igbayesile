@@ -4,6 +4,7 @@ export interface IUser {
   _id: Types.ObjectId;
   name: string;
   email: string;
+  emailChangedAt: Date;
   password: string;
   passwordConfirm: string;
   createdAt: Date;
