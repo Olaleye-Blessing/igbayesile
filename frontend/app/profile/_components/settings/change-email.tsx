@@ -16,7 +16,7 @@ import { useSettings } from "./hook";
 
 export default function ChangeEmail() {
   const token = useAuthStore((state) => state.token);
-  const updateUser = useAuthStore((state) => state.updateUser);
+  const localLogin = useAuthStore((state) => state.login);
   const { login, updateEmail, toastIds } = useSettings();
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [email, setEmail] = useState("");
@@ -25,8 +25,8 @@ export default function ChangeEmail() {
     if (token.decoded?.mode === "refresh") return setOpenLoginModal(true);
 
     try {
-      let newUser = await updateEmail(email);
-      updateUser(newUser);
+      const result = await updateEmail(email);
+      localLogin(result.user, result.authToken);
     } catch (error) {
       toast.error(handleIgbayesileAPIError(error), { id: toastIds.email });
     }
