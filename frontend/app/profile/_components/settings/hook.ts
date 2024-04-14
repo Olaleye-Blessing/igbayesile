@@ -1,6 +1,5 @@
 import { ILoginResponse } from "@/app/auth/_types";
 import { useIGBInstance } from "@/hooks/use-igb-instance";
-import { IUser } from "@/interfaces/user";
 import useAuthStore from "@/stores/auth";
 import { FormEvent } from "react";
 import toast from "react-hot-toast";
@@ -19,14 +18,14 @@ export const useSettings = () => {
 
     toast.loading("Updating Email", { id: toastIds.email });
 
-    let { data } = await igbInstance().patch<{ data: { user: IUser } }>(
+    let { data } = await igbInstance().patch<{ data: ILoginResponse }>(
       `/auth/me/email`,
       { email },
     );
 
     toast.success("Email Updated", { id: toastIds.email });
 
-    return data.data.user;
+    return data.data;
   };
 
   const login = async (e: FormEvent<HTMLFormElement>) => {

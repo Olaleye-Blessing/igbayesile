@@ -198,5 +198,5 @@ export const updateEmail = catchAsync(async (req, res) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const user = await (req.user! as any).save();
 
-  res.status(200).json({ status: 'success', data: { user } });
+  authenticateUser(user, res, 'login', 200);
 });
