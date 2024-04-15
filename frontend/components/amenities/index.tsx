@@ -24,7 +24,6 @@ type AmenitiesProps = (AmenitiesForm | AmenitiesList) & {
   limit?: number;
 };
 
-let url = `/amenities`;
 
 export default function Amenities({
   target,
@@ -34,6 +33,7 @@ export default function Amenities({
   className,
   limit,
 }: AmenitiesProps) {
+  let url = `/amenities`;
   if (!limit) limit = 5;
   url += `?limit=${limit}`;
   if (target !== "both") url += `&target=${target}`;
