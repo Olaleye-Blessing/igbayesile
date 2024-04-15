@@ -37,10 +37,13 @@ export const setRoomsFilter: RequestHandler = (req, _res, next) => {
   next();
 };
 
-export const getRooms = factory.findAll(Room, [
-  { path: 'hotel', select: 'name manager' },
-  { path: 'bookings', select: 'checkIn checkOut' },
-]);
+export const getRooms = factory.findAll({
+  model: Room,
+  populateOpts: [
+    { path: 'hotel', select: 'name manager' },
+    { path: 'bookings', select: 'checkIn checkOut' },
+  ],
+});
 
 export const getCheapestRooms: RequestHandler = async (req, res, next) => {
   req.query.sort = '-price,-ratings,-reviews,createdAt';

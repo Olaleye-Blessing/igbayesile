@@ -34,7 +34,7 @@ export const setReviewFilters: RequestHandler = (req, res, next) => {
   next();
 };
 
-export const getReviews = factory.findAll(Review);
+export const getReviews = factory.findAll({ model: Review });
 
 export const createReview = catchAsync(async (req, res, next) => {
   const reviewType = req.body.type;

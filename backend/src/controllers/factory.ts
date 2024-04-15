@@ -15,18 +15,13 @@ import { Model, PopulateOptions } from 'mongoose';
   key = 'docs',
 */
 
-export const findAll = <IDoc>(
-  model: Model<
-    IDoc,
-    any
-    // QueryWithHelpers<IDoc[], IDoc, object, IDoc, 'find'>,
-    // any, // TInstanceMethods
-    // any, // TVirtuals
-    // any, // THydratedDocumentType
-    // any // TSchema
-  >,
-  populateOpts: PopulateOptions[] = [],
-) =>
+export const findAll = <IDoc>({
+  model,
+  populateOpts = [],
+}: {
+  model: Model<IDoc, any>;
+  populateOpts?: PopulateOptions[];
+}) =>
   catchAsync(async (req, res) => {
     const features = new FilterFeatures<IDoc>(model.find(), { ...req.query })
       .filter()

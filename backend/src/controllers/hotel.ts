@@ -6,6 +6,7 @@ import Hotel from '@/models/hotel';
 import AppError from '@/utils/AppError';
 import { IHotel } from '@/interfaces/hotel';
 import * as factory from '@/controllers/factory';
+import { redisClient } from '@/databases/redis';
 
 export const setHotelsFilter: RequestHandler = (req, _res, next) => {
   const qParams = { ...req.query };
@@ -28,7 +29,10 @@ export const setHotelsFilter: RequestHandler = (req, _res, next) => {
   next();
 };
 
-export const getHotels = factory.findAll(Hotel, [{ path: 'amenities' }]);
+export const getHotels = factory.findAll({
+  model: Hotel,
+  populateOpts: [{ path: 'amenities' }],
+});
 
 export const getTopRated: RequestHandler = async (req, res, next) => {
   req.query.sort = '-ratings,-totalReviews,createdAt';
@@ -38,11 +42,22 @@ export const getTopRated: RequestHandler = async (req, res, next) => {
 };
 
 export const getHotel = catchAsync(async (req, res, next) => {
-  const hotel = await Hotel.findById(req.params.id)
+  let hotel = await redisClient.get(`hotel:${req.params.id}`);
+
+  if (hotel)
+    return res.status(200).json({
+      and: 'a',
+      status: 'success',
+      data: { hotel: JSON.parse(hotel) },
+    });
+
+  hotel = await Hotel.findById(req.params.id)
     .populate('manager')
     .populate('amenities');
 
   if (!hotel) return next(new AppError('This hotel does not exist', 404));
+
+  await redisClient.set(`hotel:${req.params.id}`, JSON.stringify(hotel));
 
   return res.status(200).json({
     status: 'success',
