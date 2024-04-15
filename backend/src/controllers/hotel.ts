@@ -38,6 +38,11 @@ export const getTopRated: RequestHandler = async (req, res, next) => {
   req.query.sort = '-ratings,-totalReviews,createdAt';
   req.query.limit = '1';
 
+  req.factory = {
+    ...req.factory,
+    cache: { maxAge: 60, directives: ['public'] },
+  };
+
   next();
 };
 

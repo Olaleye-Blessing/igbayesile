@@ -5,13 +5,16 @@ import {
 } from "@tanstack/react-query";
 import { useIGBInstance } from "./use-igb-instance";
 import { handleIgbayesileAPIError } from "@/utils/handle-igbayesile-api-error";
+import { AxiosRequestConfig } from "axios";
 
 export const useIGBQuery = <TData = unknown>({
   options,
   url,
+  axiosConfig,
 }: {
   options: UndefinedInitialDataOptions<TData, Error, TData, QueryKey>;
   url: string;
+  axiosConfig?: AxiosRequestConfig;
 }) => {
   const { igbInstance } = useIGBInstance();
 
@@ -33,7 +36,7 @@ export const useIGBQuery = <TData = unknown>({
           let { data } = await igbInstance().get<{
             status: "success";
             data: TData;
-          }>(url);
+          }>(url, axiosConfig);
 
           return data.data as TData;
         } catch (error) {

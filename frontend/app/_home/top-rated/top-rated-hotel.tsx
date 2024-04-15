@@ -22,7 +22,12 @@ export default function TopRatedHotel() {
   return (
     <section className="cardboard px-6 py-4">
       <header className="mb-4">
-        <h2>Our Top Rated Hotel</h2>
+        <h2>
+          Our Top Rated Hotel
+          <span className="text-sm text-gray-500 font-normal">
+            (Update every 12 hours)
+          </span>
+        </h2>
       </header>
       <div>
         {data ? (
