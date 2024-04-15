@@ -23,10 +23,10 @@ export const setBookingsFilter: RequestHandler = (req, res, next) => {
   next();
 };
 
-export const getBookings = factory.findAll(Booking, [
-  { path: 'room', select: '-bookings' },
-  { path: 'reviews' },
-]);
+export const getBookings = factory.findAll({
+  model: Booking,
+  populateOpts: [{ path: 'room', select: '-bookings' }, { path: 'reviews' }],
+});
 
 export const setPaymentParams = catchAsync(async (req, res, next) => {
   let { checkIn, checkOut } = req.body;
