@@ -14,6 +14,7 @@ declare global {
       CLOUDINARY_API_SECRET: string;
       PAYSTACK_PUBLIC_KEY: string;
       PAYSTACK_SECRET_KEY: string;
+      REDIS_URL: string;
     }
   }
 }

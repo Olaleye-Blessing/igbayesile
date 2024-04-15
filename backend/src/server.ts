@@ -5,11 +5,11 @@ dotenv.config({ path: './config.env' });
 
 import { v2 as cloudinary } from 'cloudinary';
 import app from './app';
-import { connectDB } from './db';
+import { connectDBs } from './databases/init';
 
 const port = process.env.PORT || 5000;
 
-connectDB();
+connectDBs();
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,

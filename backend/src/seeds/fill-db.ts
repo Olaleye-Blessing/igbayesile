@@ -2,11 +2,11 @@ import 'module-alias/register';
 import dotenv from 'dotenv';
 dotenv.config({ path: './config.env' });
 
-import { connectDB } from '@/db';
+import { connectMongoDB } from '@/databases/mongo';
 import Amenity from '@/models/amenity';
 import { hotelAmenities, roomAmenities } from './amenities';
 
-connectDB();
+connectMongoDB();
 
 const importData = async () => {
   try {
