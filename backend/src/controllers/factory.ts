@@ -25,7 +25,7 @@ export const findAll = <IDoc>({ model, populateOpts = [], cache }: IFindAll<IDoc
 
       if (cachedData) {
         return res
-          .status(200)
+          .status(304)
           .json({ status: 'success', data: JSON.parse(cachedData) });
       }
     }

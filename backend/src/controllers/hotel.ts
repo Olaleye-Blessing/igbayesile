@@ -40,7 +40,11 @@ export const getTopRated: RequestHandler = async (req, res, next) => {
 
   req.factory = {
     ...req.factory,
-    cache: { maxAge: 60, directives: ['public'] },
+    cache: {
+      maxAge: 1 * 60 * 60,
+      // TODO: Make use of s-max-age when you learn about proxy
+      directives: ['public', 'must-revalidate'],
+    },
   };
 
   next();
