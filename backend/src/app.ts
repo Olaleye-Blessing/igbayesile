@@ -3,6 +3,7 @@ import express, { Express } from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import mongoSanitize from 'express-mongo-sanitize';
 
 import authRouter from '@/routes/auth';
 import userRouter from '@/routes/user';
@@ -38,6 +39,8 @@ if (process.env.NODE_ENV === 'production') {
 }
 app.use(express.static(path.join(__dirname, '../../frontend/dist')));
 app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
+
+app.use(mongoSanitize());
 
 if (process.env.NODE_ENV === 'production')
   app.use((req, res) => {
