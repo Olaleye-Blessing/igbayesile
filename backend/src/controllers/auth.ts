@@ -1,5 +1,4 @@
 import crypto from 'crypto';
-import { NextFunction, Request, Response } from 'express';
 import User from '@/models/user';
 import AppError from '@/utils/AppError';
 import catchAsync from '@/utils/catchAsync';
@@ -27,25 +26,22 @@ export const signup = catchAsync(async (req, res, next) => {
   authenticateUser(user, res, 'login', 201);
 });
 
-export const login = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const { email, password } = req.body;
+export const login = catchAsync(async (req, res, next) => {
+  const { email, password } = req.body;
 
-    if (!email && !password)
-      return next(new AppError('Provide email and password', 400));
+  if (!email && !password)
+    return next(new AppError('Provide email and password', 400));
 
-    if (!email) return next(new AppError('Provide email', 400));
-    if (!password) return next(new AppError('Provide password', 400));
+  if (!email) return next(new AppError('Provide email', 400));
+  if (!password) return next(new AppError('Provide password', 400));
 
-    const user = await User.findOne({ email }).select('+password');
+  const user = await User.findOne({ email }).select('+password');
 
-    // Investigate this issue
-    if (!user || !(await user.correctPassword(password, user.password)))
-      return next(new AppError('Incorrect email or password', 401));
+  if (!user || !(await user.correctPassword(password, user.password)))
+    return next(new AppError('Incorrect email or password', 401));
 
-    authenticateUser(user, res, 'login', 200);
-  },
-);
+  authenticateUser(user, res, 'login', 200);
+});
 
 export const refreshAuthToken = catchAsync(async (req, res, next) => {
   const token = req.cookies[refreshLoginCookieName];
