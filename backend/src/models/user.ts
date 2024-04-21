@@ -71,6 +71,33 @@ const userSchema = new Schema<IUser>({
     default: null,
   },
   passwordResetAt: Date,
+  devices: {
+    type: [
+      {
+        id: String,
+        ip: String,
+        time: Date,
+        meta: {
+          ua: String,
+          browser: {
+            name: String,
+            version: String,
+            major: String,
+          },
+          engine: { name: String, version: String },
+          os: { name: String, version: String },
+          device: {
+            vendor: String,
+            model: String,
+            type: String,
+          },
+          cpu: { architecture: String },
+        },
+      },
+    ],
+    select: false,
+    default: [],
+  },
 });
 
 userSchema.methods.correctPassword = async function (
