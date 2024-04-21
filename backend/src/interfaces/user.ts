@@ -1,4 +1,5 @@
 import { Types } from 'mongoose';
+import { IResult as IDeviceDetail } from 'ua-parser-js';
 
 export interface IUser {
   _id: Types.ObjectId;
@@ -13,6 +14,12 @@ export interface IUser {
   passwordResetToken?: string;
   passwordResetExpires?: Date;
   passwordResetAt?: Date;
+  devices: {
+    id: string;
+    ip: string | undefined;
+    meta: IDeviceDetail;
+    time: Date;
+  }[];
 }
 
 export interface IUserWithNoCredential

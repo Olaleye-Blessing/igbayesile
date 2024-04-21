@@ -1,4 +1,6 @@
 import crypto from 'crypto';
+import { nanoid } from 'nanoid';
+import uap from 'ua-parser-js';
 import User from '@/models/user';
 import AppError from '@/utils/AppError';
 import catchAsync from '@/utils/catchAsync';
@@ -35,10 +37,33 @@ export const login = catchAsync(async (req, res, next) => {
   if (!email) return next(new AppError('Provide email', 400));
   if (!password) return next(new AppError('Provide password', 400));
 
-  const user = await User.findOne({ email }).select('+password');
+  let user = await User.findOne({ email }).select('+password +devices');
 
   if (!user || !(await user.correctPassword(password, user.password)))
     return next(new AppError('Incorrect email or password', 401));
+
+  const device = {
+    id: nanoid(),
+    ip: req.ip,
+    time: new Date(),
+    meta: uap(req.headers['user-agent']),
+  };
+
+  const devices = user.devices || [];
+
+  if (!devices.some((d) => d.ip === device.ip)) {
+    // do not send mail for first time login
+    if (devices.length !== 0) {
+      // TODO: send a mail telling them that an unknown IP address just logged in into their account
+      console.log('__ 💻 SEND MAIL FOR UNRECOGNIZED LOGIN ___');
+    }
+
+    devices.unshift(device);
+
+    user.devices = devices;
+
+    user = await user.save({ validateBeforeSave: false });
+  }
 
   authenticateUser(user, res, 'login', 200);
 });
