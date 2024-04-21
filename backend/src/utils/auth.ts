@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   JWT_LOGGED_IN_EXPIRES,
   JWT_LOGIN_SECRET,
@@ -9,6 +10,7 @@ import { TAuthTokenMode } from '@/interfaces/auth';
 import { IUser } from '@/interfaces/user';
 import { Response } from 'express';
 import jwt from 'jsonwebtoken';
+import { removeDocFields } from './remove-doc-fields';
 
 export const authenticateUser = (
   user: IUser,
@@ -17,6 +19,21 @@ export const authenticateUser = (
   status = 200,
 ) => {
   setRefreshToken(user, res);
+
+  removeDocFields({
+    doc: user,
+    keys: [
+      'password',
+      'passwordConfirm',
+      'passwordResetExpires',
+      'passwordResetAt',
+      'passwordResetToken',
+      'devices',
+      'updatedAt',
+      'emailChangedAt',
+      'createdAt',
+    ],
+  });
 
   res.status(status).json({
     status: 'success',
