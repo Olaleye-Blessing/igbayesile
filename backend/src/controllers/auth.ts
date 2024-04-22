@@ -5,11 +5,15 @@ import User from '@/models/user';
 import AppError from '@/utils/AppError';
 import catchAsync from '@/utils/catchAsync';
 import {
+  JWT_LOGGEDIN_DEVICE_SECRET,
   JWT_REFRESH_LOGIN_SECRET,
+  loggedInDeviceCookieName,
   refreshLoginCookieName,
 } from '@/configs/igbayesile';
-import { authenticateUser } from '@/utils/auth';
+import { authenticateUser, loginBruteForceToken } from '@/utils/auth';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import { redisClient } from '@/databases/redis';
+import LoginAttempt from '@/models/login-attempts';
 
 export const signup = catchAsync(async (req, res, next) => {
   const { name, email, password, passwordConfirm, role } = req.body;
@@ -28,6 +32,38 @@ export const signup = catchAsync(async (req, res, next) => {
   authenticateUser(user, res, 'login', 201);
 });
 
+export const validateLoginCookie = catchAsync(async (req, res, next) => {
+  const loggedInDeviceToken = req.cookies[loggedInDeviceCookieName];
+
+  if (!loggedInDeviceToken) return next();
+
+  try {
+    const payload = jwt.verify(
+      loggedInDeviceToken,
+      JWT_LOGGEDIN_DEVICE_SECRET,
+      {
+        audience: 'brute-force',
+        issuer: 'igbayesile',
+      },
+    );
+
+    if (
+      await redisClient.lPos(
+        'loginBlockLists',
+        payload.sub || loggedInDeviceToken,
+      )
+    )
+      return res.status(401).json({ status: 'Werey ni e' });
+
+    next();
+  } catch (error) {
+    // any error leads to block list
+    await redisClient.lPush('loginBlockLists', loggedInDeviceToken);
+
+    return res.status(401).json({ status: 'Werey ni e' });
+  }
+});
+
 export const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -39,15 +75,83 @@ export const login = catchAsync(async (req, res, next) => {
 
   let user = await User.findOne({ email }).select('+password +devices');
 
-  if (!user || !(await user.correctPassword(password, user.password)))
-    return next(new AppError('Incorrect email or password', 401));
-
   const device = {
     id: nanoid(),
     ip: req.ip,
     time: new Date(),
     meta: uap(req.headers['user-agent']),
   };
+
+  const loggedInCookie = req.cookies[loggedInDeviceCookieName];
+
+  if (!user || !(await user.correctPassword(password, user.password))) {
+    const jwtToken = loginBruteForceToken({ auth: 'no', jwtid: device.id });
+    const attempt = {
+      user: user?.id,
+      date: new Date(),
+      cookie: loggedInCookie,
+      // key: device.id,
+      key: device.ip,
+    };
+
+    // const query = {
+    //   $or: [
+    //     user && { user: user.id },
+    //     attempt.cookie && { cookie: attempt.cookie },
+    //     { key: attempt.key },
+    //   ].filter((q) => q),
+    // };
+
+    // const prevAttempt = await LoginAttempt.findOne(query);
+
+    // if (!prevAttempt) {
+    //   await LoginAttempt.create(attempt);
+
+    //   return next(new AppError('Incorrect email or password', 401));
+    // }
+
+    // // const lockoutDuration = 10 * 60 * 1000; // 10 mins
+    // const lockoutDuration = 60 * 1000; // 60 seconds
+    // const maxAttempt = 5;
+    // const currentTime = new Date();
+    // const timeSinceLastAttempt =
+    //   prevAttempt.lastAttempt.getTime() - currentTime.getTime();
+
+    // prevAttempt.lastAttempt = currentTime;
+
+    // if (timeSinceLastAttempt > lockoutDuration) {
+    //   // reset since duration has passed
+    //   prevAttempt.count = 1;
+
+    //   await prevAttempt.save({ validateBeforeSave: false });
+
+    //   return next(new AppError('Incorrect email or password', 401));
+    // }
+
+    // prevAttempt.count = Number(prevAttempt.count) + 1;
+
+    // if (prevAttempt.count <= maxAttempt) {
+    //   await prevAttempt.save({ validateBeforeSave: false });
+
+    //   return next(new AppError('Incorrect email or password', 401));
+    // }
+
+    // prevAttempt.stage = +prevAttempt.stage + 1;
+
+    // if (prevAttempt.stage >= maxAttempt) {
+    //   // TODO: add to permanent block -> REDIS
+    //   await redisClient.lPush(
+    //     'loginBlockLists',
+    //     loggedInCookie || prevAttempt.key,
+    //   );
+    // } else {
+    //   // TODO: add to temporary block -> REDIS timeout
+    // }
+
+    // await prevAttempt.save({ validateBeforeSave: false });
+
+    return next(new AppError('Incorrect email or password', 401));
+  }
 
   const devices = user.devices || [];
 
@@ -64,6 +168,12 @@ export const login = catchAsync(async (req, res, next) => {
 
     user = await user.save({ validateBeforeSave: false });
   }
+
+  res.cookie(
+    loggedInDeviceCookieName,
+    loginBruteForceToken({ auth: 'yes', user, jwtid: device.id }),
+    { httpOnly: true, secure: true },
+  );
 
   authenticateUser(user, res, 'login', 200);
 });

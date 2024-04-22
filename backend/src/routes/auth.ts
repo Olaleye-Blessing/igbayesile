@@ -6,7 +6,7 @@ import { justLoggedIn, protect } from '@/middlewares/auth';
 const router = express.Router();
 
 router.post('/signup', authController.signup);
-router.post('/login', authController.login);
+router.post('/login', authController.validateLoginCookie, authController.login);
 router.post('/refresh-token', authController.refreshAuthToken);
 router.post('/logout', authController.logout);
 router.post('/forgot-password', authController.forgotPassword);
