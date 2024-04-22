@@ -35,7 +35,11 @@ export default class FilterFeatures<T> {
   }
 
   fields() {
-    const fields = (this.queryObj.fields || '-__v').replace(/,/g, ' ');
+    let fields = this.queryObj.fields || '-__v';
+
+    if (typeof fields === 'object') fields = (fields as string[]).join(',');
+
+    fields = fields.replace(/,/g, ' ');
 
     this.query = this.query.select(fields);
 
@@ -43,7 +47,10 @@ export default class FilterFeatures<T> {
   }
 
   sort() {
-    const sort = (this.queryObj.sort || 'createdAt').replace(/,/g, ' ');
+    let sort = this.queryObj.sort || 'createdAt';
+    if (typeof sort === 'object') sort = (sort as string[]).join(',');
+
+    sort = sort.replace(/,/g, ' ');
 
     this.query = this.query.sort(sort);
 
