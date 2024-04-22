@@ -86,6 +86,7 @@ export const login = catchAsync(async (req, res, next) => {
 
   if (!user || !(await user.correctPassword(password, user.password))) {
     const jwtToken = loginBruteForceToken({ auth: 'no', jwtid: device.id });
+
     const attempt = {
       user: user?.id,
       date: new Date(),
@@ -94,61 +95,81 @@ export const login = catchAsync(async (req, res, next) => {
       key: device.ip,
     };
 
-    // const query = {
-    //   $or: [
-    //     user && { user: user.id },
-    //     attempt.cookie && { cookie: attempt.cookie },
-    //     { key: attempt.key },
-    //   ].filter((q) => q),
-    // };
+    const query = {
+      $or: [
+        user && { user: user.id },
+        attempt.cookie && { cookie: attempt.cookie },
+        { key: attempt.key },
+      ].filter((q) => q),
+    };
 
-    // const prevAttempt = await LoginAttempt.findOne(query);
+    const prevAttempt = await LoginAttempt.findOne(query);
 
-    // if (!prevAttempt) {
-    //   await LoginAttempt.create(attempt);
+    if (!prevAttempt) {
+      await LoginAttempt.create(attempt);
 
-    //   return next(new AppError('Incorrect email or password', 401));
-    // }
+      res.cookie(loggedInDeviceCookieName, jwtToken, {
+        httpOnly: true,
+        secure: true,
+      });
 
-    // // const lockoutDuration = 10 * 60 * 1000; // 10 mins
-    // const lockoutDuration = 60 * 1000; // 60 seconds
-    // const maxAttempt = 5;
-    // const currentTime = new Date();
-    // const timeSinceLastAttempt =
-    //   prevAttempt.lastAttempt.getTime() - currentTime.getTime();
+      return next(new AppError('Incorrect email or password', 401));
+    }
 
-    // prevAttempt.lastAttempt = currentTime;
+    // const lockoutDuration = 10 * 60 * 1000; // 10 mins
+    const lockoutDuration = 60 * 1000; // 60 seconds
+    const maxAttempt = 5;
+    const currentTime = new Date();
+    const timeSinceLastAttempt =
+      prevAttempt.lastAttempt.getTime() - currentTime.getTime();
 
-    // if (timeSinceLastAttempt > lockoutDuration) {
-    //   // reset since duration has passed
-    //   prevAttempt.count = 1;
+    prevAttempt.lastAttempt = currentTime;
 
-    //   await prevAttempt.save({ validateBeforeSave: false });
+    if (timeSinceLastAttempt > lockoutDuration) {
+      // reset since duration has passed
+      prevAttempt.count = 1;
 
-    //   return next(new AppError('Incorrect email or password', 401));
-    // }
+      await prevAttempt.save({ validateBeforeSave: false });
 
-    // prevAttempt.count = Number(prevAttempt.count) + 1;
+      res.cookie(loggedInDeviceCookieName, jwtToken, {
+        httpOnly: true,
+        secure: true,
+      });
 
-    // if (prevAttempt.count <= maxAttempt) {
-    //   await prevAttempt.save({ validateBeforeSave: false });
+      return next(new AppError('Incorrect email or password', 401));
+    }
 
-    //   return next(new AppError('Incorrect email or password', 401));
-    // }
+    prevAttempt.count = Number(prevAttempt.count) + 1;
 
-    // prevAttempt.stage = +prevAttempt.stage + 1;
+    if (prevAttempt.count <= maxAttempt) {
+      await prevAttempt.save({ validateBeforeSave: false });
 
-    // if (prevAttempt.stage >= maxAttempt) {
-    //   // TODO: add to permanent block -> REDIS
-    //   await redisClient.lPush(
-    //     'loginBlockLists',
-    //     loggedInCookie || prevAttempt.key,
-    //   );
-    // } else {
-    //   // TODO: add to temporary block -> REDIS timeout
-    // }
+      res.cookie(loggedInDeviceCookieName, jwtToken, {
+        httpOnly: true,
+        secure: true,
+      });
 
-    // await prevAttempt.save({ validateBeforeSave: false });
+      return next(new AppError('Incorrect email or password', 401));
+    }
+
+    prevAttempt.stage = +prevAttempt.stage + 1;
+
+    if (prevAttempt.stage >= maxAttempt) {
+      // TODO: add to permanent block -> REDIS
+      await redisClient.lPush(
+        'loginBlockLists',
+        loggedInCookie || prevAttempt.key,
+      );
+    } else {
+      // TODO: add to temporary block -> REDIS timeout
+    }
+
+    await prevAttempt.save({ validateBeforeSave: false });
+
+    res.cookie(loggedInDeviceCookieName, jwtToken, {
+      httpOnly: true,
+      secure: true,
+    });
 
     return next(new AppError('Incorrect email or password', 401));
   }
