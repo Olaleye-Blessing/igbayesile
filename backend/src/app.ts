@@ -11,8 +11,10 @@ import roomRouter from '@/routes/room';
 import bookingRouter from '@/routes/booking';
 import reviewRouter from '@/routes/review';
 import amenityRouter from '@/routes/amenity';
+import cspRouter from '@/routes/csp';
 import globalErrorHanlder from '@/controllers/error';
 import { protect } from './middlewares/auth';
+import { cspHeaders } from './configs/security/csp';
 
 const app: Express = express();
 
@@ -21,6 +23,19 @@ if (process.env.NODE_ENV !== 'production') app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+if (process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    res.set({
+      'Strict-Transport-Security': 'max-age=63072000',
+      'Reporting-Endpoints': `csp-web="${cspHeaders.web.endpoint}", csp-api="${cspHeaders.api.endpoint}"`,
+      'Content-Security-Policy': req.url.startsWith('/api/v')
+        ? cspHeaders.api.rule
+        : cspHeaders.web.rule,
+    });
+
+    next();
+  });
+}
 app.use(express.static(path.join(__dirname, '../../frontend/dist')));
 app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 
@@ -36,6 +51,7 @@ app.use('/api/v1/rooms', roomRouter);
 app.use('/api/v1/bookings', bookingRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/amenities', amenityRouter);
+app.use('/api/v1/csp', cspRouter);
 
 app.use(globalErrorHanlder);
 
