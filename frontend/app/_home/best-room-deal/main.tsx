@@ -25,6 +25,8 @@ export default function Main() {
   });
 
   const rooms = result.data?.results || [];
+  console.log("___ ROOMS ___");
+  console.log(rooms);
 
   return (
     <Fetching result={result}>
@@ -69,7 +71,7 @@ export default function Main() {
                       <span className="text-sm text-gray-500">24hrs</span>
                     </p>
                     <Link
-                      href={`/rooms/room/?roomId=${room._id}&hotelId=${room.hotel}`}
+                      href={`/hotels/${(room.hotel as any)._id}/rooms/${room._id}`}
                       className={buttonVariants({
                         variant: "default",
                       })}

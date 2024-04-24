@@ -1,3 +1,5 @@
+"use client";
+
 import { useIGBQuery } from "@/hooks/use-igb-query";
 import { RoomsQueryKey } from "../_utils/query-key-factory";
 import { IRoomDetail } from "@/interfaces/room";

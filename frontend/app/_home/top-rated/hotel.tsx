@@ -45,7 +45,7 @@ export default function Hotel({ hotel }: { hotel: IHotel }) {
           <span>{hotel.avgRoomPrice}</span>
         </p>
         <Link
-          href={`/hotels/hotel/?hotelId=${hotel._id}`}
+          href={`/hotels/${hotel._id}`}
           className={buttonVariants({
             className: "ml-auto mt-4 block",
           })}

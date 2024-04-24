@@ -42,7 +42,7 @@ export default function Room({ room, hotelId, className = "" }: RoomProps) {
       </>
       <BookRoom room={room} />
       <Link
-        href={`/rooms/room/?roomId=${room._id}&hotelId=${hotelId}`}
+        href={`/hotels/${hotelId}/rooms/${room._id}`}
         className={buttonVariants({
           variant: "secondary",
           className: "w-full mt-2",

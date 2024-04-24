@@ -109,7 +109,7 @@ export default function Booking({ booking }: BookingProps) {
       )}
 
       <Link
-        href={`/rooms/room/?roomId=${booking.room._id}&hotelId=${booking.room.hotel}`}
+        href={`/hotels/${booking.room.hotel}/rooms/${booking.room._id}`}
         className={buttonVariants({
           variant: "secondary",
           className: "w-full mt-auto",

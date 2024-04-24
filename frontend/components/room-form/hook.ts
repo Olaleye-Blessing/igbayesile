@@ -3,7 +3,7 @@ import { hotelsKeys } from "@/app/hotels/utils/query-key-factory";
 import { API_BASE_URL } from "@/constants/backend";
 import { useIGBInstance } from "@/hooks/use-igb-instance";
 import { IRoom } from "@/interfaces/room";
-import { RoomsQueryKey } from "@/app/rooms/room/_utils/query-key-factory";
+import { RoomsQueryKey } from "@/app/hotels/[hotel]/rooms/[room]/_utils/query-key-factory";
 
 export const useRoomForm = () => {
   const queryClient = useQueryClient();

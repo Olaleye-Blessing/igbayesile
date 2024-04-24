@@ -1,3 +1,4 @@
+"use client";
 /* eslint-disable @next/next/no-img-element */
 import { useIGBQuery } from "@/hooks/use-igb-query";
 import Loading from "@/app/loading";
