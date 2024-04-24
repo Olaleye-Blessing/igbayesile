@@ -8,6 +8,7 @@ declare global {
       JWT_LOGIN_SECRET: string;
       JWT_REFRESH_LOGIN_SECRET: string;
       JWT_LOGGED_IN_EXPIRES: string;
+      JWT_LOGGEDIN_DEVICE_SECRET: string;
       FRONTEND_URL: string;
       CLOUDINARY_CLOUD_NAME: string;
       CLOUDINARY_API_KEY: string;

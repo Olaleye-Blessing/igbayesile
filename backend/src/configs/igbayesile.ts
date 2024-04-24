@@ -8,3 +8,8 @@ export const JWT_LOGIN_SECRET = process.env.JWT_LOGIN_SECRET!;
 export const JWT_REFRESH_LOGIN_SECRET = process.env.JWT_REFRESH_LOGIN_SECRET!;
 
 export const JWT_REFRESH_LOGIN_EXPIRES = process.env.JWT_REFRESH_LOGIN_EXPIRES!;
+
+export const JWT_LOGGEDIN_DEVICE_SECRET =
+  process.env.JWT_LOGGEDIN_DEVICE_SECRET!;
+
+export const loggedInDeviceCookieName = '_logged-device';
