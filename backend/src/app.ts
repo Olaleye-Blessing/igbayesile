@@ -1,4 +1,3 @@
-import path from 'path';
 import express, { Express } from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
@@ -28,24 +27,21 @@ if (process.env.NODE_ENV === 'production') {
   app.use((req, res, next) => {
     res.set({
       'Strict-Transport-Security': 'max-age=63072000',
-      'Reporting-Endpoints': `csp-web="${cspHeaders.web.endpoint}", csp-api="${cspHeaders.api.endpoint}"`,
-      'Content-Security-Policy': req.url.startsWith('/api/v')
-        ? cspHeaders.api.rule
-        : cspHeaders.web.rule,
+      'Reporting-Endpoints': `csp-api="${cspHeaders.endpoint}"`,
+      'Content-Security-Policy': cspHeaders.rule,
     });
 
     next();
   });
 }
-app.use(express.static(path.join(__dirname, '../../frontend/dist')));
 app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 
 app.use(mongoSanitize());
 
-if (process.env.NODE_ENV === 'production')
-  app.use((req, res) => {
-    res.status(503).json({ message: 'Coming soon' });
-  });
+// if (process.env.NODE_ENV === 'production')
+//   app.use((req, res) => {
+//     res.status(503).json({ message: 'Coming soon' });
+//   });
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', protect, userRouter);
