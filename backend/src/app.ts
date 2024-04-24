@@ -38,10 +38,10 @@ app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 
 app.use(mongoSanitize());
 
-// if (process.env.NODE_ENV === 'production')
-//   app.use((req, res) => {
-//     res.status(503).json({ message: 'Coming soon' });
-//   });
+if (process.env.NODE_ENV === 'production')
+  app.use((req, res) => {
+    res.status(503).json({ message: 'Coming soon' });
+  });
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', protect, userRouter);
