@@ -5,8 +5,8 @@
 	"scripts": {
 		"dev": "concurrently \"cd backend && pnpm run dev\" \"cd frontend && pnpm run dev\"",
 		"prod:frontend": "cd frontend && pnpm run build",
-		"prod:backend": "cd backend && pnpm run build && pnpm run start:prod",
-		"prod": "pnpm run prod:frontend && pnpm run prod:backend"
+		"local-prod:backend": "cd backend && pnpm run local:prod",
+		"prod": "pnpm run prod:frontend && pnpm run local-prod:backend"
 	},
 	"author": "",
 	"license": "ISC",

@@ -1,5 +1,3 @@
-// https://stackoverflow.com/a/72335470 set up path alias
-import 'module-alias/register';
 import dotenv from 'dotenv';
 dotenv.config({ path: './config.env' });
 
