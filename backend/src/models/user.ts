@@ -100,6 +100,8 @@ const userSchema = new Schema<IUser>({
   },
 });
 
+userSchema.index({ email: 1 });
+
 userSchema.methods.correctPassword = async function (
   incomingPassword: string,
   dbPassword: string,

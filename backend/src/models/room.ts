@@ -101,6 +101,14 @@ const roomSchema = new Schema<IRoom>(
   },
 );
 
+roomSchema.index({
+  hotel: 1,
+  country: 1,
+  city: 1,
+  ratings: 1,
+  maxNumOfGuests: 1,
+});
+
 roomSchema.virtual('bookings', {
   ref: 'Booking',
   foreignField: 'room',
