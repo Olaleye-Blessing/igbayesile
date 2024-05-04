@@ -14,12 +14,14 @@ import useSearchParameters from "@/hooks/use-search-parameters";
 import Rooms from "./rooms";
 import Amenity from "@/components/amenities/amenity";
 import NewRoom from "./new-room";
+import useAuthStore from "@/stores/auth";
 
 interface MainProps {
   hotelId: string;
 }
 
 export default function Main({ hotelId }: MainProps) {
+  const user = useAuthStore((store) => store.user);
   const { data, error } = useIGBQuery<{ hotel: IFullHotel }>({
     url: `/hotels/${hotelId}`,
     options: {
@@ -48,7 +50,9 @@ export default function Main({ hotelId }: MainProps) {
                 />
               </button>
             </div>
-            <NewRoom hotel={data.hotel} />
+            {user?._id === data.hotel.manager._id && (
+              <NewRoom hotel={data.hotel} />
+            )}
           </header>
           <section className="space-y-2">
             <AutoPlayImages
