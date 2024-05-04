@@ -86,7 +86,7 @@ export default function Page() {
         />
         <Button
           type="submit"
-          className="flex mx-auto mt-6"
+          className="flex mx-auto mt-6 w-full max-w-52"
           isLoading={form.formState.isSubmitting}
         >
           Log In
