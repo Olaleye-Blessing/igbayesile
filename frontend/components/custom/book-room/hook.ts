@@ -107,7 +107,6 @@ function datesisOverlapping({
     areIntervalsOverlapping(
       { ...date },
       { start: bookingDates.from!, end: bookingDates.to! },
-      { inclusive: true },
     ),
   );
 
