@@ -92,7 +92,7 @@ function datesisOverlapping({
   bookingDates,
 }: {
   room: IRoomDetail;
-  bookingDates: DateRange | undefined;
+  bookingDates: DateRange;
 }) {
   const bookedDates =
     room.bookings.map((booking) => ({
@@ -100,8 +100,7 @@ function datesisOverlapping({
       end: booking.checkOut,
     })) || [];
 
-  if (bookedDates.length === 0 || !bookingDates?.from || !bookingDates.to)
-    return false;
+  if (bookedDates.length === 0) return false;
 
   const overlapped = bookedDates.some((date) =>
     areIntervalsOverlapping(
