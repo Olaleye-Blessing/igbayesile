@@ -28,16 +28,16 @@ export default function LoggedInMenu({ user, logout }: LoggedInMenuProps) {
     <Sheet open={open} onOpenChange={(val) => setOpen(val)}>
       <SheetTrigger asChild>
         <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarImage src={user.avatar} />
+          <AvatarFallback>{user.name[0].toUpperCase()}</AvatarFallback>
         </Avatar>
       </SheetTrigger>
       <SheetContent className="!max-w-80 rounded-l-md">
         <SheetHeader>
           <div className="flex items-start justify-start">
             <Avatar className="mr-2">
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage src={user.avatar} />
+              <AvatarFallback>{user.name[0].toUpperCase()}</AvatarFallback>
             </Avatar>
             <div className="text-left">
               <h3 className="text-base">{user.name}</h3>

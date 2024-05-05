@@ -102,10 +102,9 @@ export default function Main({ hotelId }: MainProps) {
             <h3 className="text-base">Owner</h3>
             <div className="flex items-center justify-start">
               <Avatar className="mr-2">
-                {/* TODO: Replace this with the manager avatar */}
-                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarImage src={data.hotel.manager.avatar} />
                 <AvatarFallback>
-                  {data.hotel.manager.name.slice(0, 2).toUpperCase()}
+                  {data.hotel.manager.name[0].toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div>

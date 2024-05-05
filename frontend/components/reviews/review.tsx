@@ -11,8 +11,8 @@ export default function Review({ review }: ReviewProps) {
       <div className="flex items-start justify-start">
         <figure className="mr-1">
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage src={review.user.avatar} />
+            <AvatarFallback>{review.user.name[0].toUpperCase()}</AvatarFallback>
           </Avatar>
         </figure>
         <div>

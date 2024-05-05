@@ -97,7 +97,7 @@ reviewSchema.pre(/^find/, function (next) {
   // @ts-expect-error This is correct
   this.populate({
     path: 'user',
-    select: 'name role',
+    select: 'name role avatar',
   });
 
   next();
