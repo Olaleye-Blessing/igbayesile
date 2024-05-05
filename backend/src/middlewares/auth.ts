@@ -4,6 +4,8 @@ import catchAsync from '@/utils/catchAsync';
 import { JWT_LOGIN_SECRET } from '@/configs/igbayesile';
 import User from '@/models/user';
 import { IAuthJWTPayLoad } from '@/interfaces/auth';
+import { redisClient } from '@/databases/redis';
+import { authTokenBLPrefix } from '@/configs/db';
 
 export const restrictTo = (...roles: string[]) =>
   catchAsync(async (req, res, next) => {
@@ -20,6 +22,10 @@ export const protect = catchAsync(async (req, res, next) => {
   const token = authorization?.split(' ')[1];
 
   if (!token) return next(new AppError('Please provide a login token', 401));
+
+  if (await redisClient.get(`${authTokenBLPrefix}${token}`)) {
+    return next(new AppError(`Access rejected! Login again!`, 403));
+  }
 
   const decodedToken = jwt.verify(token, JWT_LOGIN_SECRET) as IAuthJWTPayLoad;
 

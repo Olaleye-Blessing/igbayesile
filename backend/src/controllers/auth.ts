@@ -6,15 +6,19 @@ import User from '@/models/user';
 import AppError from '@/utils/AppError';
 import catchAsync from '@/utils/catchAsync';
 import {
+  JWT_LOGIN_SECRET,
   JWT_REFRESH_LOGIN_SECRET,
   refreshLoginCookieName,
 } from '@/configs/igbayesile';
 import { authenticateUser } from '@/utils/auth';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt, { JsonWebTokenError, JwtPayload } from 'jsonwebtoken';
 import {
   deleteCloudinaryImg,
   extractCloudinaryImgPublicId,
 } from '@/utils/cloudinary';
+import { IAuthJWTPayLoad } from '@/interfaces/auth';
+import { redisClient } from '@/databases/redis';
+import { authTokenBLPrefix, refreshTokenBlPrefix } from '@/configs/db';
 
 const defaultAvatar =
   'https://res.cloudinary.com/dxgwsomk7/image/upload/v1714900541/frontend/images/no-avatar_xdut3c.webp';
@@ -81,6 +85,12 @@ export const refreshAuthToken = catchAsync(async (req, res, next) => {
 
   if (!token) return next(new AppError('Provide a refresh token', 400));
 
+  // TODO: Decide if blocking ip address is okay
+  if (await redisClient.get(`${refreshTokenBlPrefix}${token}`)) {
+    res.cookie(refreshLoginCookieName, '', { expires: new Date(0) });
+    return next(new AppError(`Access rejected! Login again!`, 403));
+  }
+
   const decodedToken = jwt.verify(
     token,
     JWT_REFRESH_LOGIN_SECRET,
@@ -104,7 +114,39 @@ export const refreshAuthToken = catchAsync(async (req, res, next) => {
  * https://stackoverflow.com/a/53994938
  * Revoke refresh token: https://www.youtube.com/watch?v=25GS0MLT8JU&t=4580s
  */
-export const logout = catchAsync(async (req, res) => {
+export const logout = catchAsync(async (req, res, next) => {
+  const accessToken = req.headers.authorization?.split(' ')[1];
+  const refreshToken = req.cookies[refreshLoginCookieName];
+
+  if (!accessToken) return next(new AppError('You were not logged in!', 401));
+
+  try {
+    const decodedToken = jwt.verify(
+      accessToken,
+      JWT_LOGIN_SECRET,
+    ) as IAuthJWTPayLoad;
+    const decodedReresh = jwt.verify(
+      refreshToken,
+      JWT_REFRESH_LOGIN_SECRET,
+    ) as JwtPayload;
+
+    await redisClient.set(`${authTokenBLPrefix}${accessToken}`, accessToken, {
+      EX: Math.ceil(decodedToken.exp! - Date.now() / 1000),
+    });
+    await redisClient.set(
+      `${refreshTokenBlPrefix}${refreshToken}`,
+      refreshToken,
+      {
+        EX: Math.ceil(decodedReresh.exp! - Date.now() / 1000),
+      },
+    );
+  } catch (error) {
+    const _error = error as JsonWebTokenError;
+    if (_error.name === 'JsonWebTokenError') {
+      // TODO: Block ip address
+    }
+  }
+
   res.cookie(refreshLoginCookieName, '', { expires: new Date(0) });
 
   // TODO: Decide if a cache-control header should be set: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control

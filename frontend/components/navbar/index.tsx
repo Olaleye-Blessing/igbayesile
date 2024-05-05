@@ -13,6 +13,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 
 const Navbar = () => {
   const user = useAuthStore((state) => state.user);
+  const authToken = useAuthStore((state) => state.token);
   const storeLogout = useAuthStore((state) => state.logout);
 
   const logout = async () => {
@@ -22,11 +23,10 @@ const Navbar = () => {
       storeLogout();
 
       toast.loading("Leaving...", { id: toastId });
-      await axios.post(
-        `${API_BASE_URL}/auth/logout`,
-        {},
-        { withCredentials: true },
-      );
+      await axios.post(`${API_BASE_URL}/auth/logout`, undefined, {
+        headers: { Authorization: `Bearer ${authToken.jwt}` },
+        withCredentials: true,
+      });
 
       toast.success("See you soon", { id: toastId });
     } catch (error) {
