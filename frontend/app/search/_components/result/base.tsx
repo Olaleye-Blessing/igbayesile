@@ -34,8 +34,11 @@ export default function Base({ type, data }: BaseProps) {
 
     searchParams.updateParams(options, "push");
   };
+
   const itemPageHref =
-    type === "hotels" ? `/hotels/${data._id}` : `/rooms/${data._id}`;
+    type === "hotels"
+      ? `/hotels/${data._id}`
+      : `/hotels/${(data.hotel as any)._id}/rooms/${data._id}`;
 
   return (
     <li
