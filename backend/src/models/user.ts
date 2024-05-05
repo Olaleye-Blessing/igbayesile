@@ -18,6 +18,12 @@ interface UserModel extends Model<IUser, object, IUserMethods> {
 }
 
 const userSchema = new Schema<IUser>({
+  // avatar: String,
+  avatar: {
+    type: String,
+    default:
+      'https://res.cloudinary.com/dxgwsomk7/image/upload/v1714900541/frontend/images/no-avatar_xdut3c.webp',
+  },
   name: {
     type: String,
     required: [true, 'Please provide your name'],

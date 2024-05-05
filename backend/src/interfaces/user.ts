@@ -3,6 +3,7 @@ import { IResult as IDeviceDetail } from 'ua-parser-js';
 
 export interface IUser {
   _id: Types.ObjectId;
+  avatar: string;
   name: string;
   email: string;
   emailChangedAt: Date;

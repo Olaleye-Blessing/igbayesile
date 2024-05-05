@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import { nanoid } from 'nanoid';
 import uap from 'ua-parser-js';
+import { v2 as cloudinary } from 'cloudinary';
 import User from '@/models/user';
 import AppError from '@/utils/AppError';
 import catchAsync from '@/utils/catchAsync';
@@ -10,6 +11,13 @@ import {
 } from '@/configs/igbayesile';
 import { authenticateUser } from '@/utils/auth';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import {
+  deleteCloudinaryImg,
+  extractCloudinaryImgPublicId,
+} from '@/utils/cloudinary';
+
+const defaultAvatar =
+  'https://res.cloudinary.com/dxgwsomk7/image/upload/v1714900541/frontend/images/no-avatar_xdut3c.webp';
 
 export const signup = catchAsync(async (req, res, next) => {
   const { name, email, password, passwordConfirm, role } = req.body;
@@ -205,10 +213,75 @@ export const updatePassword = catchAsync(async (req, res, next) => {
   authenticateUser(user, res, 'login', 200);
 });
 
+export const updateAvatar = catchAsync(async (req, res, next) => {
+  let user = req.user!;
+
+  const avatarFile = req.file;
+
+  if (!avatarFile) return next(new AppError('Provide an avatar', 400));
+
+  const supportedTypes = ['jpg', 'jpeg', 'png'];
+
+  if (!supportedTypes.some((type) => avatarFile.mimetype.endsWith(type)))
+    return next(
+      new AppError(
+        `Image type not supported. Only ${supportedTypes.join(',')} are supported!`,
+        400,
+      ),
+    );
+
+  const oneMb = 1024 * 1024;
+
+  if (avatarFile.size >= oneMb)
+    return next(new AppError('Avatar must be less than 1 MB', 413));
+
+  const avatarB64 = Buffer.from(avatarFile.buffer).toString('base64');
+  const avatarURI = 'data:' + avatarFile.mimetype + ';base64,' + avatarB64;
+  const avatarURL = await cloudinary.uploader.upload(avatarURI, {
+    folder: 'profiles',
+  });
+
+  // TODO: Learn how to do background job. Like move this operation to another thread
+  if (user.avatar !== defaultAvatar) {
+    await deleteCloudinaryImg(
+      `profiles/${extractCloudinaryImgPublicId(user.avatar)}`,
+      { invalidate: true },
+    );
+  }
+
+  const avatar = avatarURL.secure_url;
+
+  user.avatar = avatar;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  user = await (user as any).save({ validateBeforeSave: false });
+
+  res.status(200).json({ status: 'success', data: { user } });
+});
+
 export const loginMe = catchAsync(async (req, res, next) => {
   req.body.email = req.user!.email;
 
   next();
+});
+
+export const deleteAvatar = catchAsync(async (req, res, next) => {
+  let user = req.user!;
+
+  if (user.avatar === defaultAvatar)
+    return next(new AppError("You haven't uploaded an avatar yet.", 400));
+
+  await deleteCloudinaryImg(
+    `profiles/${extractCloudinaryImgPublicId(user.avatar)}`,
+    { invalidate: true },
+  );
+
+  user.avatar = defaultAvatar;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  user = await(user as any).save({ validateBeforeSave: false });
+
+  res.status(200).json({ status: 'success', data: { user } });
 });
 
 export const updateEmail = catchAsync(async (req, res) => {

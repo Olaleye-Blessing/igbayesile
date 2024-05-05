@@ -4,4 +4,5 @@ export interface IUser {
   email: string;
   createdAt: Date;
   role: "guest" | "manager";
+  avatar: string;
 }
