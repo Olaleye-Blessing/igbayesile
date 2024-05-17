@@ -41,8 +41,8 @@ export default class FilterFeatures<T> {
 
     fields = fields.replace(/,/g, ' ');
 
-    // @ts-expect-error Correct
-    this.query = this.query.select(fields);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.query = this.query.select(fields) as any;
 
     return this;
   }

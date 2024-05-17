@@ -1,0 +1,8 @@
+version: "3.7"
+services:
+  api:
+    container_name: igbayesile_api_prod
+    build:
+      target: prod
+      args:
+        - platform=linux/amd64

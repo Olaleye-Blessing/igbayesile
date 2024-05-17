@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+  api:
+    container_name: igbayesile_api_dev
+    build:
+      target: dev
+      args:
+        - platform=linux/arm64
+    volumes:
+      - ./:/app
+      - igbayesileAPI:/app/node_modules
+    env_file:
+      - dev.env
+volumes:
+  igbayesileAPI:

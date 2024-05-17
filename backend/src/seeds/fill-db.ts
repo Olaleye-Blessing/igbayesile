@@ -1,7 +1,3 @@
-import 'module-alias/register';
-import dotenv from 'dotenv';
-dotenv.config({ path: './config.env' });
-
 import { connectMongoDB } from '@/databases/mongo';
 import Amenity from '@/models/amenity';
 import { hotelAmenities, roomAmenities } from './amenities';
