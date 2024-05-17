@@ -51,7 +51,9 @@ export const getTopRated: RequestHandler = async (req, res, next) => {
 };
 
 export const getHotel = catchAsync(async (req, res, next) => {
-  let hotel = await redisClient.get(`hotel:${req.params.id}`);
+  let hotel: string | null | IHotel = await redisClient.get(
+    `hotel:${req.params.id}`,
+  );
 
   if (hotel)
     return res.status(200).json({

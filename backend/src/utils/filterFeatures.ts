@@ -41,6 +41,7 @@ export default class FilterFeatures<T> {
 
     fields = fields.replace(/,/g, ' ');
 
+    // @ts-expect-error Correct
     this.query = this.query.select(fields);
 
     return this;
