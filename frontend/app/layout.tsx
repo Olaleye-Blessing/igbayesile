@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        {process.env.NODE_ENV !== "production" ? (
+        {/* {process.env.NODE_ENV !== "production" ? (
           <Providers>
             <InitializeConfigs>
               <Navbar />
@@ -34,7 +34,14 @@ export default function RootLayout({
           <main className="flex items-center justify-center h-screen">
             <h1>COMING SOON</h1>
           </main>
-        )}
+        )} */}
+        <Providers>
+          <InitializeConfigs>
+            <Navbar />
+            {children}
+          </InitializeConfigs>
+          <Toaster />
+        </Providers>
       </body>
     </html>
   );

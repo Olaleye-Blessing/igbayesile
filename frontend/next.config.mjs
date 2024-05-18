@@ -1,9 +1,9 @@
 // TODO: Violated policies are not being reported. Look into it.
-const reportURI = `https://igbayesile.onrender.com/api/v1/csp/web`;
+const reportURI = `${process.env.BACKEND_URL}/api/v1/csp/web`;
 
 const cspHeader = `
     default-src 'self';
-    connect-src 'self' countriesnow.space igbayesile.onrender.com;
+    connect-src 'self' countriesnow.space *.igbayesile.xyz;
     script-src 'self' 'unsafe-inline';
     style-src 'self' fonts.googleapis.com fonts.googleapis.com 'unsafe-inline';
     img-src 'self' res.cloudinary.com github.com;

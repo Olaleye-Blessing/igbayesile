@@ -34,6 +34,9 @@ if (process.env.NODE_ENV === 'production') {
     next();
   });
 }
+
+console.log(process.env.NODE_ENV?.length);
+
 app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 
 app.use(mongoSanitize());
