@@ -23,7 +23,7 @@ igbayesile-dev-log: dev-install igbayesile-up-build
 
 .PHONY: igbayesile-down
 igbayesile-down:
-	$(COMPOSE_CMD) down -v
+	$(COMPOSE_CMD) down
 
 .PHONY: igbayesile-push
 igbayesile-push:
