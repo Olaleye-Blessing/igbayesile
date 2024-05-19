@@ -1,8 +1,10 @@
+import { envData } from './env-data';
+
 const commonOptions = {
   hostname: 'api.paystack.co',
   port: 443,
   headers: {
-    Authorization: 'Bearer ' + process.env.PAYSTACK_SECRET_KEY,
+    Authorization: 'Bearer ' + envData.PAYSTACK_SECRET_KEY,
   },
 };
 

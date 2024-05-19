@@ -1,16 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  JWT_LOGGED_IN_EXPIRES,
-  JWT_LOGIN_SECRET,
-  JWT_REFRESH_LOGIN_EXPIRES,
-  JWT_REFRESH_LOGIN_SECRET,
-  refreshLoginCookieName,
-} from '@/configs/igbayesile';
+import { refreshLoginCookieName } from '@/configs/igbayesile';
 import { TAuthTokenMode } from '@/interfaces/auth';
 import { IUser } from '@/interfaces/user';
 import { Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { removeDocFields } from './remove-doc-fields';
+import { envData } from '@/configs/env-data';
 
 export const authenticateUser = (
   user: IUser,
@@ -45,8 +40,8 @@ export const authenticateUser = (
 };
 
 export const createAuthToken = (user: IUser, mode: TAuthTokenMode) => {
-  const authToken = jwt.sign({ id: user._id, mode }, JWT_LOGIN_SECRET, {
-    expiresIn: JWT_LOGGED_IN_EXPIRES,
+  const authToken = jwt.sign({ id: user._id, mode }, envData.JWT_LOGIN_SECRET, {
+    expiresIn: envData.JWT_LOGGED_IN_EXPIRES,
   });
 
   return authToken;
@@ -55,8 +50,8 @@ export const createAuthToken = (user: IUser, mode: TAuthTokenMode) => {
 export const setRefreshToken = (user: IUser, res: Response) => {
   res.cookie(
     refreshLoginCookieName,
-    jwt.sign({ id: user._id }, JWT_REFRESH_LOGIN_SECRET, {
-      expiresIn: JWT_REFRESH_LOGIN_EXPIRES,
+    jwt.sign({ id: user._id }, envData.JWT_REFRESH_LOGIN_SECRET, {
+      expiresIn: envData.JWT_REFRESH_LOGIN_EXPIRES,
     }),
     {
       httpOnly: true,

@@ -1,7 +1,8 @@
 import { Resend } from 'resend';
 import type { CreateEmailRequestOptions, Payload } from './interface';
+import { envData } from '@/configs/env-data';
 
-const resend = new Resend(process.env.RESEND_KEY);
+const resend = new Resend(envData.RESEND_KEY);
 
 export const sendEmail = async (
   payload: Payload,

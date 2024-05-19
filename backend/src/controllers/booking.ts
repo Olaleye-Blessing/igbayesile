@@ -12,6 +12,7 @@ import { FilterQuery } from 'mongoose';
 import { IBooking } from '@/interfaces/booking';
 import * as factory from './factory';
 import { dateWithoutTimezone } from '@/utils/date-without-timezone';
+import { envData } from '@/configs/env-data';
 
 export const setBookingsFilter: RequestHandler = (req, res, next) => {
   const filter: FilterQuery<IBooking> = {};
@@ -80,7 +81,7 @@ export const setPaymentParams = catchAsync(async (req, res, next) => {
     amount,
     email: req.user!.email,
     callback_url:
-      process.env.NODE_ENV === 'production'
+      envData.NODE_ENV === 'production'
         ? `${req.protocol}:://${req.get('host')}`
         : 'http://localhost:3000' + `/bookings/confirm?roomid=${roomId}`,
     metadata: {

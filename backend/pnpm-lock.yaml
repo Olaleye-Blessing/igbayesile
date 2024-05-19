@@ -31,7 +31,7 @@ dependencies:
     version: 9.0.2
   mongoose:
     specifier: ^8.2.2
-    version: 8.3.5
+    version: 8.4.0
   morgan:
     specifier: ^1.10.0
     version: 1.10.0
@@ -43,7 +43,7 @@ dependencies:
     version: 3.3.7
   redis:
     specifier: ^4.6.13
-    version: 4.6.13
+    version: 4.6.14
   resend:
     specifier: ^3.2.0
     version: 3.2.0
@@ -53,6 +53,9 @@ dependencies:
   validator:
     specifier: ^13.11.0
     version: 13.12.0
+  zod:
+    specifier: ^3.22.2
+    version: 3.23.8
 
 devDependencies:
   '@types/bcrypt':
@@ -273,16 +276,16 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@redis/bloom@1.2.0(@redis/client@1.5.14):
+  /@redis/bloom@1.2.0(@redis/client@1.5.16):
     resolution: {integrity: sha512-HG2DFjYKbpNmVXsa0keLHp/3leGJz1mjh09f2RLGGLQZzSHpkmZWuwJbAvo3QcRY8p80m5+ZdXZdYOSBLlp7Cg==}
     peerDependencies:
       '@redis/client': ^1.0.0
     dependencies:
-      '@redis/client': 1.5.14
+      '@redis/client': 1.5.16
     dev: false
 
-  /@redis/client@1.5.14:
-    resolution: {integrity: sha512-YGn0GqsRBFUQxklhY7v562VMOP0DcmlrHHs3IV1mFE3cbxe31IITUkqhBcIhVSI/2JqtWAJXg5mjV4aU+zD0HA==}
+  /@redis/client@1.5.16:
+    resolution: {integrity: sha512-X1a3xQ5kEMvTib5fBrHKh6Y+pXbeKXqziYuxOUo1ojQNECg4M5Etd1qqyhMap+lFUOAh8S7UYevgJHOm4A+NOg==}
     engines: {node: '>=14'}
     dependencies:
       cluster-key-slot: 1.1.2
@@ -290,36 +293,36 @@ packages:
       yallist: 4.0.0
     dev: false
 
-  /@redis/graph@1.1.1(@redis/client@1.5.14):
+  /@redis/graph@1.1.1(@redis/client@1.5.16):
     resolution: {integrity: sha512-FEMTcTHZozZciLRl6GiiIB4zGm5z5F3F6a6FZCyrfxdKOhFlGkiAqlexWMBzCi4DcRoyiOsuLfW+cjlGWyExOw==}
     peerDependencies:
       '@redis/client': ^1.0.0
     dependencies:
-      '@redis/client': 1.5.14
+      '@redis/client': 1.5.16
     dev: false
 
-  /@redis/json@1.0.6(@redis/client@1.5.14):
+  /@redis/json@1.0.6(@redis/client@1.5.16):
     resolution: {integrity: sha512-rcZO3bfQbm2zPRpqo82XbW8zg4G/w4W3tI7X8Mqleq9goQjAGLL7q/1n1ZX4dXEAmORVZ4s1+uKLaUOg7LrUhw==}
     peerDependencies:
       '@redis/client': ^1.0.0
     dependencies:
-      '@redis/client': 1.5.14
+      '@redis/client': 1.5.16
     dev: false
 
-  /@redis/search@1.1.6(@redis/client@1.5.14):
+  /@redis/search@1.1.6(@redis/client@1.5.16):
     resolution: {integrity: sha512-mZXCxbTYKBQ3M2lZnEddwEAks0Kc7nauire8q20oA0oA/LoA+E/b5Y5KZn232ztPb1FkIGqo12vh3Lf+Vw5iTw==}
     peerDependencies:
       '@redis/client': ^1.0.0
     dependencies:
-      '@redis/client': 1.5.14
+      '@redis/client': 1.5.16
     dev: false
 
-  /@redis/time-series@1.0.5(@redis/client@1.5.14):
+  /@redis/time-series@1.0.5(@redis/client@1.5.16):
     resolution: {integrity: sha512-IFjIgTusQym2B5IZJG3XKr5llka7ey84fw/NOYqESP5WUfQs9zz1ww/9+qoz4ka/S6KcGBodzlCeZ5UImKbscg==}
     peerDependencies:
       '@redis/client': ^1.0.0
     dependencies:
-      '@redis/client': 1.5.14
+      '@redis/client': 1.5.16
     dev: false
 
   /@selderee/plugin-htmlparser2@0.11.0:
@@ -461,8 +464,8 @@ packages:
     resolution: {integrity: sha512-CiJJvcRtIgzadHCYXw7dqEnMNRjhGZlYK05Mj9OyktqV8uVT8fD2BFOB7S1uwBE3Kj2Z+4UyPmFw/Ixgw/LAlA==}
     dev: false
 
-  /@types/whatwg-url@11.0.4:
-    resolution: {integrity: sha512-lXCmTWSHJvf0TRSO58nm978b8HJ/EdsSsEKLd3ODHFjo+3VGAyyTp4v50nWvwtzBxSMQrVOK7tcuN0zGPLICMw==}
+  /@types/whatwg-url@11.0.5:
+    resolution: {integrity: sha512-coYR071JRaHa+xoEvvYqvnIHaVqaYrLPbsufM9BF63HkwI5Lgmy2QR8Q5K/lYDYo5AK82wOvSOS0UsLTpTG7uQ==}
     dependencies:
       '@types/webidl-conversions': 7.0.3
     dev: false
@@ -1948,12 +1951,12 @@ packages:
   /mongodb-connection-string-url@3.0.1:
     resolution: {integrity: sha512-XqMGwRX0Lgn05TDB4PyG2h2kKO/FfWJyCzYQbIhXUxz7ETt0I/FqHjUeqj37irJ+Dl1ZtU82uYyj14u2XsZKfg==}
     dependencies:
-      '@types/whatwg-url': 11.0.4
+      '@types/whatwg-url': 11.0.5
       whatwg-url: 13.0.0
     dev: false
 
-  /mongodb@6.5.0:
-    resolution: {integrity: sha512-Fozq68InT+JKABGLqctgtb8P56pRrJFkbhW0ux+x1mdHeyinor8oNzJqwLjV/t5X5nJGfTlluxfyMnOXNggIUA==}
+  /mongodb@6.6.2:
+    resolution: {integrity: sha512-ZF9Ugo2JCG/GfR7DEb4ypfyJJyiKbg5qBYKRintebj8+DNS33CyGMkWbrS9lara+u+h+yEOGSRiLhFO/g1s1aw==}
     engines: {node: '>=16.20.1'}
     peerDependencies:
       '@aws-sdk/credential-providers': ^3.188.0
@@ -1984,13 +1987,13 @@ packages:
       mongodb-connection-string-url: 3.0.1
     dev: false
 
-  /mongoose@8.3.5:
-    resolution: {integrity: sha512-2zqeAjHjCqT1o5HeUCvkE9tUHsXwemnwEZ2SKnUxsaP8p1a+UcSQSNbnSuOzUVePMwLETrsvLIRdFLjsNfCgWA==}
+  /mongoose@8.4.0:
+    resolution: {integrity: sha512-fgqRMwVEP1qgRYfh+tUe2YBBFnPO35FIg2lfFH+w9IhRGg1/ataWGIqvf/MjwM29cZ60D5vSnqtN2b8Qp0sOZA==}
     engines: {node: '>=16.20.1'}
     dependencies:
       bson: 6.7.0
       kareem: 2.6.3
-      mongodb: 6.5.0
+      mongodb: 6.6.2
       mpath: 0.9.0
       mquery: 5.0.0
       ms: 2.1.3
@@ -2380,15 +2383,15 @@ packages:
       picomatch: 2.3.1
     dev: true
 
-  /redis@4.6.13:
-    resolution: {integrity: sha512-MHgkS4B+sPjCXpf+HfdetBwbRz6vCtsceTmw1pHNYJAsYxrfpOP6dz+piJWGos8wqG7qb3vj/Rrc5qOlmInUuA==}
+  /redis@4.6.14:
+    resolution: {integrity: sha512-GrNg/e33HtsQwNXL7kJT+iNFPSwE1IPmd7wzV3j4f2z0EYxZfZE7FVTmUysgAtqQQtg5NXF5SNLR9OdO/UHOfw==}
     dependencies:
-      '@redis/bloom': 1.2.0(@redis/client@1.5.14)
-      '@redis/client': 1.5.14
-      '@redis/graph': 1.1.1(@redis/client@1.5.14)
-      '@redis/json': 1.0.6(@redis/client@1.5.14)
-      '@redis/search': 1.1.6(@redis/client@1.5.14)
-      '@redis/time-series': 1.0.5(@redis/client@1.5.14)
+      '@redis/bloom': 1.2.0(@redis/client@1.5.16)
+      '@redis/client': 1.5.16
+      '@redis/graph': 1.1.1(@redis/client@1.5.16)
+      '@redis/json': 1.0.6(@redis/client@1.5.16)
+      '@redis/search': 1.1.6(@redis/client@1.5.16)
+      '@redis/time-series': 1.0.5(@redis/client@1.5.16)
     dev: false
 
   /resend@3.2.0:
@@ -2896,3 +2899,7 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+  /zod@3.23.8:
+    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
+    dev: false

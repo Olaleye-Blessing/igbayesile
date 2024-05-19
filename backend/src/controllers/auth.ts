@@ -5,11 +5,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import User from '@/models/user';
 import AppError from '@/utils/AppError';
 import catchAsync from '@/utils/catchAsync';
-import {
-  JWT_LOGIN_SECRET,
-  JWT_REFRESH_LOGIN_SECRET,
-  refreshLoginCookieName,
-} from '@/configs/igbayesile';
+import { refreshLoginCookieName } from '@/configs/igbayesile';
 import { authenticateUser } from '@/utils/auth';
 import jwt, { JsonWebTokenError, JwtPayload } from 'jsonwebtoken';
 import {
@@ -20,6 +16,7 @@ import { IAuthJWTPayLoad } from '@/interfaces/auth';
 import { redisClient } from '@/databases/redis';
 import { authTokenBLPrefix, refreshTokenBlPrefix } from '@/configs/db';
 import { sendEmail } from '@/utils/email';
+import { envData } from '@/configs/env-data';
 
 const defaultAvatar =
   'https://res.cloudinary.com/dxgwsomk7/image/upload/v1714900541/frontend/images/no-avatar_xdut3c.webp';
@@ -94,7 +91,7 @@ export const refreshAuthToken = catchAsync(async (req, res, next) => {
 
   const decodedToken = jwt.verify(
     token,
-    JWT_REFRESH_LOGIN_SECRET,
+    envData.JWT_REFRESH_LOGIN_SECRET,
   ) as JwtPayload;
 
   const user = await User.findById(decodedToken.id);
@@ -124,11 +121,11 @@ export const logout = catchAsync(async (req, res, next) => {
   try {
     const decodedToken = jwt.verify(
       accessToken,
-      JWT_LOGIN_SECRET,
+      envData.JWT_LOGIN_SECRET,
     ) as IAuthJWTPayLoad;
     const decodedReresh = jwt.verify(
       refreshToken,
-      JWT_REFRESH_LOGIN_SECRET,
+      envData.JWT_REFRESH_LOGIN_SECRET,
     ) as JwtPayload;
 
     await redisClient.set(`${authTokenBLPrefix}${accessToken}`, accessToken, {
@@ -179,8 +176,8 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
 
   let resetUrl = '';
 
-  if (process.env.NODE_ENV === 'production' || req.headers.origin) {
-    resetUrl = `${process.env.FRONTEND_URL}/auth/reset-password/?token=${resetToken}`;
+  if (envData.NODE_ENV === 'production' || req.headers.origin) {
+    resetUrl = `${envData.FRONTEND_URL}/auth/reset-password/?token=${resetToken}`;
   } else {
     resetUrl = `${req.protocol}:://${req.get(
       'host',
@@ -202,7 +199,7 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
   return res.status(statusCode).json({
     status,
     message,
-    ...(process.env.NODE_ENV === 'development' && { resetUrl }),
+    ...(envData.NODE_ENV === 'development' && { resetUrl }),
   });
 });
 

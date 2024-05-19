@@ -1,10 +1,10 @@
-import { REDIS_URL } from '@/configs/db';
+import { envData } from '@/configs/env-data';
 import { createClient, RedisClientType } from 'redis';
 
 let redisClient: RedisClientType;
 
 const connectRedisDB = async () => {
-  redisClient = createClient({ url: REDIS_URL });
+  redisClient = createClient({ url: envData.REDIS_URL });
 
   redisClient.on('error', (err) => console.log('Redis Client Error', err));
 

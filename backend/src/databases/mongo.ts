@@ -1,7 +1,7 @@
+import { envData } from '@/configs/env-data';
 import mongoose from 'mongoose';
 
-// const DB = process.env.DB_URL!.replace('<PASSWORD>', process.env.DB_PASSWORD!);
-const DB = process.env.MONGO_DB_URL!;
+const DB = envData.MONGO_DB_URL!;
 
 export const connectMongoDB = async () => {
   try {
@@ -9,7 +9,7 @@ export const connectMongoDB = async () => {
 
     console.log(' ✅ MONGO DB connection successful ');
   } catch (error) {
-    if (process.env.NODE_ENV === 'production') return;
+    if (envData.NODE_ENV === 'production') return;
 
     console.log(' ❌ DB error');
     console.log(error);

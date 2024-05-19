@@ -15,15 +15,16 @@ import cspRouter from '@/routes/csp';
 import globalErrorHanlder from '@/controllers/error';
 import { protect } from './middlewares/auth';
 import { cspHeaders } from './configs/security/csp';
+import { envData } from './configs/env-data';
 
 const app: Express = express();
 
-if (process.env.NODE_ENV !== 'production') app.use(morgan('dev'));
+if (envData.NODE_ENV !== 'production') app.use(morgan('dev'));
 
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-if (process.env.NODE_ENV === 'production') {
+if (envData.NODE_ENV === 'production') {
   app.use((req, res, next) => {
     res.set({
       'Strict-Transport-Security': 'max-age=63072000',
@@ -35,13 +36,13 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-console.log(process.env.NODE_ENV?.length);
+console.log(envData.NODE_ENV?.length);
 
-app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
+app.use(cors({ origin: envData.FRONTEND_URL, credentials: true }));
 
 app.use(mongoSanitize());
 
-if (process.env.NODE_ENV === 'production')
+if (envData.NODE_ENV === 'production')
   app.use((req, res) => {
     res.status(503).json({ message: 'Coming soon' });
   });

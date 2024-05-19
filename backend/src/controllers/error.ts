@@ -1,8 +1,9 @@
 import { MulterError } from 'multer';
 import AppError from '@/utils/AppError';
 import { NextFunction, Request, Response } from 'express';
+import { envData } from '@/configs/env-data';
 
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = envData.NODE_ENV === 'production';
 
 const duplicateMongoError = (err: Error | AppError) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

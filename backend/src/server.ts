@@ -1,15 +1,16 @@
 import { v2 as cloudinary } from 'cloudinary';
 import app from './app';
 import { connectDBs } from './databases/init';
+import { envData } from './configs/env-data';
 
-const port = process.env.PORT || 5000;
+const port = envData.PORT || 5000;
 
 connectDBs();
 
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
-  api_key: process.env.CLOUDINARY_API_KEY!,
-  api_secret: process.env.CLOUDINARY_API_SECRET!,
+  cloud_name: envData.CLOUDINARY_CLOUD_NAME!,
+  api_key: envData.CLOUDINARY_API_KEY!,
+  api_secret: envData.CLOUDINARY_API_SECRET!,
 });
 
 const server = app.listen(port, () => {
