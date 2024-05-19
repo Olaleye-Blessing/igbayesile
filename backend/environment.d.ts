@@ -15,6 +15,7 @@ declare global {
       PAYSTACK_PUBLIC_KEY: string;
       PAYSTACK_SECRET_KEY: string;
       REDIS_URL: string;
+      RESEND_KEY: string;
     }
   }
 }

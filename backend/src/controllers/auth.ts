@@ -19,6 +19,7 @@ import {
 import { IAuthJWTPayLoad } from '@/interfaces/auth';
 import { redisClient } from '@/databases/redis';
 import { authTokenBLPrefix, refreshTokenBlPrefix } from '@/configs/db';
+import { sendEmail } from '@/utils/email';
 
 const defaultAvatar =
   'https://res.cloudinary.com/dxgwsomk7/image/upload/v1714900541/frontend/images/no-avatar_xdut3c.webp';
@@ -186,7 +187,17 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
     )}/api/v1/auth/reset-password/?token=${resetToken}`;
   }
 
-  // TODO: send a mail
+  const { error } = await sendEmail({
+    type: 'onboarding',
+    to: [email],
+    subject: 'Reset Your Igbayesile Password<Valid for 1 hour>',
+    html: `<div>
+      <p>It looks like someone submitted a request to reset your Igbayesile password. There's nothing to do or worry about if it wasn't you. You can keep on keeping on.</p>
+      <p>If this was you, <a href="${resetUrl}">reset your password</a> and get back into your account.</p>
+    </div>`,
+  });
+
+  if (error) return next(new AppError('Internal Server Error', 500));
 
   return res.status(statusCode).json({
     status,
