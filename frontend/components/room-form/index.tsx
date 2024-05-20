@@ -198,6 +198,7 @@ export default function RoomForm({
             form={form}
             target="room"
             defaultChecks={form.getValues("amenities")}
+            info="(Minimum of 3 amenities)"
           />
           {type === "new" && (
             <Alert className="bg-red-100 bg-opacity-20 text-red-600">

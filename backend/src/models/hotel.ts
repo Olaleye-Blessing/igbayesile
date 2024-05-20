@@ -36,7 +36,7 @@ const hotelSchema = new Schema<IHotel>(
     amenities: {
       type: [{ type: mongoose.Schema.ObjectId, ref: 'Amenity' }],
       validate: {
-        validator: (amenities: string[]) => amenities.length > 3,
+        validator: (amenities: string[]) => amenities.length >= 3,
         message: 'Provide at least 3 amenities',
       },
     },

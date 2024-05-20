@@ -159,7 +159,7 @@ export default function HotelForm({}: HotelFormProps) {
         />
         {images && <ImagesPreview form={form} images={images} />}
       </div>
-      <Amenities form={form} target="hotel" />
+      <Amenities form={form} target="hotel" info="(Minimum of 3 amenities)" />
       <Button type="submit" className="mt-4" isLoading={isSubmitting}>
         Create
       </Button>

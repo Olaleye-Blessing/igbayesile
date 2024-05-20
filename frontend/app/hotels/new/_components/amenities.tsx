@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { UseFormReturn } from "react-hook-form";
 import AmenitiesComp from "@/components/amenities";
 import { IAmenity } from "@/interfaces/amenity";
@@ -6,6 +7,7 @@ interface AmenitiesProps {
   listClassName?: string;
   defaultChecks?: string[];
   target: IAmenity["target"];
+  info: ReactNode;
 }
 
 export default function Amenities({
@@ -13,6 +15,7 @@ export default function Amenities({
   listClassName,
   defaultChecks,
   target,
+  info,
 }: AmenitiesProps) {
   const onSelectAmenity = (checked: boolean, amenity: IAmenity) => {
     let _amenities = [...form.getValues("amenities")];
@@ -29,11 +32,8 @@ export default function Amenities({
   return (
     <div>
       <p className="flex items-center justify-start mb-1 font-semibold">
-        <span className="text-base">Amenities</span>(
-        <span className="text-gray-400 text-sm">
-          Choose as many as possible
-        </span>
-        )
+        <span className="text-base">Amenities</span>
+        <span className="text-gray-400 text-sm">{info}</span>
       </p>
       <AmenitiesComp
         target={target}
