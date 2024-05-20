@@ -6,13 +6,16 @@ import {
 } from "@tanstack/react-query";
 import { useIGBQuery } from "@/hooks/use-igb-query";
 import { IPaginatedResult } from "@/types/paginate";
+import { AxiosRequestConfig } from "axios";
 
 export const usePagination = <TData = unknown>({
   url,
   options,
+  axiosConfig,
 }: {
   url: string;
   options: UndefinedInitialDataOptions<TData, Error, TData, QueryKey>;
+  axiosConfig?: AxiosRequestConfig;
 }) => {
   const [page, setPage] = useState(1);
   const [totalData, setTotalData] = useState<TData[]>([]);
@@ -31,6 +34,7 @@ export const usePagination = <TData = unknown>({
       placeholderData: keepPreviousData,
       refetchOnWindowFocus: false,
     },
+    axiosConfig,
   });
 
   useEffect(() => {

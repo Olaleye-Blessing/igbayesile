@@ -31,12 +31,13 @@ export const useIGBQuery = <TData = unknown>({
      */
     queryFn:
       options.queryFn ??
-      (async () => {
+      // TODO: Test this signal on other requests
+      (async ({ signal }) => {
         try {
           let { data } = await igbInstance().get<{
             status: "success";
             data: TData;
-          }>(url, axiosConfig);
+          }>(url, { ...axiosConfig, signal });
 
           return data.data as TData;
         } catch (error) {

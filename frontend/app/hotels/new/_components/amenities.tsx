@@ -8,6 +8,7 @@ interface AmenitiesProps {
   defaultChecks?: string[];
   target: IAmenity["target"];
   info: ReactNode;
+  onChange?: (amenities: any[]) => void;
 }
 
 export default function Amenities({
@@ -16,6 +17,7 @@ export default function Amenities({
   defaultChecks,
   target,
   info,
+  onChange,
 }: AmenitiesProps) {
   const onSelectAmenity = (checked: boolean, amenity: IAmenity) => {
     let _amenities = [...form.getValues("amenities")];
@@ -26,6 +28,7 @@ export default function Amenities({
       _amenities = _amenities.filter((am) => am !== amenity._id);
     }
 
+    onChange?.(_amenities);
     form.setValue("amenities", _amenities);
   };
 

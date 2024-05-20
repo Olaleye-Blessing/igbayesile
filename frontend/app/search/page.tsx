@@ -88,6 +88,9 @@ export default function Page() {
             <form
               onSubmit={handleOnSearch}
               className="grid grid-cols-1 md:flex md:flex-wrap"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") e.preventDefault();
+              }}
             >
               <TopSearch />
               <div className="w-full md:px-4 md:flex md:items-stretch md:justify-start md:mt-4">

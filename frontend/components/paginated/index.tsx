@@ -25,6 +25,13 @@ export default function Paginated({
   noDataMsg = <p>No data found</p>,
   noMoreMsg = <p>No more data</p>,
 }: PaginatedProps) {
+  // console.log("__isPending", result.isPending);
+  // console.log("__isError", result.isError);
+  // console.log("__isData", result.data);
+  // console.log("__isFetching", result.isFetching);
+  // console.log("__data", data);
+  // console.log("\n\n");
+
   return (
     <>
       {result.isPending ? (
@@ -34,7 +41,7 @@ export default function Paginated({
       ) : (
         <>{children}</>
       )}
-      {result.data && result.data.total > data.length && (
+      {!result.isFetching && result.data && result.data.total > data.length && (
         <Button
           type="button"
           onClick={() => loadMore()}

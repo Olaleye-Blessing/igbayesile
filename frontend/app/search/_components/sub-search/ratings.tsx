@@ -2,6 +2,7 @@ import RatingStar from "@/components/custom/rating-star";
 import { SearchData } from "../../_types";
 import { Controller, UseFormReturn } from "react-hook-form";
 import { FormRadioField } from "@/components/custom/form-radio-field";
+import useSearchParameters from "@/hooks/use-search-parameters";
 
 interface RatingsProps {
   form: UseFormReturn<SearchData, any, undefined>;
@@ -19,6 +20,8 @@ const ratings = [4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5, 0].map((rate) => ({
 }));
 
 export default function Ratings({ form }: RatingsProps) {
+  const { updateParams, deleteParams } = useSearchParameters();
+
   return (
     <section>
       <h3>Ratings</h3>
@@ -33,7 +36,15 @@ export default function Ratings({ form }: RatingsProps) {
               options={ratings}
               radioGroup={{
                 className: "capitalize space-y-1",
-                onValueChange: field.onChange,
+                onValueChange: (ratings) => {
+                  const rating = Number(ratings);
+                  field.onChange(ratings);
+
+                  rating === 0
+                    ? deleteParams(["ratings"], "push")
+                    : updateParams({ ratings }, "push");
+
+                },
                 name: "ratings",
                 value: form.watch("ratings") || "",
                 defaultValue: "",

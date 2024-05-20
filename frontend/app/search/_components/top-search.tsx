@@ -8,13 +8,15 @@ import { FormField } from "@/components/custom/form-field";
 import { DatePickerWithRange } from "@/components/custom/date-picker/date-range-picker";
 import { Label } from "@/components/ui/label";
 import ToggleContainer from "./toggle-container";
-// import { useRouter } from "next/navigation";
+import useSearchParameters from "@/hooks/use-search-parameters";
+import { useDebouncedField } from "../_hooks/use-debounced-field";
 
 const fromDate = new Date();
 
 export default function TopSearch() {
+  const { updateParams, deleteParams } = useSearchParameters();
   const form = useFormContext<SearchData>();
-  // const router = useRouter();
+  const { handleSearchChange } = useDebouncedField();
 
   return (
     <div className="sticky p-4 top-0 left-0 z-20 md:w-full md:flex-shrink-0 md:bg-background">
@@ -40,18 +42,31 @@ export default function TopSearch() {
             country={form.watch("country")}
             state={form.watch("state")}
             handleSetLocation={(type, value) => {
+              value
+                ? updateParams({ [type]: value }, "push")
+                : deleteParams([type], "push");
+
               form.setValue(type, value);
             }}
             countryContClassName="!w-full !max-w-none !mb-3"
             stateContClassName="!w-full !max-w-none !mb-3"
           />
           <FormField
-            input={{ ...form.register("city"), placeholder: "City" }}
+            input={{
+              ...form.register("city"),
+              placeholder: "City",
+              onChange: (e) => {
+                handleSearchChange("city", e.target.value.trim());
+              },
+            }}
           />
           <FormField
             input={{
               ...form.register("name"),
-              placeholder: "Search for hotels",
+              placeholder: "Search for hotels/rooms",
+              onChange: (e) => {
+                handleSearchChange("name", e.target.value.trim());
+              },
             }}
           />
           <div className="mb-3 flex items-end justify-center flex-wrap [&>*]:flex-1 sm:mt-0">

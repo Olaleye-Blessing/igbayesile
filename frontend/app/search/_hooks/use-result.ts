@@ -2,6 +2,7 @@ import { usePagination } from "@/components/paginated/use-pagination";
 import useSearchParameters from "@/hooks/use-search-parameters";
 import { IHotel } from "@/interfaces/hotel";
 import { IRoom } from "@/interfaces/room";
+import { useEffect, useState } from "react";
 // import { keepPreviousData } from "@tanstack/react-query";
 
 const roomsSpecificKeys = ["minPrice", "maxPrice", "minBeds", "maxBeds"];
@@ -9,6 +10,8 @@ const roomsSpecificKeys = ["minPrice", "maxPrice", "minBeds", "maxBeds"];
 export const useResult = () => {
   const searchParams = useSearchParameters();
   const search = (Object.fromEntries(searchParams.entries()) || {}) as any;
+  const [totalData, setTotalData] = useState<(IHotel | IRoom)[]>([]);
+  const [type, setType] = useState(searchParams.getParam("type") || "hotels");
 
   // default search
   // if (!search.page) search.page = 1;
@@ -48,7 +51,11 @@ export const useResult = () => {
   url += new URLSearchParams(search).toString();
 
   // const { result, loadMore, totalData } = usePagination<IHotelResult | IRoomResult>({
-  const { result, loadMore, totalData } = usePagination<IHotel | IRoom>({
+  const {
+    result,
+    loadMore,
+    totalData: data,
+  } = usePagination<IHotel | IRoom>({
     url,
     options: {
       queryKey: ["search", { url, search }],
@@ -57,11 +64,21 @@ export const useResult = () => {
     },
   });
 
+  useEffect(() => {
+    setTotalData(data);
+  }, [data]);
+
+  useEffect(() => {
+    setType(type);
+    setTotalData([]);
+  }, [type]);
+
   return {
     // searchParams,
     result,
     loadMore,
-    type: searchParams.getParam("type"),
+    // type: searchParams.getParam("type"),
+    type,
     totalData,
   };
 };
