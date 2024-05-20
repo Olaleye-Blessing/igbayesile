@@ -71,6 +71,8 @@ export default function RoomForm({
         `Room ${type === "new" ? "created" : "edited"} successfully`,
         { id: toastId },
       );
+
+      if (type === "new") form.reset();
     } catch (error) {
       let message = handleIgbayesileAPIError(error);
       toast.error(message, { id: toastId });
