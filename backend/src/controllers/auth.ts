@@ -17,39 +17,31 @@ import { redisClient } from '@/databases/redis';
 import { authTokenBLPrefix, refreshTokenBlPrefix } from '@/configs/db';
 import { sendEmail } from '@/utils/email';
 import { envData } from '@/configs/env-data';
+import { filterObj } from '@/utils/filter-obj';
 
 const defaultAvatar =
   'https://res.cloudinary.com/dxgwsomk7/image/upload/v1714900541/frontend/images/no-avatar_xdut3c.webp';
 
-export const signup = catchAsync(async (req, res, next) => {
-  const { name, email, password, passwordConfirm, role } = req.body;
+export const signup = catchAsync(async (req, res) => {
+  const body = filterObj(req.body, [
+    'name',
+    'email',
+    'password',
+    'passwordConfirm',
+    'role',
+  ]);
 
-  if (!name || !email || !password || !passwordConfirm || !role)
-    return next(new AppError('Please provide all details', 400));
-
-  const user = await User.create({
-    name,
-    email,
-    password,
-    passwordConfirm,
-    role,
-  });
+  const user = await User.create(body);
 
   authenticateUser(user, res, 'login', 201);
 });
 
 export const login = catchAsync(async (req, res, next) => {
-  const { email, password } = req.body;
+  let user = await User.findOne({ email: req.body.email }).select(
+    '+password +devices',
+  );
 
-  if (!email && !password)
-    return next(new AppError('Provide email and password', 400));
-
-  if (!email) return next(new AppError('Provide email', 400));
-  if (!password) return next(new AppError('Provide password', 400));
-
-  let user = await User.findOne({ email }).select('+password +devices');
-
-  if (!user || !(await user.correctPassword(password, user.password)))
+  if (!user || !(await user.correctPassword(req.body.password, user.password)))
     return next(new AppError('Incorrect email or password', 401));
 
   const device = {
@@ -160,7 +152,6 @@ export const logout = catchAsync(async (req, res, next) => {
 
 export const forgotPassword = catchAsync(async (req, res, next) => {
   const email = req.body.email;
-  if (!email) return next(new AppError('Please provide a email!', 400));
 
   const user = await User.findOne({ email });
 
@@ -204,13 +195,11 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
 });
 
 export const resetPassword = catchAsync(async (req, res, next) => {
-  const token = req.params.token;
-  if (!token) return next(new AppError('Please provide a reset token', 400));
-
   const passwordResetToken = crypto
     .createHash('sha256')
-    .update(token)
+    .update(req.params.token)
     .digest('hex');
+
   const user = await User.findOne({
     passwordResetToken,
     passwordResetExpires: { $gte: new Date(Date.now()) },
@@ -242,9 +231,6 @@ export const resetPassword = catchAsync(async (req, res, next) => {
 export const updatePassword = catchAsync(async (req, res, next) => {
   const { currentPassword, password, passwordConfirm } = req.body;
 
-  if (!currentPassword || !password || !passwordConfirm)
-    return next(new AppError('Preovide all required fields', 400));
-
   // There will always be a user since this is a protected route
   const user = (await User.findById(req.user!._id).select('+password'))!;
 
@@ -263,27 +249,10 @@ export const updatePassword = catchAsync(async (req, res, next) => {
   authenticateUser(user, res, 'login', 200);
 });
 
-export const updateAvatar = catchAsync(async (req, res, next) => {
+export const updateAvatar = catchAsync(async (req, res) => {
   let user = req.user!;
 
-  const avatarFile = req.file;
-
-  if (!avatarFile) return next(new AppError('Provide an avatar', 400));
-
-  const supportedTypes = ['jpg', 'jpeg', 'png'];
-
-  if (!supportedTypes.some((type) => avatarFile.mimetype.endsWith(type)))
-    return next(
-      new AppError(
-        `Image type not supported. Only ${supportedTypes.join(',')} are supported!`,
-        400,
-      ),
-    );
-
-  const oneMb = 1024 * 1024;
-
-  if (avatarFile.size >= oneMb)
-    return next(new AppError('Avatar must be less than 1 MB', 413));
+  const avatarFile = req.file!;
 
   const avatarB64 = Buffer.from(avatarFile.buffer).toString('base64');
   const avatarURI = 'data:' + avatarFile.mimetype + ';base64,' + avatarB64;
@@ -329,15 +298,13 @@ export const deleteAvatar = catchAsync(async (req, res, next) => {
   user.avatar = defaultAvatar;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  user = await(user as any).save({ validateBeforeSave: false });
+  user = await (user as any).save({ validateBeforeSave: false });
 
   res.status(200).json({ status: 'success', data: { user } });
 });
 
 export const updateEmail = catchAsync(async (req, res) => {
-  const email = req.body.email;
-
-  req.user!.email = email;
+  req.user!.email = req.body.email;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const user = await (req.user! as any).save();

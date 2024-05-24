@@ -1,17 +1,13 @@
+import { IBaseUser } from '@/schemas/auth';
 import { Types } from 'mongoose';
 import { IResult as IDeviceDetail } from 'ua-parser-js';
 
-export interface IUser {
+export interface IUser extends IBaseUser {
   _id: Types.ObjectId;
   avatar: string;
-  name: string;
-  email: string;
   emailChangedAt: Date;
-  password: string;
-  passwordConfirm: string;
   createdAt: Date;
   updatedAt: Date;
-  role: 'guest' | 'manager';
   passwordResetToken?: string;
   passwordResetExpires?: Date;
   passwordResetAt?: Date;
@@ -27,8 +23,4 @@ export interface IUserWithNoCredential
   extends Omit<IUser, 'password' | 'passwordConfirm'> {
   password?: string;
   passwordConfirm?: string;
-}
-
-export interface IMongoUser extends IUser {
-  _id: Types.ObjectId;
 }

@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { Schema, model, Model } from 'mongoose';
-import valdatior from 'validator';
+// import valdatior from 'validator';
 import { hash, compare } from 'bcrypt';
 import { IUser } from '@/interfaces/user';
 
@@ -17,6 +17,95 @@ interface UserModel extends Model<IUser, object, IUserMethods> {
   // myStaticMethod(): number;
 }
 
+// const userSchema = new Schema<IUser>({
+//   // avatar: String,
+//   avatar: {
+//     type: String,
+//     default:
+//       'https://res.cloudinary.com/dxgwsomk7/image/upload/v1714900541/frontend/images/no-avatar_xdut3c.webp',
+//   },
+//   name: {
+//     type: String,
+//     required: [true, 'Please provide your name'],
+//     trim: true,
+//   },
+//   email: {
+//     type: String,
+//     required: [true, 'Please provide an email'],
+//     validate: [valdatior.isEmail, 'Please provide a valid email'],
+//     unique: true,
+//   },
+//   emailChangedAt: Date,
+//   role: {
+//     type: String,
+//     required: [true, 'Please select the type of user you are.'],
+//     enum: {
+//       values: ['guest', 'manager'],
+//       message: 'You can only be a guest or manager',
+//     },
+//   },
+//   password: {
+//     type: String,
+//     required: [true, 'Please provide a password'],
+//     minLength: [5, 'Password is too short'],
+//     select: false,
+//   },
+//   passwordConfirm: {
+//     type: String,
+//     required: [true, 'Please confirm your password'],
+//     validate: [
+//       function validate(confirmPasword: string) {
+//         // TODO: Properly type `this`
+//         // @ts-expect-error This is not an error
+//         return this.password === confirmPasword;
+//       },
+//       `Passwords are not the same`,
+//     ],
+//     select: false,
+//   },
+//   createdAt: {
+//     type: Date,
+//     default: new Date(),
+//   },
+//   updatedAt: Date,
+//   passwordResetToken: {
+//     type: String,
+//     default: null,
+//   },
+//   passwordResetExpires: {
+//     type: Date,
+//     default: null,
+//   },
+//   passwordResetAt: Date,
+//   devices: {
+//     type: [
+//       {
+//         id: String,
+//         ip: String,
+//         time: Date,
+//         meta: {
+//           ua: String,
+//           browser: {
+//             name: String,
+//             version: String,
+//             major: String,
+//           },
+//           engine: { name: String, version: String },
+//           os: { name: String, version: String },
+//           device: {
+//             vendor: String,
+//             model: String,
+//             type: String,
+//           },
+//           cpu: { architecture: String },
+//         },
+//       },
+//     ],
+//     select: false,
+//     default: [],
+//   },
+// });
+
 const userSchema = new Schema<IUser>({
   // avatar: String,
   avatar: {
@@ -26,41 +115,23 @@ const userSchema = new Schema<IUser>({
   },
   name: {
     type: String,
-    required: [true, 'Please provide your name'],
     trim: true,
   },
   email: {
     type: String,
-    required: [true, 'Please provide an email'],
-    validate: [valdatior.isEmail, 'Please provide a valid email'],
     unique: true,
   },
   emailChangedAt: Date,
   role: {
     type: String,
-    required: [true, 'Please select the type of user you are.'],
-    enum: {
-      values: ['guest', 'manager'],
-      message: 'You can only be a guest or manager',
-    },
+    enum: ['guest', 'manager'],
   },
   password: {
     type: String,
-    required: [true, 'Please provide a password'],
-    minLength: [5, 'Password is too short'],
     select: false,
   },
   passwordConfirm: {
     type: String,
-    required: [true, 'Please confirm your password'],
-    validate: [
-      function validate(confirmPasword: string) {
-        // TODO: Properly type `this`
-        // @ts-expect-error This is not an error
-        return this.password === confirmPasword;
-      },
-      `Passwords are not the same`,
-    ],
     select: false,
   },
   createdAt: {
