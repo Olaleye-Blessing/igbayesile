@@ -5,6 +5,8 @@ import roomRouter from './room';
 import reviewRouter from './review';
 import { protect, restrictTo } from '@/middlewares/auth';
 import { imgsUpload } from '@/middlewares/multer';
+import { validateData } from '@/utils/validate-data';
+import * as hotelSchema from '@/schemas/hotel';
 
 const router = express.Router();
 
@@ -24,6 +26,12 @@ router
     protect,
     restrictTo('manager'),
     imgsUpload.array('images', 5),
+    (req, _, next) => {
+      // This is needed to validate the images files in the hotel schema
+      req.body.images = req.files;
+      next();
+    },
+    validateData({ schema: hotelSchema.BaseSchema }),
     hotelController.createHotel,
   );
 

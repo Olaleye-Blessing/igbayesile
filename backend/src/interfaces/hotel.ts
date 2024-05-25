@@ -1,13 +1,8 @@
+import { IBaseHotel } from '@/schemas/hotel';
 import { Types } from 'mongoose';
 
-export interface IHotel {
+export interface IHotel extends Omit<IBaseHotel, 'images' | 'amenities'> {
   _id: Types.ObjectId;
-  name: string;
-  description: string;
-  country: string;
-  state: string;
-  city: string;
-  location_description: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   amenities: any[];
   images: string[];

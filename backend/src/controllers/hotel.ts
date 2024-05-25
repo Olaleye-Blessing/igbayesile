@@ -77,15 +77,6 @@ export const getHotel = catchAsync(async (req, res, next) => {
 });
 
 export const createHotel = catchAsync(async (req, res, next) => {
-  if (req.body.amenities < 3)
-    return next(new AppError('Provide at least 3 amenities', 400));
-
-  const imagesFiles = req.files as Express.Multer.File[];
-
-  // Checking here so as not to waste time uploading
-  if (imagesFiles.length < 3)
-    return next(new AppError('Provide at least 3 hotel pictures', 400));
-
   if (
     await Hotel.exists({
       name: req.body.name,
@@ -101,6 +92,8 @@ export const createHotel = catchAsync(async (req, res, next) => {
         422,
       ),
     );
+
+  const imagesFiles = req.files as Express.Multer.File[];
 
   // TODO: Learn about possible errors that could happen from cloudinary
   const imagesUrls = imagesFiles.map((image) => {
