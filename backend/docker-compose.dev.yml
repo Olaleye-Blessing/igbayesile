@@ -1,5 +1,11 @@
 version: "3.7"
 services:
+  mongodb:
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    ports:
+      - 27017:27017
   api:
     container_name: igbayesile_api_dev
     build:
