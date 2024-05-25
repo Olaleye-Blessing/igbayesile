@@ -27,8 +27,8 @@ export const BaseSchema = z.object({
       const oneMB = 1024 * 1024;
 
       if (
-        imgs.some((img) =>
-          supportedTypes.some((type) => !img.mimetype.endsWith(type)),
+        imgs.some(
+          (img) => !supportedTypes.some((type) => img.mimetype.endsWith(type)),
         )
       ) {
         ctx.addIssue({
