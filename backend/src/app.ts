@@ -6,6 +6,7 @@ import mongoSanitize from 'express-mongo-sanitize';
 
 import authRouter from '@/routes/auth';
 import userRouter from '@/routes/user';
+import staffRouter from '@/routes/staff';
 import hotelRouter from '@/routes/hotel';
 import roomRouter from '@/routes/room';
 import bookingRouter from '@/routes/booking';
@@ -49,6 +50,7 @@ if (envData.NODE_ENV === 'production')
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', protect, userRouter);
+app.use('/api/v1/staffs', staffRouter);
 app.use('/api/v1/hotels', hotelRouter);
 app.use('/api/v1/rooms', roomRouter);
 app.use('/api/v1/bookings', bookingRouter);

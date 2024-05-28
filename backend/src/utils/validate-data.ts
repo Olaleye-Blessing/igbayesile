@@ -20,9 +20,9 @@ export const nonEmptyStringSchema = z
 
 export const validateData =
   ({ schema, path = 'body', errCode = 400 }: IValidatePayload) =>
-  (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
-      schema.parse(req[path]);
+      await schema.parseAsync(req[path]);
 
       next();
     } catch (error) {

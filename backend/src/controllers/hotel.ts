@@ -7,6 +7,10 @@ import AppError from '@/utils/AppError';
 import { IHotel } from '@/interfaces/hotel';
 import * as factory from '@/controllers/factory';
 import { redisClient } from '@/databases/redis';
+import User from '@/models/user';
+import { sendEmail } from '@/utils/email';
+import { envData } from '@/configs/env-data';
+import { sleep } from '@/utils/sleep';
 
 export const setHotelsFilter: RequestHandler = (req, _res, next) => {
   const qParams = { ...req.query };
@@ -112,10 +116,84 @@ export const createHotel = catchAsync(async (req, res, next) => {
     manager: req.user!._id,
   };
 
+  const staffId = body.staff;
+
+  delete body.staff;
+
+  let invitationToken = '';
+
+  if (staffId) {
+    const invitationData = Hotel.setStaffInvitationToken(staffId)!;
+    body.staffInvitation = invitationData.staffInvitation;
+    invitationToken = invitationData.invitationToken;
+  }
+
   const hotel = await Hotel.create(body);
+
+  if (!staffId) {
+    return res.status(201).json({
+      status: 'success',
+      data: { hotel },
+    });
+  }
+
+  const staff = await User.findById(staffId).select('+email');
+
+  if (!staff) {
+    return res.status(201).json({
+      status: 'success',
+      data: {
+        hotel,
+        message: {
+          status: 'failed',
+          data: 'The staff you invited no longer exists! Go to the hotel edit page and inivite a new staff!',
+        },
+      },
+    });
+  }
+
+  let inviteUrl = '';
+  const invitePath = `/hotels/${hotel._id}/invitation?token=${invitationToken}`;
+
+  if (envData.NODE_ENV === 'production') {
+    inviteUrl = `${envData.FRONTEND_URL}${invitePath}`;
+  } else {
+    inviteUrl = `${req.protocol}:://${req.get('host')}${invitePath}`;
+  }
+
+  const managerName = req.user!.name;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const responseData: any = { hotel };
+
+  if (envData.NODE_ENV === 'production') {
+    const { error } = await sendEmail({
+      type: 'noreply',
+      to: [staff.email],
+      subject: `[Igbayesile] ${managerName.replace(/\s/g, '_')} has invited you to manage the ${body.name} hotel`,
+      html: `<div>
+      <p>${managerName} has invited you to manage the ${body.name} hotel on Igbayesile. Head over to <a href="${inviteUrl}">${inviteUrl}</a> to check out the hotel.</p>
+      <p>This invitation will expire in 7 days.</p>
+    </div>`,
+    });
+
+    responseData.message = {
+      status: error ? 'failed' : 'success',
+      data: error
+        ? 'Unable to send invitation request to your staff.  Go to the hotel edit page and re-inivite a the staff!'
+        : 'Invitation has been sent your staff.',
+    };
+  } else if (envData.NODE_ENV === 'development') {
+    responseData.message = {
+      status: 'success',
+      data: 'Invitation has been sent your staff.',
+    };
+    responseData.inviteUrl = inviteUrl;
+  }
+
+  if (envData.NODE_ENV === 'development') await sleep(1000);
 
   return res.status(201).json({
     status: 'success',
-    data: { hotel },
+    data: responseData,
   });
 });

@@ -1,6 +1,16 @@
+import crypto from 'crypto';
 import { IHotel } from '@/interfaces/hotel';
 import AppError from '@/utils/AppError';
-import mongoose, { model, Schema } from 'mongoose';
+import mongoose, { Model, model, Schema } from 'mongoose';
+
+interface IHotelMethods {}
+
+interface HotelModel extends Model<IHotel, object, IHotelMethods> {
+  setStaffInvitationToken(id: string): {
+    invitationToken: string;
+    staffInvitation: IHotel['staffInvitation'];
+  };
+}
 
 const hotelSchema = new Schema<IHotel>(
   {
@@ -53,6 +63,25 @@ const hotelSchema = new Schema<IHotel>(
       type: mongoose.Schema.ObjectId,
       ref: 'User',
       required: true,
+    },
+    staff: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+    },
+    staffInvitation: {
+      token: {
+        type: String,
+        default: null,
+      },
+      id: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+        default: null,
+      },
+      expires: {
+        type: Date,
+        default: null,
+      },
     },
     avgRoomPrice: {
       type: Number,
@@ -108,6 +137,24 @@ hotelSchema.post('save', function (error, doc, next) {
   return next();
 });
 
-const Hotel = model('Hotel', hotelSchema);
+hotelSchema.static('setStaffInvitationToken', function (id: string) {
+  const invitationToken = crypto.randomBytes(32).toString('hex');
+  const token = crypto
+    .createHash('sha256')
+    .update(invitationToken)
+    .digest('hex');
+  const oneDay = 1000 * 60 * 60 * 24;
+
+  return {
+    invitationToken,
+    staffInvitation: {
+      token,
+      id,
+      expires: new Date(Date.now() + 7 * oneDay + 1000 * 5), // add extra 3 seconds
+    },
+  };
+});
+
+const Hotel = model<IHotel, HotelModel>('Hotel', hotelSchema);
 
 export default Hotel;

@@ -13,6 +13,14 @@ import Amenities from "./amenities";
 import { Button } from "@/components/ui/button";
 import useSearchParameters from "@/hooks/use-search-parameters";
 import { useIGBInstance } from "@/hooks/use-igb-instance";
+import Staff from "./staff";
+
+interface IHotelRes {
+  data: {
+    hotel: IHotel;
+    message?: { status: "success" | "failed"; data: string };
+  };
+}
 
 export interface HotelFormData
   extends Omit<
@@ -40,6 +48,7 @@ export default function HotelForm({}: HotelFormProps) {
       location_description: "",
       amenities: [],
       images: [],
+      staff: "",
     },
   });
 
@@ -60,7 +69,7 @@ export default function HotelForm({}: HotelFormProps) {
     try {
       toast.loading("Creating your hotel", { id: toastId });
 
-      const res = await igbInstance().post<{ data: { hotel: IHotel } }>(
+      const res = await igbInstance().post<IHotelRes>(
         `${API_BASE_URL}/hotels`,
         hotelData,
         {
@@ -69,6 +78,18 @@ export default function HotelForm({}: HotelFormProps) {
       );
 
       toast.success("Hotel created successfully", { id: toastId });
+
+      const message = res.data.data.message;
+      if (message) {
+        if (message.status === "failed") {
+          toast.error(message.data, {
+            id: "staff-invitation-failed",
+            duration: 4_000,
+          });
+        } else {
+          toast.success(message.data, { id: "staff-invitation-success" });
+        }
+      }
       setIsSubmitting(false);
 
       searchParams.updateParams({ hotel: res.data.data.hotel._id }, "push");
@@ -103,11 +124,19 @@ export default function HotelForm({}: HotelFormProps) {
         },
       )}
     >
-      <FormField
-        input={{ ...form.register("name", { required: true }) }}
-        required
-        errMsg={rhfErrMsg<HotelFormData>("name", form)}
-      />
+      <div className="grid gap-2 grid-cols-1 sm:grid-cols-2">
+        <FormField
+          input={{ ...form.register("name", { required: true }) }}
+          required
+          errMsg={rhfErrMsg<HotelFormData>("name", form)}
+        />
+        <Staff
+          handleChangeStaff={(staff) => {
+            if (staff) form.setValue("staff", staff.value);
+            else form.setValue("staff", "");
+          }}
+        />
+      </div>
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
         <CountriesStates
           stateContClassName="w-full max-w-none flex flex-col space-y-1"

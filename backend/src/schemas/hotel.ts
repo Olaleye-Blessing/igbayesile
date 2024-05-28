@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { nonEmptyStringSchema } from '@/utils/validate-data';
+import { userExists } from '@/controllers/user';
 
 export const BaseSchema = z.object({
   name: nonEmptyStringSchema,
@@ -9,6 +10,13 @@ export const BaseSchema = z.object({
   state: nonEmptyStringSchema,
   city: z.string(),
   location_description: nonEmptyStringSchema,
+  staff: z
+    .string()
+    .optional()
+    // return true if there is no id as staff is optional field
+    .refine(async (id) => !id || (await userExists(id)), {
+      message: 'User does not exit',
+    }),
   amenities: z
     .string({ message: 'Provide at least 3 amenities' })
     .array()

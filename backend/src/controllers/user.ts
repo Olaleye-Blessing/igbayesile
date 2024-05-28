@@ -1,4 +1,13 @@
+import User from '@/models/user';
 import catchAsync from '@/utils/catchAsync';
+
+export const userExists = async (userId: string) => {
+  try {
+    return Boolean(await User.exists({ _id: userId }));
+  } catch (error) {
+    return false;
+  }
+};
 
 export const getMe = catchAsync(async (req, res) => {
   console.log(req.query);

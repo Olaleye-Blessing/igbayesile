@@ -11,6 +11,7 @@ export interface IHotel {
   amenities: IAmenity[];
   images: string[];
   manager: string;
+  staff?: string;
   _id: string;
   avgRoomPrice: number;
   totalRooms: number;
