@@ -43,6 +43,10 @@ const roles = [
     value: "guest",
   },
   {
+    id: "staff",
+    value: "staff",
+  },
+  {
     id: "manager",
     value: "manager",
   },

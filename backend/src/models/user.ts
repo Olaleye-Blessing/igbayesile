@@ -124,7 +124,7 @@ const userSchema = new Schema<IUser>({
   emailChangedAt: Date,
   role: {
     type: String,
-    enum: ['guest', 'manager'],
+    enum: ['guest', 'manager', 'staff'],
   },
   password: {
     type: String,

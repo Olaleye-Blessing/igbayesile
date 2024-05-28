@@ -6,8 +6,8 @@ const BaseSchema = z.object({
   email: z.string().email({ message: 'is invalid' }),
   password: z.string().min(5, { message: 'should be minimum of 5' }),
   passwordConfirm: z.string().min(5, { message: 'should be minimum of 5' }),
-  role: z.enum(['guest', 'manager'], {
-    message: "can only be 'guest' or 'manager'",
+  role: z.enum(['guest', 'manager', 'staff'], {
+    message: "can only be 'guest', 'staff', or 'manager'",
   }),
 });
 
