@@ -27,6 +27,6 @@ igbayesile-down:
 
 .PHONY: igbayesile-push
 igbayesile-push:
-	make igbayesile-up-build environment=prod
+	make igbayesile-up environment=prod
 	docker tag igbayesile_api:latest blexxy/igbayesile_api:latest
 	docker push blexxy/igbayesile_api:latest
