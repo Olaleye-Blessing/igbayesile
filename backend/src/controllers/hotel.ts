@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { FilterQuery } from 'mongoose';
-import { RequestHandler } from 'express';
+import { Request, RequestHandler } from 'express';
 import { v2 as cloudinary } from 'cloudinary';
 import catchAsync from '@/utils/catchAsync';
 import Hotel from '@/models/hotel';
@@ -12,6 +12,9 @@ import User from '@/models/user';
 import { sendEmail } from '@/utils/email';
 import { envData } from '@/configs/env-data';
 import { sleep } from '@/utils/sleep';
+import { IUser } from '@/interfaces/user';
+
+// TODO: Introduce caching of individual hotel if necessary
 
 export const setHotelsFilter: RequestHandler = (req, _res, next) => {
   const qParams = { ...req.query };
@@ -56,24 +59,12 @@ export const getTopRated: RequestHandler = async (req, res, next) => {
 };
 
 export const getHotel = catchAsync(async (req, res, next) => {
-  let hotel: string | null | IHotel = await redisClient.get(
-    `hotel:${req.params.id}`,
-  );
-
-  if (hotel)
-    return res.status(200).json({
-      and: 'a',
-      status: 'success',
-      data: { hotel: JSON.parse(hotel) },
-    });
-
-  hotel = await Hotel.findById(req.params.id)
+  const hotel = await Hotel.findById(req.params.id)
     .populate('manager')
-    .populate('amenities');
+    .populate('amenities')
+    .populate('staff');
 
   if (!hotel) return next(new AppError('This hotel does not exist', 404));
-
-  await redisClient.set(`hotel:${req.params.id}`, JSON.stringify(hotel));
 
   return res.status(200).json({
     status: 'success',
@@ -153,28 +144,17 @@ export const createHotel = catchAsync(async (req, res, next) => {
     });
   }
 
-  let inviteUrl = '';
-  const invitePath = `/hotels/${hotel._id}/invitation?token=${invitationToken}`;
+  const inviteUrl = getStaffInviteUrl({ req, hotel, invitationToken });
 
-  if (envData.NODE_ENV === 'production') {
-    inviteUrl = `${envData.FRONTEND_URL}${invitePath}`;
-  } else {
-    inviteUrl = `${req.protocol}:://${req.get('host')}${invitePath}`;
-  }
-
-  const managerName = req.user!.name;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const responseData: any = { hotel };
 
   if (envData.NODE_ENV === 'production') {
-    const { error } = await sendEmail({
-      type: 'noreply',
-      to: [staff.email],
-      subject: `[Igbayesile] ${managerName.replace(/\s/g, '_')} has invited you to manage the ${body.name} hotel`,
-      html: `<div>
-      <p>${managerName} has invited you to manage the ${body.name} hotel on Igbayesile. Head over to <a href="${inviteUrl}">${inviteUrl}</a> to check out the hotel.</p>
-      <p>This invitation will expire in 7 days.</p>
-    </div>`,
+    const { error } = await sendStaffInviteEmail({
+      staff,
+      hotel,
+      manager: req.user!,
+      inviteUrl,
     });
 
     responseData.message = {
@@ -205,7 +185,7 @@ export const assignStaff = catchAsync(async (req, res, next) => {
     .update(req.params.token)
     .digest('hex');
 
-  const hotel = await Hotel.findOne({
+  let hotel = await Hotel.findOne({
     'staffInvitation.token': token,
     'staffInvitation.id': req.user!._id,
     'staffInvitation.expires': { $gte: new Date(Date.now()) },
@@ -222,7 +202,7 @@ export const assignStaff = catchAsync(async (req, res, next) => {
   hotel.staff = req.user!._id;
   hotel.staffInvitation = undefined;
 
-  await hotel.save({ validateBeforeSave: false });
+  hotel = await hotel.save({ validateBeforeSave: false });
 
   if (envData.NODE_ENV === 'development') await sleep(1500);
 
@@ -230,3 +210,120 @@ export const assignStaff = catchAsync(async (req, res, next) => {
 
   res.status(200).json({ status: 'success' });
 });
+
+export const changeStaff = catchAsync(async (req, res, next) => {
+  const staffId = req.body.staff;
+  const hotelId = req.params.id;
+
+  const staff = await User.findById(staffId);
+
+  if (!staff)
+    return next(
+      new AppError(
+        'The staff you invited no longer exists! Invite a new staff!',
+        400,
+      ),
+    );
+
+  const { invitationToken, staffInvitation } =
+    Hotel.setStaffInvitationToken(staffId)!;
+
+  const hotel = await Hotel.findByIdAndUpdate(hotelId, { staffInvitation });
+
+  if (!hotel) return next(new AppError('This hotel does not exist', 404));
+
+  const inviteUrl = getStaffInviteUrl({ req, hotel, invitationToken });
+
+  const message =
+    'Invitation has been sent your staff. Your hostel staff will be updated as soon as the new staff accept your invitation.';
+
+  if (envData.NODE_ENV === 'production') {
+    const { error } = await sendStaffInviteEmail({
+      staff,
+      hotel,
+      manager: req.user!,
+      inviteUrl,
+    });
+
+    if (error)
+      return next(
+        new AppError(
+          'Unable to send invitation request to your staff. Re-inivite the staff!',
+          500,
+        ),
+      );
+
+    return res.status(200).json({ status: 'success', data: { message } });
+  }
+
+  res.status(200).json({ status: 'success', data: { message, inviteUrl } });
+});
+
+export const removeStaff = catchAsync(async (req, res, next) => {
+  const hotel = await Hotel.findByIdAndUpdate(
+    req.params.id,
+    { staff: null },
+    { new: true },
+  );
+
+  if (!hotel) return next(new AppError('This hotel does not exist', 404));
+
+  const redisHotel: string | null | IHotel = await redisClient.get(
+    `hotel:${req.params.id}`,
+  );
+
+  if (redisHotel) {
+    const hotel = JSON.parse(redisHotel);
+
+    delete hotel.staff;
+  }
+
+  res.status(200).json({ status: 'success', data: { hotel } });
+});
+
+const getStaffInviteUrl = ({
+  req,
+  hotel,
+  invitationToken,
+}: {
+  req: Request;
+  hotel: IHotel;
+  invitationToken: string;
+}) => {
+  let inviteUrl = '';
+  const invitePath = `/hotels/${hotel._id}/invitation?token=${invitationToken}`;
+
+  if (envData.NODE_ENV === 'production') {
+    inviteUrl = `${envData.FRONTEND_URL}${invitePath}`;
+  } else {
+    inviteUrl = `${req.protocol}:://${req.get('host')}${invitePath}`;
+  }
+
+  return inviteUrl;
+};
+
+const sendStaffInviteEmail = async ({
+  staff,
+  hotel,
+  manager,
+  inviteUrl,
+}: {
+  staff: IUser;
+  hotel: IHotel;
+  manager: IUser;
+  inviteUrl: string;
+}) => {
+  const managerName = manager.name;
+
+  const result = await sendEmail({
+    type: 'noreply',
+    to: [staff.email],
+    subject: `[Igbayesile] ${managerName.replace(/\s/g, '_')} has invited you to manage the ${hotel.name} hotel`,
+    html: `<div>
+      <p>${managerName} has invited you to manage the ${hotel.name} hotel on Igbayesile. Head over to <a href="${inviteUrl}">${inviteUrl}</a> to check out the hotel.</p>
+      <p>This invitation will expire in 7 days.</p>
+    </div>`,
+  });
+
+  return result;
+};

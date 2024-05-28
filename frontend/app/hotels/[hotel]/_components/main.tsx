@@ -5,7 +5,6 @@ import Loading from "@/app/loading";
 import { IFullHotel } from "@/interfaces/hotel";
 import { hotelsKeys } from "../../utils/query-key-factory";
 import { MapPin } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import AutoPlayImages from "@/components/custom/carousel/auto-play-images";
 import RatingsReviewBadge from "@/components/rating-review-badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,6 +14,8 @@ import Rooms from "./rooms";
 import Amenity from "@/components/amenities/amenity";
 import NewRoom from "./new-room";
 import useAuthStore from "@/stores/auth";
+import Profile from "./profile";
+import AssignStaffButton from "./edit-staff/assign-staff-button";
 
 interface MainProps {
   hotelId: string;
@@ -51,7 +52,17 @@ export default function Main({ hotelId }: MainProps) {
               </button>
             </div>
             {user?._id === data.hotel.manager._id && (
-              <NewRoom hotel={data.hotel} />
+              <div className="flex items-center justify-end mb-2">
+                {!data.hotel.staff && (
+                  <AssignStaffButton
+                    text="Invite A Staff"
+                    variant="outline"
+                    hotel={data.hotel}
+                    className="mb-2"
+                  />
+                )}
+                <NewRoom hotel={data.hotel} />
+              </div>
             )}
           </header>
           <section className="space-y-2">
@@ -98,22 +109,10 @@ export default function Main({ hotelId }: MainProps) {
               </ul>
             )}
           </section>
-          <section className="mt-3">
-            <h3 className="text-base">Owner</h3>
-            <div className="flex items-center justify-start">
-              <Avatar className="mr-2">
-                <AvatarImage src={data.hotel.manager.avatar} />
-                <AvatarFallback>
-                  {data.hotel.manager.name[0].toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <p>{data.hotel.manager.name}</p>
-                {/* TODO: Enable managers to add bio */}
-                <p>No bio yet</p>
-              </div>
-            </div>
-          </section>
+          {data.hotel.staff && (
+            <Profile hotel={data.hotel} authUser={user} role="staff" />
+          )}
+          <Profile hotel={data.hotel} role="manager" />
           <Tabs
             defaultValue={tab}
             className=""

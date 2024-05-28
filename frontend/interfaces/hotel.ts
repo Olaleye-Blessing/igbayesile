@@ -21,6 +21,7 @@ export interface IHotel {
   updatedAt: Date;
 }
 
-export interface IFullHotel extends Omit<IHotel, "manager"> {
+export interface IFullHotel extends Omit<IHotel, "manager" | "staff"> {
   manager: Omit<IUser, "role"> & { role: "manager" };
+  staff?: Omit<IUser, "role"> & { role: "staff" };
 }

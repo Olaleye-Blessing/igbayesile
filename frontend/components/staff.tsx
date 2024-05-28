@@ -15,9 +15,13 @@ type IOption = {
 
 interface StaffProps {
   handleChangeStaff: (staff: IOption | null) => void;
+  name?: string;
 }
 
-export default function Staff({ handleChangeStaff }: StaffProps) {
+export default function Staff({
+  handleChangeStaff,
+  name = "staff",
+}: StaffProps) {
   const [search, setSearch] = useState("");
 
   let url = `/staffs`;
@@ -42,10 +46,10 @@ export default function Staff({ handleChangeStaff }: StaffProps) {
 
   return (
     <div className="mb-3">
-      <Label htmlFor="staff">Staff</Label>
+      <Label htmlFor={name}>Staff</Label>
       <ReactSelect
-        id="staff"
-        name="staff"
+        id={name}
+        name={name}
         isLoading={isFetching}
         options={staffs}
         onInputChange={(name) => handleSearchStaffs(name)}

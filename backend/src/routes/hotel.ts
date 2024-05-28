@@ -44,4 +44,19 @@ router.patch(
   hotelController.assignStaff,
 );
 
+router.patch(
+  '/:id/staff',
+  protect,
+  restrictTo('manager'),
+  validateData({ schema: hotelSchema.changeStaffSchema }),
+  hotelController.changeStaff,
+);
+
+router.delete(
+  '/:id/staff',
+  protect,
+  restrictTo('manager'),
+  hotelController.removeStaff,
+);
+
 export default router;

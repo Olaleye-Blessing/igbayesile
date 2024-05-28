@@ -28,6 +28,7 @@ export const useSettings = () => {
     return data.data;
   };
 
+  // TODO: CREATE A HOOK OR COMPONENT FOR THIS RE-LOGIN
   const login = async (e: FormEvent<HTMLFormElement>) => {
     const form = e.currentTarget;
 

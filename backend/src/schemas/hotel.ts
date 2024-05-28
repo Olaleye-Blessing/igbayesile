@@ -58,4 +58,6 @@ export const BaseSchema = z.object({
     }),
 });
 
+export const changeStaffSchema = BaseSchema.pick({ staff: true });
+
 export type IBaseHotel = z.infer<typeof BaseSchema>;

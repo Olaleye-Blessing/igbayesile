@@ -13,7 +13,7 @@ import Amenities from "./amenities";
 import { Button } from "@/components/ui/button";
 import useSearchParameters from "@/hooks/use-search-parameters";
 import { useIGBInstance } from "@/hooks/use-igb-instance";
-import Staff from "./staff";
+import Staff from "@/components/staff";
 
 interface IHotelRes {
   data: {
