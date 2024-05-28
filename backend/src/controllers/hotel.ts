@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { FilterQuery } from 'mongoose';
 import { RequestHandler } from 'express';
 import { v2 as cloudinary } from 'cloudinary';
@@ -196,4 +197,36 @@ export const createHotel = catchAsync(async (req, res, next) => {
     status: 'success',
     data: responseData,
   });
+});
+
+export const assignStaff = catchAsync(async (req, res, next) => {
+  const token = crypto
+    .createHash('sha256')
+    .update(req.params.token)
+    .digest('hex');
+
+  const hotel = await Hotel.findOne({
+    'staffInvitation.token': token,
+    'staffInvitation.id': req.user!._id,
+    'staffInvitation.expires': { $gte: new Date(Date.now()) },
+  });
+
+  if (!hotel)
+    return next(
+      new AppError(
+        `Your invitation has either expired or doesn't exist. Contact your manager to send a new invitation`,
+        400,
+      ),
+    );
+
+  hotel.staff = req.user!._id;
+  hotel.staffInvitation = undefined;
+
+  await hotel.save({ validateBeforeSave: false });
+
+  if (envData.NODE_ENV === 'development') await sleep(1500);
+
+  // TODO: Check if it's needed to assgin a token
+
+  res.status(200).json({ status: 'success' });
 });

@@ -36,5 +36,12 @@ router
   );
 
 router.route('/:id').get(hotelController.getHotel);
+// TODO: Decide if this route should be directed to the staffs route like so -> router.use("/:hotelId/staffs")
+router.patch(
+  '/:id/invitation/:token',
+  protect,
+  restrictTo('staff'),
+  hotelController.assignStaff,
+);
 
 export default router;
