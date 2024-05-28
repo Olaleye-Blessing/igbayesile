@@ -1,15 +1,15 @@
-import LoginModal, { LoginModalProps } from "./login-modal";
+import LoginAgain from "@/components/login-again";
 import StaffModal, { StaffModalProps } from "./staff-modal";
 
 interface ModalsProps {
-  login: LoginModalProps;
+  login: { open: boolean; onOpenChange(open: boolean): void };
   staff: StaffModalProps;
 }
 
 export default function Modals({ login, staff }: ModalsProps) {
   return (
     <>
-      <LoginModal
+      <LoginAgain
         open={login.open}
         onOpenChange={(open) => login.onOpenChange(open)}
       />

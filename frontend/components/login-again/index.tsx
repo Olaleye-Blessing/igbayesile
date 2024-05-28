@@ -1,5 +1,3 @@
-import { FormField } from "@/components/custom/form-field";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,18 +5,25 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { FormField } from "../custom/form-field";
+import { useLoginAgain } from "./use-login-again";
 import { FormEventHandler } from "react";
-import { useStaff } from "./hook";
-import { handleIgbayesileAPIError } from "@/utils/handle-igbayesile-api-error";
 import toast from "react-hot-toast";
+import { handleIgbayesileAPIError } from "@/utils/handle-igbayesile-api-error";
 
-export interface LoginModalProps {
+interface LoginAgainProps {
   open: boolean;
   onOpenChange(open: boolean): void;
+  successMsg?: string;
 }
 
-export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
-  const { login, toastId: loginToastId } = useStaff();
+export default function LoginAgain({
+  open,
+  onOpenChange,
+  successMsg = "You can continue with your action now.",
+}: LoginAgainProps) {
+  const { login, toastId } = useLoginAgain();
 
   const handleLogin: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -27,9 +32,9 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
       await login(e);
 
       onOpenChange(false);
-      toast("You can continue with your action now.", { id: loginToastId });
+      toast(successMsg, { id: toastId });
     } catch (error) {
-      toast.error(handleIgbayesileAPIError(error), { id: loginToastId });
+      toast.error(handleIgbayesileAPIError(error), { id: toastId });
     }
   };
 

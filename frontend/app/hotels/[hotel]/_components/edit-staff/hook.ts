@@ -1,46 +1,19 @@
-import { ILoginResponse } from "@/app/auth/_types";
 import { hotelsKeys } from "@/app/hotels/utils/query-key-factory";
+import { useLoginAgain } from "@/components/login-again/use-login-again";
 import { useIGBInstance } from "@/hooks/use-igb-instance";
 import { IFullHotel } from "@/interfaces/hotel";
-import useAuthStore from "@/stores/auth";
 import { handleIgbayesileAPIError } from "@/utils/handle-igbayesile-api-error";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 
 export const useStaff = () => {
   const queryClient = useQueryClient();
-  const token = useAuthStore((state) => state.token);
-  const storeLogin = useAuthStore((state) => state.login);
+  const { reLogin } = useLoginAgain();
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [openStaffModal, setOpenStaffModal] = useState(false);
 
   const { igbInstance } = useIGBInstance();
-
-  const toastId = "loggin-in";
-
-  // TODO: CREATE A HOOK OR COMPONENT FOR THIS RE-LOGIN
-  const login = async (e: FormEvent<HTMLFormElement>) => {
-    const form = e.currentTarget;
-
-    const password: string = (form.elements as any).password.value.trim();
-
-    if (!password) throw new Error("Provie your password");
-
-    toast.loading("Confirming...", { id: toastId });
-
-    let {
-      data: { data },
-    } = await igbInstance().post<{ data: ILoginResponse }>("/auth/me/login", {
-      password,
-    });
-
-    storeLogin(data.user, data.authToken);
-
-    toast.success("Confirmation successful", { id: toastId });
-
-    return data;
-  };
 
   const removeStaff = useMutation({
     mutationFn: async (hotel: IFullHotel) => {
@@ -89,7 +62,7 @@ export const useStaff = () => {
   });
 
   const isLoginModalOpen = () => {
-    if (token.decoded?.mode === "refresh") {
+    if (reLogin()) {
       setOpenLoginModal(true);
 
       return true;
@@ -104,14 +77,10 @@ export const useStaff = () => {
 
     if (isLoginModalOpen()) return false;
 
-    console.log("___ MAKE REQUEST TO CHANGE STAFF");
-
     await changeStaff.mutateAsync({ hotel, staff });
   };
 
   return {
-    login,
-    toastId,
     removeStaff,
     changeStaff,
     handleChangeStaff,

@@ -1,23 +1,17 @@
-import { FormEventHandler, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { handleIgbayesileAPIError } from "@/utils/handle-igbayesile-api-error";
 import { FormField } from "@/components/custom/form-field";
 import Section from "./section";
 import { Button } from "@/components/ui/button";
 import useAuthStore from "@/stores/auth";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { useSettings } from "./hook";
+import LoginAgain from "@/components/login-again";
 
 export default function ChangeEmail() {
   const token = useAuthStore((state) => state.token);
   const localLogin = useAuthStore((state) => state.login);
-  const { login, updateEmail, toastIds } = useSettings();
+  const { updateEmail, toastIds } = useSettings();
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [email, setEmail] = useState("");
 
@@ -29,19 +23,6 @@ export default function ChangeEmail() {
       localLogin(result.user, result.authToken);
     } catch (error) {
       toast.error(handleIgbayesileAPIError(error), { id: toastIds.email });
-    }
-  };
-
-  const handleLogin: FormEventHandler<HTMLFormElement> = async (e) => {
-    e.preventDefault();
-
-    try {
-      await login(e);
-
-      setOpenLoginModal(false);
-      toast("You can update your email now", { id: toastIds.login });
-    } catch (error) {
-      toast.error(handleIgbayesileAPIError(error), { id: toastIds.login });
     }
   };
 
@@ -69,27 +50,10 @@ export default function ChangeEmail() {
           <Button>Set New Email</Button>
         </form>
       </Section>
-      <Dialog
+      <LoginAgain
         open={openLoginModal}
         onOpenChange={(open) => setOpenLoginModal(open)}
-      >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Are you absolutely sure?</DialogTitle>
-            <DialogDescription>
-              Login again to prove you are in control of your account
-            </DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleLogin}>
-            <FormField
-              label="Password"
-              input={{ name: "password", required: true, type: "password" }}
-              required
-            />
-            <Button>Login</Button>
-          </form>
-        </DialogContent>
-      </Dialog>
+      />
     </>
   );
 }
