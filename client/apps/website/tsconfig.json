@@ -3,9 +3,13 @@
   "compilerOptions": {
     "plugins": [
       {
-        "name": "next"
-      }
-    ]
+        "name": "next",
+      },
+    ],
+    "paths": {
+      "@website/*": ["./*"],
+      "@ui/*": ["../../packages/ui/src/*"],
+    },
   },
   "include": [
     "next-env.d.ts",
