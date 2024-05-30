@@ -4,7 +4,8 @@ export const formatCurrency = ({
   options = {},
 }: {
   amount: number;
-  locales?: Intl.LocalesArgument;
+  // locales?: Intl.LocalesArgument;
+  locales?: any;
   options?: Intl.NumberFormatOptions;
 }) => {
   options.minimumFractionDigits = options.maximumFractionDigits ?? 0;

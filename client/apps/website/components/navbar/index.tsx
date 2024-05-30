@@ -2,7 +2,7 @@
 
 import useAuthStore from "@website/stores/auth";
 import HomeLogo from "../home-logo";
-import { Button } from "@repo/ui/components/ui/button";
+import { Button } from "@ui/components/ui/button";
 import axios from "axios";
 import { API_BASE_URL } from "@website/constants/backend";
 import toast from "react-hot-toast";

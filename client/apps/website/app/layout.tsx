@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 // import "./globals.css";
-import "@repo/ui/globals.css";
+import "@ui/globals.css";
 import "./material-icons.css";
 import Providers from "@website/components/providers";
 import { Toaster } from "react-hot-toast";
