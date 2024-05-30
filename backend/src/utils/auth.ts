@@ -56,8 +56,8 @@ export const setRefreshToken = (user: IUser, res: Response) => {
     {
       httpOnly: true,
       secure: true,
-      // path: '/refresh-token',
       expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      domain: envData.NODE_ENV === 'production' ? '.igbayesile.xyz' : undefined,
     },
   );
 };
