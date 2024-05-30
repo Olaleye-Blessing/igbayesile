@@ -37,9 +37,13 @@ if (envData.NODE_ENV === 'production') {
   });
 }
 
-console.log(envData.NODE_ENV?.length);
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:3001',
+  /.+\.igbayesile\.xyz$/,
+];
 
-app.use(cors({ origin: envData.FRONTEND_URL, credentials: true }));
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 
 app.use(mongoSanitize());
 
