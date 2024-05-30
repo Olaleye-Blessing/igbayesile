@@ -4,7 +4,7 @@ import {
   useQuery,
 } from "@tanstack/react-query";
 import { useIGBInstance } from "./use-igb-instance";
-import { handleIgbayesileAPIError } from "@website/utils/handle-igbayesile-api-error";
+import { handleIgbayesileAPIError } from "@dashboard/utils/handle-igbayesile-api-error";
 import { AxiosRequestConfig } from "axios";
 
 export const useIGBQuery = <TData = unknown>({
