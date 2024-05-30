@@ -11,6 +11,7 @@ import { API_BASE_URL } from "@website/constants/backend";
 import { handleIgbayesileAPIError } from "@website/utils/handle-igbayesile-api-error";
 import useAuthStore from "@website/stores/auth";
 import { ILoginResponse } from "../_types";
+import { allowedDashboardSiteRoles } from "@ui/constants/roles";
 
 interface FormData {
   email: string;
@@ -42,9 +43,21 @@ export default function Page() {
           withCredentials: true,
         },
       );
+
       toast.success("Signed in successfully", { id: toastId });
+
+      // TODO: Update this logic when there is another subdomain
+      if (!redirectPage.startsWith("http")) {
+        storeLogin(result.user, result.authToken);
+        return router.push(redirectPage);
+      }
+
+      if (allowedDashboardSiteRoles.includes(result.user.role)) {
+        return (window.location.href = redirectPage);
+      }
+
       storeLogin(result.user, result.authToken);
-      router.push(redirectPage);
+      router.push("/");
     } catch (error) {
       toast.error(handleIgbayesileAPIError(error), { id: toastId });
     }
