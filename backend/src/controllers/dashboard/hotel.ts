@@ -1,6 +1,6 @@
 import Hotel from '@/models/hotel';
 import { RequestHandler } from 'express';
-import { findAll } from './factory';
+import { findAll } from '../factory';
 
 export const setFilters: RequestHandler = async (req, res, next) => {
   const user = req.user!;
