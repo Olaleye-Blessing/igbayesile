@@ -5,9 +5,12 @@ import { pages } from "./utils";
 import { Menu } from "lucide-react";
 import { Button, buttonVariants } from "@ui/components/ui/button";
 import { usePathname } from "next/navigation";
+import { usePagePath } from "@dashboard/hooks/use-page-path";
 
 export default function MainNavbar() {
+  const { updatePagePath } = usePagePath();
   const pathname = usePathname();
+  const disbledNavLinks = pathname === "/";
   const toggleNav = () => {
     document.querySelector(".main_nav--cont")?.classList.toggle("open");
   };
@@ -29,21 +32,32 @@ export default function MainNavbar() {
         <nav className="px-4 max-w-md">
           <ul className="flex flex-col">
             {pages.map((page) => {
-              const path = page.name === "dashboard" ? "/" : `/${page.name}`;
+              const path = updatePagePath({
+                newPath: page.name,
+                action: "normal",
+              });
+
+              const Tag: any = disbledNavLinks ? "p" : Link;
+              const options = disbledNavLinks
+                ? {
+                    className:
+                      "flex items-center justify-start cursor-not-allowed",
+                  }
+                : {
+                    href: path,
+                    className: buttonVariants({
+                      variant: "ghost",
+                      className: `!justify-start capitalize w-full lg:hover:bg-primary ${pathname === path ? " bg-blue-800 bg-opacity-60" : ""}`,
+                    }),
+                    onClick: toggleNav,
+                  };
 
               return (
                 <li className="mb-4 last:mb-0">
-                  <Link
-                    href={path}
-                    className={buttonVariants({
-                      variant: "ghost",
-                      className: `!justify-start capitalize w-full lg:hover:bg-primary ${pathname === path ? " bg-blue-800 bg-opacity-60" : ""}`,
-                    })}
-                    onClick={toggleNav}
-                  >
+                  <Tag {...options}>
                     <span className="mr-2">{<page.icon />}</span>
                     <span>{page.name}</span>
-                  </Link>
+                  </Tag>
                 </li>
               );
             })}
