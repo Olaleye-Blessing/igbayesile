@@ -1,11 +1,12 @@
-import RatingStar from "@repo/ui/components/custom/rating-star";
-import { Button } from "@repo/ui/components/ui/button";
-
 export default function Page() {
   return (
-    <main className="bg-red-900">
-      <Button>Click me</Button>
-      <RatingStar rating={3} />
+    <main className="">
+      <h1>Home Page</h1>
+      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores quae,
+      aut doloribus ad modi incidunt earum odit sint consequatur esse totam,
+      autem quis accusantium itaque deleniti? Quasi nesciunt vitae voluptatem
+      molestias eligendi enim totam magni sint iusto ab iste et sequi illum
+      officia, dolorum consequuntur doloremque ipsam a tempore deleniti.
     </main>
   );
 }

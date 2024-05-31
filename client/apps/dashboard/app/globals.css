@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.main_nav--cont {
+  @apply bg-card shadow-lg border-t-[0.01rem] border-input w-screen h-[calc(100vh-10rem)] absolute top-[calc(100%+0.5rem)] pt-4 left-[-102vw];
+  @apply lg:static lg:w-auto lg:h-auto lg:bg-transparent lg:shadow-none;
+}
+
+.main_nav--cont.open {
+  @apply left-[-0.5rem];
+}
+
+.nav_hotels > div {
+  @apply lg:!bg-transparent;
+}
