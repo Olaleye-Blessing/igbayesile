@@ -1,36 +1,24 @@
+"use client";
+
 import { useIGBQuery } from "@dashboard/hooks/use-igb-query";
 import ReactSelect from "@ui/components/custom/select/react-select";
-import { sleep } from "@ui/utils/sleep";
-import { ISampleHotel, hotels as sampleHotels } from "./data";
-import { handleIgbayesileAPIError } from "@dashboard/utils/handle-igbayesile-api-error";
 import { IPaginatedResult } from "@ui/types/paginate";
 import toast from "react-hot-toast";
+import { IFullHotel } from "@ui/interfaces/hotel";
+import { usePagePath } from "@dashboard/hooks/use-page-path";
 
 export default function Hotel() {
-  const { data, isFetching, error } = useIGBQuery<
-    IPaginatedResult<ISampleHotel>
-  >({
-    url: "/hotels",
-    options: {
-      queryKey: ["hotels"],
-      queryFn: async () => {
-        try {
-          await sleep(2_000);
-
-          return {
-            limit: 10,
-            page: 1,
-            total: 10,
-            results: [...sampleHotels],
-          };
-        } catch (error) {
-          throw new Error(handleIgbayesileAPIError(error));
-        }
+  const { updateHotelPath } = usePagePath();
+  const { data, isFetching, error } = useIGBQuery<IPaginatedResult<IFullHotel>>(
+    {
+      url: "/hotels",
+      options: {
+        queryKey: ["dashboard", "hotels"],
       },
     },
-  });
+  );
 
-  let hotels: any[] = [];
+  let hotels: { label: string; value: string }[] = [];
 
   if (!isFetching) {
     if (data) {
@@ -54,6 +42,9 @@ export default function Hotel() {
       options={hotels}
       placeholder="Hotels"
       loadingMessage={() => "Loading Hotels..."}
+      onChange={(hotel: any) =>
+        updateHotelPath({ hotelId: hotel.value, action: "push" })
+      }
     />
   );
 }

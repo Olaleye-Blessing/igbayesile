@@ -13,6 +13,7 @@ import bookingRouter from '@/routes/booking';
 import reviewRouter from '@/routes/review';
 import amenityRouter from '@/routes/amenity';
 import cspRouter from '@/routes/csp';
+import dashboardRouter from '@/routes/dashboard';
 import globalErrorHanlder from '@/controllers/error';
 import { protect } from './middlewares/auth';
 import { cspHeaders } from './configs/security/csp';
@@ -61,6 +62,7 @@ app.use('/api/v1/bookings', bookingRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/amenities', amenityRouter);
 app.use('/api/v1/csp', cspRouter);
+app.use('/api/v1/dashboard', dashboardRouter);
 
 app.use(globalErrorHanlder);
 

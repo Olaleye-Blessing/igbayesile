@@ -4,13 +4,9 @@ import { PropsWithChildren, useEffect, useState } from "react";
 import { useIGBInstance } from "@dashboard/hooks/use-igb-instance";
 import useAuthStore from "@dashboard/stores/auth";
 import Loading from "@dashboard/app/loading";
-import { usePathname } from "next/navigation";
 import { allowedDashboardSiteRoles } from "@ui/constants/roles";
 
 export default function InitializeConfigs({ children }: PropsWithChildren) {
-  const pathname = usePathname();
-
-  console.log({ pathname });
   const { refreshToken } = useIGBInstance();
   const [loading, setLoading] = useState(true);
   const login = useAuthStore((state) => state.login);
