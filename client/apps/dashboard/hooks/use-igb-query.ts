@@ -11,12 +11,14 @@ export const useIGBQuery = <TData = unknown>({
   options,
   url,
   axiosConfig,
+  dashboard = true,
 }: {
   options: UndefinedInitialDataOptions<TData, Error, TData, QueryKey>;
   url: string;
+  dashboard?: boolean;
   axiosConfig?: AxiosRequestConfig;
 }) => {
-  const { igbInstance } = useIGBInstance();
+  const { igbInstance } = useIGBInstance(dashboard);
 
   return useQuery({
     ...options,

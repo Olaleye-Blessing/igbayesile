@@ -11,7 +11,7 @@ export interface ILoginResponse {
   user: IUser;
 }
 
-export const useIGBInstance = () => {
+export const useIGBInstance = (dashboard = true) => {
   const router = useRouter();
   const authToken = useAuthStore((state) => state.token);
   const updateToken = useAuthStore((state) => state.updateToken);
@@ -34,8 +34,11 @@ export const useIGBInstance = () => {
   };
 
   const igbInstance = () => {
+    let baseURL = API_BASE_URL;
+    if (dashboard) baseURL += "/dashboard";
+
     let instance = axios.create({
-      baseURL: API_BASE_URL,
+      baseURL,
       withCredentials: true,
     });
 
