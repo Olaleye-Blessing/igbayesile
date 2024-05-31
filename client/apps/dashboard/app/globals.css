@@ -14,3 +14,7 @@
 .nav_hotels > div {
   @apply lg:!bg-transparent;
 }
+
+.dash_cardboard {
+  @apply bg-muted/60 rounded-md border transition duration-200 ease-linear shadow-sm hover:shadow text-card-foreground;
+}

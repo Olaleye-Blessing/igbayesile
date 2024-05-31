@@ -31,7 +31,7 @@ export default function RootLayout({
                   <TopNavbar />
                 </div>
               </div>
-              <div className="">
+              <div className="w-full overflow-x-hidden">
                 <div className="hidden lg:block lg:sticky lg:top-0 lg:right-0 lg:bg-background">
                   <TopNavbar />
                 </div>
