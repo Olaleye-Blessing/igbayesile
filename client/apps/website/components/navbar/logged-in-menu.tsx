@@ -10,7 +10,13 @@ import {
 } from "@ui/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@ui/components/ui/avatar";
 import { IUser } from "@ui/interfaces/user";
-import { commonPaths, guestPaths, managerPaths } from "./_utils/paths";
+import {
+  commonPaths,
+  guestPaths,
+  managerPaths,
+  staffPaths,
+  TPath,
+} from "./_utils/paths";
 import Search from "./search";
 import Divider from "./divider";
 interface LoggedInMenuProps {
@@ -18,11 +24,17 @@ interface LoggedInMenuProps {
   logout: () => Promise<void>;
 }
 
+const userPaths: Record<IUser["role"], Array<TPath>> = {
+  guest: guestPaths,
+  manager: managerPaths,
+  staff: staffPaths,
+};
+
 export default function LoggedInMenu({ user, logout }: LoggedInMenuProps) {
   const [open, setOpen] = useState(false);
 
-  const userPaths = user.role === "manager" ? managerPaths : guestPaths;
-  const paths = [...userPaths, ...commonPaths];
+  const path = userPaths[user.role];
+  const paths = [...path, ...commonPaths];
 
   return (
     <Sheet open={open} onOpenChange={(val) => setOpen(val)}>
@@ -59,6 +71,8 @@ export default function LoggedInMenu({ user, logout }: LoggedInMenuProps) {
                   className: "!justify-start w-full",
                 })}
                 onClick={() => setOpen(false)}
+                target={path.target || "_self"}
+                rel="noreferrer"
               >
                 <span className="mr-2">
                   <path.Icon className="h-5 w-4" />
