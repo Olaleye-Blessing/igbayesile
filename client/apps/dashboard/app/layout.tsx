@@ -3,6 +3,7 @@ import MainNavbar from "@dashboard/components/navigations/main-navbar";
 import TopNavbar from "@dashboard/components/navigations/top-navbar";
 import Providers from "@dashboard/components/providers";
 import "@repo/ui/globals.css";
+import "./material-icons.css";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";

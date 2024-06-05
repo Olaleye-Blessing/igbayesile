@@ -2,9 +2,19 @@ import { usePathname, useRouter } from "next/navigation";
 
 type TAction = "push" | "replace" | "normal";
 
+const hotelIdRegExp = /^(?:\/)([a-zA-Z0-9]+)\//; // Capture hotel ID
+
 export const usePagePath = () => {
   const pathname = usePathname();
   const router = useRouter();
+
+  const getHotelId = () => {
+    const match = pathname.match(hotelIdRegExp);
+
+    if (!match) return null;
+
+    return match[0].slice(1).slice(0, -1);
+  };
 
   const updatePagePath = ({
     newPath,
@@ -15,7 +25,6 @@ export const usePagePath = () => {
     action?: TAction;
     scroll?: boolean;
   }) => {
-    const hotelIdRegExp = /^(?:\/)([a-zA-Z0-9]+)\//; // Capture hotel ID
     const match = pathname.match(hotelIdRegExp);
 
     if (!match) return act("/", action, scroll);
@@ -48,5 +57,5 @@ export const usePagePath = () => {
     return router[action](path, { scroll });
   }
 
-  return { updateHotelPath, updatePagePath };
+  return { updateHotelPath, updatePagePath, getHotelId };
 };

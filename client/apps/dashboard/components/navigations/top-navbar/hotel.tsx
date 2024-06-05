@@ -37,7 +37,7 @@ export default function Hotel() {
 
   return (
     <ReactSelect
-      className="mr-2 w-full max-w-40 nav_hotels"
+      className="mr-2 w-full max-w-40 nav_hotels z-50"
       isLoading={isFetching}
       options={hotels}
       placeholder="Hotels"

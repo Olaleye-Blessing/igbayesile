@@ -1,0 +1,24 @@
+.amenities .amenity__text {
+  @apply text-muted-foreground text-sm;
+  @apply whitespace-nowrap overflow-hidden text-ellipsis max-w-40;
+}
+
+.amenities .amenity__icon {
+  @apply mr-1;
+}
+
+.amenities .amenity:nth-child(2n+1) .amenity__icon {
+  @apply text-[coral]
+}
+.amenities .amenity:nth-child(2n+2) .amenity__icon {
+  @apply text-indigo-500;
+}
+.amenities .amenity:nth-child(2n+3) .amenity__icon {
+  @apply text-green-600;
+}
+.amenities .amenity:nth-child(2n+4) .amenity__icon {
+  @apply text-purple-600;
+}
+.amenities .amenity:nth-child(2n+5) .amenity__icon {
+  @apply text-yellow-600;
+}
