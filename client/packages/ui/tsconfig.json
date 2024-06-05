@@ -1,7 +1,10 @@
 {
   "extends": "@repo/typescript-config/react-library.json",
   "compilerOptions": {
-    "moduleResolution": "NodeNext",
+    // "moduleResolution": "NodeNext",
+    // "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
+    "module": "Preserve",
     "baseUrl": ".",
     "paths": {
       "@ui/*": ["./src/*"],
