@@ -6,13 +6,12 @@ import {
   Plus,
   User,
 } from "lucide-react";
-import { HTMLAttributeAnchorTarget } from "react";
 
 export type TPath = {
   href: string;
   label: string;
   Icon: LucideIcon;
-  target?: HTMLAttributeAnchorTarget;
+  external?: boolean;
 };
 
 const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL!;
@@ -22,12 +21,12 @@ export const commonPaths: TPath[] = [
   { href: "/profile/?tab=settings", label: "Edit Profile", Icon: User },
 ];
 
-const managerStaffPaths = [
+const managerStaffPaths: TPath[] = [
   {
     href: dashboardUrl,
     label: "Dashboard",
     Icon: LayoutDashboard,
-    target: "_blank",
+    external: true,
   },
 ];
 

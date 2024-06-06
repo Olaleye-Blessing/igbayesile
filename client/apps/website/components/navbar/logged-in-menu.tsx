@@ -59,28 +59,34 @@ export default function LoggedInMenu({ user, logout }: LoggedInMenuProps) {
         </SheetHeader>
         <Divider />
         <ul className="flex flex-col">
-          {paths.map((path) => (
-            <li
-              key={path.href}
-              className="w-full flex items-center justify-start"
-            >
-              <Link
-                href={path.href}
-                className={buttonVariants({
-                  variant: "ghost",
-                  className: "!justify-start w-full",
-                })}
-                onClick={() => setOpen(false)}
-                target={path.target || "_self"}
-                rel="noreferrer"
+          {paths.map((path) => {
+            const Component = path.external ? "a" : Link;
+            const attrs = path.external
+              ? { rel: "noreferrer", target: "_blank" }
+              : {};
+
+            return (
+              <li
+                key={path.href}
+                className="w-full flex items-center justify-start"
               >
-                <span className="mr-2">
-                  <path.Icon className="h-5 w-4" />
-                </span>
-                <span className="text-sm">{path.label}</span>
-              </Link>
-            </li>
-          ))}
+                <Component
+                  {...attrs}
+                  href={path.href}
+                  className={buttonVariants({
+                    variant: "ghost",
+                    className: "!justify-start w-full",
+                  })}
+                  onClick={() => setOpen(false)}
+                >
+                  <span className="mr-2">
+                    <path.Icon className="h-5 w-4" />
+                  </span>
+                  <span className="text-sm">{path.label}</span>
+                </Component>
+              </li>
+            );
+          })}
         </ul>
         <Divider />
         <Search className="w-full my-1" />
