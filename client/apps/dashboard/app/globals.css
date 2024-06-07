@@ -8,7 +8,7 @@
 }
 
 .main_nav--cont.open {
-  @apply left-[-0.5rem];
+  @apply left-[-0.5rem] z-50;
 }
 
 .nav_hotels > div {
