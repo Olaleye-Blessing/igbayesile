@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import SiteLogo from "@ui/components/site-logo";
 
 interface HomeLogoProps {
   className?: string;
@@ -8,7 +9,7 @@ interface HomeLogoProps {
 export default function HomeLogo({ className }: HomeLogoProps) {
   return (
     <Link href="/" className={className}>
-      HomeLogo
+      <SiteLogo />
     </Link>
   );
 }
