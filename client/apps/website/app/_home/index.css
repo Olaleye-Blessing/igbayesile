@@ -1,5 +1,5 @@
 .header {
-  background-image: url("/imgs/home_landing_page.jpeg");
+  background-image: url("https://res.cloudinary.com/dxgwsomk7/image/upload/v1718298295/frontend/images/website_home_header_bg.jpg");
   background-position: center right;
   background-size: cover;
 }
@@ -9,7 +9,7 @@
 }
 
 .signup__section {
-  background-image: url("./../../public/imgs/home_landing.jpeg");
+  background-image: url("https://res.cloudinary.com/dxgwsomk7/image/upload/v1718299175/frontend/images/website_home_sign_up_banner.jpg");
   background-position: center left;
   background-size: cover;
 }
