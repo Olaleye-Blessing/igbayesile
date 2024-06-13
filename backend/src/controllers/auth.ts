@@ -1,7 +1,6 @@
 import crypto from 'crypto';
 import { nanoid } from 'nanoid';
 import uap from 'ua-parser-js';
-import { v2 as cloudinary } from 'cloudinary';
 import User from '@/models/user';
 import AppError from '@/utils/AppError';
 import catchAsync from '@/utils/catchAsync';
@@ -11,6 +10,7 @@ import jwt, { JsonWebTokenError, JwtPayload } from 'jsonwebtoken';
 import {
   deleteCloudinaryImg,
   extractCloudinaryImgPublicId,
+  uploadCloudinaryAssest,
 } from '@/utils/cloudinary';
 import { IAuthJWTPayLoad } from '@/interfaces/auth';
 import { redisClient } from '@/databases/redis';
@@ -256,8 +256,9 @@ export const updateAvatar = catchAsync(async (req, res) => {
 
   const avatarB64 = Buffer.from(avatarFile.buffer).toString('base64');
   const avatarURI = 'data:' + avatarFile.mimetype + ';base64,' + avatarB64;
-  const avatarURL = await cloudinary.uploader.upload(avatarURI, {
-    folder: 'profiles',
+  const avatarURL = await uploadCloudinaryAssest({
+    uri: avatarURI,
+    options: { folder: 'profiles' },
   });
 
   // TODO: Learn how to do background job. Like move this operation to another thread

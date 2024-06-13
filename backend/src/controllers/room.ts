@@ -1,5 +1,4 @@
 import { RequestHandler } from 'express';
-import { v2 as cloudinary } from 'cloudinary';
 import { FilterQuery, Types } from 'mongoose';
 import AppError from '@/utils/AppError';
 import catchAsync from '@/utils/catchAsync';
@@ -9,6 +8,7 @@ import { IRoom } from '@/interfaces/room';
 import * as factory from '@/controllers/factory';
 import Booking from '@/models/booking';
 import { filterObj } from '@/utils/filter-obj';
+import { uploadCloudinaryAssest } from '@/utils/cloudinary';
 
 export const setRoomsFilter: RequestHandler = (req, _res, next) => {
   const filter: FilterQuery<IRoom> = {};
@@ -106,8 +106,11 @@ export const createRoom = catchAsync(async (req, res, next) => {
   const imagesUrls = imagesFiles.map((image) => {
     const b64 = Buffer.from(image.buffer).toString('base64');
     const dataURI = 'data:' + image.mimetype + ';base64,' + b64;
-    return cloudinary.uploader.upload(dataURI, {
-      folder: 'hotels_images/room_images',
+    return uploadCloudinaryAssest({
+      uri: dataURI,
+      options: {
+        folder: 'hotels_images/room_images',
+      },
     });
   });
 

@@ -1,5 +1,29 @@
-import { DeliveryType } from 'cloudinary';
-import { v2 as cloudinary } from 'cloudinary';
+import {
+  DeliveryType,
+  UploadApiOptions,
+  UploadApiResponse,
+  UploadResponseCallback,
+  v2 as cloudinary,
+} from 'cloudinary';
+
+export const uploadCloudinaryAssest = async ({
+  uri,
+  options,
+  callback,
+}: {
+  uri: string;
+  options?: UploadApiOptions;
+  callback?: UploadResponseCallback;
+}): Promise<UploadApiResponse> => {
+  return cloudinary.uploader.upload(
+    uri,
+    {
+      ...options,
+      tags: (process.env.NODE_ENV || 'development').toLowerCase(),
+    },
+    callback,
+  );
+};
 
 export const extractCloudinaryImgPublicId = (img: string) => {
   const parts = img.split('/');

@@ -1,7 +1,6 @@
 import crypto from 'crypto';
 import { FilterQuery } from 'mongoose';
 import { Request, RequestHandler } from 'express';
-import { v2 as cloudinary } from 'cloudinary';
 import catchAsync from '@/utils/catchAsync';
 import Hotel from '@/models/hotel';
 import AppError from '@/utils/AppError';
@@ -13,6 +12,7 @@ import { sendEmail } from '@/utils/email';
 import { envData } from '@/configs/env-data';
 import { sleep } from '@/utils/sleep';
 import { IUser } from '@/interfaces/user';
+import { uploadCloudinaryAssest } from '@/utils/cloudinary';
 
 // TODO: Introduce caching of individual hotel if necessary
 
@@ -95,8 +95,9 @@ export const createHotel = catchAsync(async (req, res, next) => {
   const imagesUrls = imagesFiles.map((image) => {
     const b64 = Buffer.from(image.buffer).toString('base64');
     const dataURI = 'data:' + image.mimetype + ';base64,' + b64;
-    return cloudinary.uploader.upload(dataURI, {
-      folder: 'hotels_images',
+    return uploadCloudinaryAssest({
+      uri: dataURI,
+      options: { folder: 'hotels_images' },
     });
   });
 
