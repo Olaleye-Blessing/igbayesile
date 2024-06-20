@@ -10,6 +10,16 @@ import Booking from '@/models/booking';
 import { filterObj } from '@/utils/filter-obj';
 import { uploadCloudinaryAssest } from '@/utils/cloudinary';
 
+export const hideHiddenRooms: RequestHandler = (req, _, next) => {
+  req.query = {
+    ...req.query,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    hidden: false as any,
+  };
+
+  next();
+};
+
 export const setRoomsFilter: RequestHandler = (req, _res, next) => {
   const filter: FilterQuery<IRoom> = {};
 

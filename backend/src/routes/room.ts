@@ -17,13 +17,18 @@ router.use('/:roomId/reviews', reviewRouter);
 
 router.get(
   '/best-deal',
+  roomController.hideHiddenRooms,
   roomController.getCheapestRooms,
   roomController.getRooms,
 );
 
 router
   .route('/')
-  .get(roomController.setRoomsFilter, roomController.getRooms)
+  .get(
+    roomController.hideHiddenRooms,
+    roomController.setRoomsFilter,
+    roomController.getRooms,
+  )
   .post(
     protect,
     restrictTo('manager'),
