@@ -93,6 +93,10 @@ const roomSchema = new Schema<IRoom>(
       type: Number,
       default: 0,
     },
+    hidden: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

@@ -18,6 +18,7 @@ export interface IRoom {
   city: string;
   ratings: number;
   totalReviews: number;
+  hidden: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
