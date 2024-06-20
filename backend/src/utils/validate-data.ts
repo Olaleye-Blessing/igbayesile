@@ -18,6 +18,10 @@ export const nonEmptyStringSchema = z
   .trim()
   .min(1, { message: 'is required' });
 
+export const zodMustBeNumberSchema = z.number({
+  invalid_type_error: 'must be number',
+});
+
 export const validateData =
   ({ schema, path = 'body', errCode = 400 }: IValidatePayload) =>
   async (req: Request, res: Response, next: NextFunction) => {
@@ -28,9 +32,6 @@ export const validateData =
     } catch (error) {
       if (!(error instanceof ZodError))
         return next(new AppError('Internal Server error', 500));
-
-      console.log('___ ERRORS ___');
-      console.log(error.errors);
 
       const messages = error.errors
         .reduce((msgs, current) => {

@@ -3,9 +3,12 @@ import express from 'express';
 
 import * as roomController from '@/controllers/room';
 import { protect, restrictTo } from '@/middlewares/auth';
+import { imgsUpload } from '@/middlewares/multer';
 import { upload } from '@/middlewares/multer';
 import bookingRouter from './booking';
 import reviewRouter from './review';
+import { validateData } from '@/utils/validate-data';
+import * as roomSchema from '@/schemas/room';
 
 const router = express.Router({ mergeParams: true });
 
@@ -24,7 +27,16 @@ router
   .post(
     protect,
     restrictTo('manager'),
-    upload.array('images', 5),
+    imgsUpload.array('images', 5),
+    (req, _, next) => {
+      // This is needed to validate the data in the hotel schema
+      req.body.images = req.files;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if (!req.body.hotel) req.body.hotel = (req.params as any).hotelId;
+
+      next();
+    },
+    validateData({ schema: roomSchema.BaseSchema }),
     roomController.createRoom,
   );
 

@@ -1,18 +1,12 @@
+import { IBaseRoom } from '@/schemas/room';
 import { Types } from 'mongoose';
 
-export interface IRoom {
+export interface IRoom extends Omit<IBaseRoom, 'images' | 'amenities' | 'hotel'> {
   _id: Types.ObjectId;
-  name: string;
-  description: string;
-  location_description: string;
-  images: string[];
-  numberOfBeds: number;
-  price: number;
-  maxNumOfGuests: number;
-  numOfBathrooms: number;
-  hotel: Types.ObjectId;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   amenities: any[];
+  images: string[];
+  hotel: Types.ObjectId;
   country: string;
   state: string;
   city: string;
