@@ -52,3 +52,17 @@ export const justLoggedIn = catchAsync(async (req, res, next) => {
 
   next();
 });
+
+export const dashboardOnly = catchAsync(async (req, res, next) => {
+  let authorized = false;
+
+  if (envData.NODE_ENV === 'production') {
+    authorized = req.headers.origin === 'https://dashboard.igbayesile.xyz';
+  } else {
+    authorized = req.headers.origin === 'http://localhost:3001';
+  }
+
+  if (!authorized) return next(new AppError('Unauthorized', 401));
+
+  next();
+});
