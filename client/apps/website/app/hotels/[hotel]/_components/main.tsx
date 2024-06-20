@@ -88,10 +88,12 @@ export default function Main({ hotelId }: MainProps) {
                 )}
               </span>
             </p>
-            <div>
-              <p className="font-bold">Location Description</p>
-              <p>{data.hotel.location_description}</p>
-            </div>
+            {data.hotel.location_description && (
+              <div>
+                <p className="font-bold">Location Description</p>
+                <p>{data.hotel.location_description}</p>
+              </div>
+            )}
             <div>
               <p className="font-bold">Hotel Description</p>
               <p>{data.hotel.description}</p>

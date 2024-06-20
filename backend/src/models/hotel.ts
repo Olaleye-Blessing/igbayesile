@@ -37,10 +37,6 @@ const hotelSchema = new Schema<IHotel>(
     city: String,
     location_description: {
       type: String,
-      required: [
-        true,
-        "Provide a short description about your hotel's location",
-      ],
       trim: true,
     },
     amenities: {

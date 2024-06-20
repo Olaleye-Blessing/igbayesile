@@ -8,8 +8,8 @@ export const BaseSchema = z.object({
   // check country and state asynchroniously
   country: nonEmptyStringSchema,
   state: nonEmptyStringSchema,
-  city: z.string(),
-  location_description: nonEmptyStringSchema,
+  city: nonEmptyStringSchema,
+  location_description: z.string().optional(),
   staff: z
     .string()
     .optional()

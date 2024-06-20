@@ -164,11 +164,9 @@ export default function HotelForm({}: HotelFormProps) {
         />
         <TextAreaField
           textarea={{
-            ...form.register("location_description", { required: true }),
+            ...form.register("location_description", { required: false }),
           }}
-          required
           label="Location Description"
-          errMsg={rhfErrMsg<HotelFormData>("location_description", form)}
         />
       </div>
       <div>

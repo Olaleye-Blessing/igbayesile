@@ -7,7 +7,7 @@ export interface IHotel {
   country: string;
   state: string;
   city: string;
-  location_description: string;
+  location_description?: string;
   amenities: IAmenity[];
   images: string[];
   manager: string;
