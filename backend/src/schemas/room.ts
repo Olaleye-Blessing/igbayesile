@@ -1,3 +1,4 @@
+import { roomTypes } from '@/utils/room-types';
 import {
   nonEmptyStringSchema,
   zodMustBeNumberSchema,
@@ -6,6 +7,7 @@ import { z } from 'zod';
 
 export const BaseSchema = z.object({
   name: nonEmptyStringSchema,
+  type: z.enum(roomTypes),
   description: nonEmptyStringSchema,
   location_description: z.string().optional(),
   numberOfBeds: zodMustBeNumberSchema.positive({

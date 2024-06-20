@@ -5,6 +5,7 @@ type ValProps = TNewFormProps | TEditFormProps;
 export const defaultValues = ({ type, room }: ValProps): RoomFormData => {
   const val: RoomFormData = {
     name: "",
+    type: "",
     description: "",
     images: [],
     numberOfBeds: 0,

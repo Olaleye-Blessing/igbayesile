@@ -5,6 +5,7 @@ import { IHotel } from "./hotel";
 export interface IRoom {
   _id: string;
   name: string;
+  type: string;
   description: string;
   location_description: string;
   images: string[];

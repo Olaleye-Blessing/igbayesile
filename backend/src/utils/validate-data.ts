@@ -18,7 +18,7 @@ export const nonEmptyStringSchema = z
   .trim()
   .min(1, { message: 'is required' });
 
-export const zodMustBeNumberSchema = z.number({
+export const zodMustBeNumberSchema = z.coerce.number({
   invalid_type_error: 'must be number',
 });
 

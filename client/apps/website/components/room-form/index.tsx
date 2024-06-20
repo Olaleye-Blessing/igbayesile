@@ -15,6 +15,14 @@ import { RoomFormData, TEditFormProps, TNewFormProps } from "./_utils/types";
 import { defaultValues } from "./_utils/default-value";
 import { useRoomForm } from "./hook";
 import ErrorAction from "./error-action";
+import { Label } from "@ui/components/ui/label";
+import ReactSelect from "@ui/components/custom/select/react-select";
+import { roomTypes } from "@ui/utils/room-types";
+
+const roomTypesOptions = roomTypes.map((type) => ({
+  label: type,
+  value: type,
+}));
 
 type RoomFormProps = (TNewFormProps | TEditFormProps) & {
   hotelId: string;
@@ -50,6 +58,7 @@ export default function RoomForm({
 
     const roomData = new FormData(e.target);
     roomData.set("hotel", hotelId);
+    roomData.set("type", form.getValues("type"));
     _data.amenities.forEach((amenity) => roomData.append("amenities", amenity));
 
     const toastId =
@@ -86,6 +95,7 @@ export default function RoomForm({
   };
 
   const images = form.watch("images");
+  const roomTypeError = rhfErrMsg<RoomFormData>("type", form);
 
   return (
     <>
@@ -101,11 +111,27 @@ export default function RoomForm({
             },
           )}
         >
-          <FormField
-            input={{ ...form.register("name", { required: true }) }}
-            required
-            errMsg={rhfErrMsg<RoomFormData>("name", form) as any}
-          />
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
+            <FormField
+              input={{ ...form.register("name", { required: true }) }}
+              required
+              errMsg={rhfErrMsg<RoomFormData>("name", form) as any}
+            />
+            <div className="mb-3 flex flex-col w-full">
+              <Label required={true} className="mb-[0.3rem]">
+                Type
+              </Label>
+              <ReactSelect
+                options={roomTypesOptions}
+                onChange={(type: any) => form.setValue("type", type.value)}
+              />
+              {roomTypeError && (
+                <p className="text-red-600 text-sm text-left">
+                  {roomTypeError}
+                </p>
+              )}
+            </div>
+          </div>
           <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             <FormField
               input={{
@@ -168,13 +194,9 @@ export default function RoomForm({
             />
             <TextAreaField
               textarea={{
-                ...form.register("location_description", { required: true }),
+                ...form.register("location_description"),
               }}
-              required
               label="Location Description"
-              errMsg={
-                rhfErrMsg<RoomFormData>("location_description", form) as any
-              }
             />
           </div>
           {type === "new" && (

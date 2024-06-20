@@ -11,6 +11,7 @@ export interface RoomFormData
     | "ratings"
     | "totalReviews"
     | "updatedAt"
+    | "hidden"
   > {
   images: File[];
   amenities: string[];
