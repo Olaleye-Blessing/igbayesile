@@ -48,11 +48,6 @@ app.use(cors({ origin: allowedOrigins, credentials: true }));
 
 app.use(mongoSanitize());
 
-if (envData.NODE_ENV === 'production')
-  app.use((req, res) => {
-    res.status(503).json({ message: 'Coming soon' });
-  });
-
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', protect, userRouter);
 app.use('/api/v1/staffs', staffRouter);
