@@ -11,6 +11,7 @@ import { Button } from "@ui/components/ui/button";
 import { FormEventHandler } from "react";
 import toast from "react-hot-toast";
 import { usePayment } from "../_hooks/payment";
+import { dateWithoutTimezone } from "@website/utils/date-without-timezone";
 
 interface ConfrimProps {
   bookInfo: IBookInfo;
@@ -86,8 +87,8 @@ export default function Confirm({ bookInfo }: ConfrimProps) {
     const body = {
       room: roomInfo.data.room._id,
       guests: bookInfo.guests,
-      checkIn: bookInfo.checkIn,
-      checkOut: bookInfo.checkOut,
+      checkIn: dateWithoutTimezone(new Date(bookInfo.checkIn)),
+      checkOut: dateWithoutTimezone(new Date(bookInfo.checkOut)),
     };
 
     try {

@@ -30,12 +30,9 @@ export const getBookings = factory.findAll({
 });
 
 export const setPaymentParams = catchAsync(async (req, res, next) => {
-  let { checkIn, checkOut } = req.body;
+  const { checkIn, checkOut } = req.body;
   if (!checkIn || !checkOut)
     return next(new AppError('Provide check in and check out dates', 400));
-
-  checkIn = dateWithoutTimezone(new Date(checkIn));
-  checkOut = dateWithoutTimezone(new Date(checkOut));
 
   const now = new Date();
   now.setHours(0, 0, 0, 0);
@@ -44,7 +41,6 @@ export const setPaymentParams = catchAsync(async (req, res, next) => {
   if (checkIn < currentDate || checkOut < currentDate)
     return next(new AppError("You can't select dates in the past", 422));
 
-  // TODO: use zod to validate date
   const totalDays = differenceInDays(checkOut, checkIn);
 
   if (totalDays <= 0) return next(new AppError('Invalid stay days', 422));
