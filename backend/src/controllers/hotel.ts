@@ -42,6 +42,15 @@ export const getHotels = factory.findAll({
   populateOpts: [{ path: 'amenities' }],
 });
 
+export const setStateFilter: RequestHandler = async (req, _res, next) => {
+  const stateValue = req.query.state;
+  // This is needed as the API for storing hotels state adds "state" or "dsitrict"
+  // to the end of each state for some particular country.
+  if (stateValue) req.query.state = { $regex: stateValue, $options: 'i' };
+
+  next();
+};
+
 export const getTopRated: RequestHandler = async (req, res, next) => {
   req.query.sort = '-ratings,-totalReviews,createdAt';
   req.query.limit = '1';

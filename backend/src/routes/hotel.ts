@@ -19,9 +19,19 @@ router.get(
   hotelController.getHotels,
 );
 
+router.get(
+  '/nearest',
+  hotelController.setStateFilter,
+  hotelController.getHotels,
+);
+
 router
   .route('/')
-  .get(hotelController.setHotelsFilter, hotelController.getHotels)
+  .get(
+    hotelController.setHotelsFilter,
+    hotelController.setStateFilter,
+    hotelController.getHotels,
+  )
   .post(
     protect,
     restrictTo('manager'),

@@ -5,6 +5,7 @@ import Search from "./_home/search";
 import TopRatedHotel from "./_home/top-rated/top-rated-hotel";
 import BestRoomDeal from "./_home/best-room-deal";
 import SignUp from "./_home/sign-up";
+import NearestHotels from "./_home/nearest-hotels";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
         <Search />
         <TopRatedHotel />
         <BestRoomDeal />
+        <NearestHotels />
         <SignUp />
       </main>
       <Footer />
