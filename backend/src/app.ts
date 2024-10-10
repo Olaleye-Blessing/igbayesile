@@ -38,11 +38,11 @@ if (envData.NODE_ENV === 'production') {
   });
 }
 
-const allowedOrigins = [
-  'http://localhost:3000',
-  'http://localhost:3001',
-  /.+\.igbayesile\.xyz$/,
-];
+const allowedOrigins: (RegExp | string)[] = [/.+\.igbayesile\.xyz$/];
+
+if (envData.NODE_ENV === 'development') {
+  allowedOrigins.push(...['http://localhost:3000', 'http://localhost:3001']);
+}
 
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 

@@ -131,9 +131,9 @@ The project is divided into two main parts:
 
 10. Run the command below to install dependencies and start both websites:
 
-   ```bash
-   pnpm i
-   pnpm dev
-   ```
+    ```bash
+    pnpm i
+    pnpm dev
+    ```
 
 You should be able to access the main website on [http://localhost:3000](http://localhost:3000) and the dashboard on [http://localhost:3000](http://localhost:3000).
