@@ -7,6 +7,7 @@ import Providers from "@website/components/providers";
 import { Toaster } from "react-hot-toast";
 import InitializeConfigs from "@website/components/initialize-configs";
 import Navbar from "@website/components/navbar";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -94,6 +95,7 @@ export default function RootLayout({
           <Toaster />
         </Providers>
       </body>
+      <Script src="https://scripts.simpleanalyticscdn.com/latest.js" />
     </html>
   );
 }
