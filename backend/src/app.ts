@@ -48,6 +48,9 @@ app.use(cors({ origin: allowedOrigins, credentials: true }));
 
 app.use(mongoSanitize());
 
+app.use('/api/v1/keep-active', (req, res) => {
+  return res.status(200).json({ status: 'success' });
+});
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', protect, userRouter);
 app.use('/api/v1/staffs', staffRouter);
